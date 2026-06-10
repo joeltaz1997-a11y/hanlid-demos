@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maholy — Edición de video e imagen · Producción audiovisual</title>
+<meta name="description" content="Portafolio de Maholy: edición de video, postproducción, retoque de imagen y diseño de campañas para marcas. Casos: Rockexplore y Austrodrill Supplies.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08100b; --bg2:#0d1712; --surface:#111a15; --line:rgba(255,255,255,.10);
+  --text:#eaf0ea; --muted:#93a09a; --faint:#5a665f;
+  --rock:#e0218a; --rock-deep:#7a1450; --rock-glow:rgba(224,33,138,.28);
+  --austro:#16c5bc; --austro-deep:#0a6e6a; --austro-glow:rgba(22,197,188,.26);
+  --accent:#19e08a;
+  --maxw:1280px;
+  --serif:"Schibsted Grotesk",system-ui,sans-serif;
+  --sans:"Hanken Grotesk",system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg);color:var(--text);font-family:var(--sans);
+  font-size:17px;line-height:1.6;font-weight:300;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+::selection{background:var(--accent);color:#08100b}
+img,video{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+
+/* ---------- Tipografía utilitaria ---------- */
+.eyebrow{font-size:12.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--muted);font-weight:500}
+h1,h2,h3{font-family:var(--serif);font-weight:400;line-height:1.02;letter-spacing:-.015em}
+.serif-italic{font-style:normal;font-weight:300;color:var(--muted)}
+.lead{font-size:clamp(19px,2.4vw,25px);color:#cfd6d2;font-weight:400;line-height:1.5}
+
+/* ---------- Nav ---------- */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:60;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px clamp(20px,4vw,46px);
+  transition:background .4s ease,backdrop-filter .4s ease,border-color .4s ease;
+  border-bottom:1px solid transparent;
+}
+nav.scrolled{background:rgba(8,16,11,.72);backdrop-filter:blur(14px);border-color:var(--line)}
+.brand{font-family:var(--serif);font-size:20px;letter-spacing:.04em;font-weight:600}
+.brand b{font-weight:600;color:var(--accent)}
+.navlinks{display:flex;gap:30px;align-items:center}
+.navlinks a{font-size:13.5px;letter-spacing:.06em;color:var(--muted);transition:color .25s;position:relative}
+.navlinks a:hover{color:var(--text)}
+.navlinks a::after{content:"";position:absolute;left:0;bottom:-5px;height:1px;width:0;background:var(--accent);transition:width .3s}
+.navlinks a:hover::after{width:100%}
+.nav-cta{color:var(--text)!important;border:1px solid var(--line);padding:8px 16px;border-radius:40px;transition:border-color .25s,background .25s}
+.nav-cta:hover{border-color:var(--accent);background:rgba(20,22,28,.04)}
+.nav-cta::after{display:none}
+.burger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:0}
+.burger span{width:24px;height:2px;background:var(--text);transition:.3s}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;overflow:hidden}
+.hero-media{position:absolute;inset:0;z-index:0}
+.hero-media video,.hero-media img{width:100%;height:100%;object-fit:cover;opacity:.5}
+.hero-media::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(120% 90% at 70% 10%,transparent,rgba(8,16,11,.7) 72%),
+  linear-gradient(to top,var(--bg) 5%,rgba(8,16,11,.25) 50%,rgba(8,16,11,.55))}
+.hero-inner{position:relative;z-index:2;width:100%;padding-bottom:clamp(48px,9vh,110px)}
+.hero h1{font-size:clamp(58px,15vw,210px);font-weight:600;letter-spacing:-.045em;line-height:.86}
+.hero h1 .sub{display:block;font-size:clamp(19px,3.2vw,42px);font-weight:400;letter-spacing:-.018em;color:#dbe2dd;margin-top:.4em;line-height:1.1}
+.hero .tagrow{display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center;margin-top:34px;max-width:680px}
+.hero .tagrow .lead{flex:1 1 340px;min-width:260px}
+.scrollcue{display:inline-flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-top:30px}
+.scrollcue .ln{width:46px;height:1px;background:var(--muted);position:relative;overflow:hidden}
+.scrollcue .ln::after{content:"";position:absolute;inset:0;background:var(--accent);transform:translateX(-100%);animation:slide 2.2s infinite}
+@keyframes slide{50%{transform:translateX(0)}100%{transform:translateX(100%)}}
+
+/* ---------- Secciones genéricas ---------- */
+section{position:relative}
+.band{padding:clamp(80px,12vh,150px) 0}
+.sechead{display:flex;align-items:flex-end;justify-content:space-between;gap:30px;flex-wrap:wrap;margin-bottom:54px}
+.sechead h2{font-size:clamp(34px,6vw,76px)}
+.sechead .idx{font-family:var(--sans);font-size:13px;letter-spacing:.3em;color:var(--faint)}
+
+/* ---------- About ---------- */
+.about-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(30px,6vw,90px);align-items:start}
+.about-grid .big{font-family:var(--serif);font-size:clamp(26px,3.6vw,44px);line-height:1.22;font-weight:300;letter-spacing:-.01em}
+.about-grid .big em{font-style:normal;font-weight:500;color:var(--text)}
+.about-grid .big .hl{color:var(--accent)}
+.facts{display:grid;gap:26px;border-left:1px solid var(--line);padding-left:30px;margin-top:8px}
+.fact .k{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin-bottom:6px}
+.fact .v{font-size:15.5px;color:#cfd6d2}
+.caps{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.cap{font-size:13px;color:var(--muted);border:1px solid var(--line);padding:7px 14px;border-radius:30px;transition:.25s}
+.cap:hover{border-color:var(--accent);color:var(--text)}
+
+/* ---------- Work index ---------- */
+.worklist{display:grid;gap:2px;border-top:1px solid var(--line)}
+.workitem{display:grid;grid-template-columns:64px 1fr auto;gap:24px;align-items:center;
+  padding:30px 6px;border-bottom:1px solid var(--line);transition:padding .35s,background .35s;cursor:pointer}
+.workitem:hover{padding-left:22px;background:linear-gradient(90deg,rgba(255,255,255,.04),transparent)}
+.workitem .num{font-size:13px;color:var(--faint);letter-spacing:.1em}
+.workitem .ttl{font-family:var(--serif);font-size:clamp(26px,4.4vw,52px);line-height:1}
+.workitem .ttl small{display:block;font-family:var(--sans);font-size:14px;font-weight:300;color:var(--muted);letter-spacing:.04em;margin-top:10px}
+.workitem .go{font-size:13px;letter-spacing:.12em;color:var(--muted);white-space:nowrap;display:flex;align-items:center;gap:9px;transition:.3s}
+.workitem .go .arr{transition:transform .35s}
+.workitem:hover .go{color:var(--text)}
+.workitem:hover .go .arr{transform:translateX(6px)}
+.workitem[data-theme="rock"]:hover .ttl{color:var(--rock)}
+.workitem[data-theme="austro"]:hover .ttl{color:var(--austro)}
+
+/* ---------- Case study ---------- */
+.case{--accent:var(--rock)}
+.case#austrodrill{--accent:var(--austro)}
+.case-hero{position:relative;padding:clamp(70px,11vh,130px) 0 50px}
+.case-tag{display:inline-flex;align-items:center;gap:12px;color:var(--accent);font-size:13px;letter-spacing:.22em;text-transform:uppercase;font-weight:500}
+.case-tag .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 18px var(--accent)}
+.case-hero h2{font-size:clamp(46px,11vw,140px);font-weight:600;letter-spacing:-.045em;margin:18px 0 0;line-height:.9}
+.case-hero .role{font-family:var(--serif);font-style:normal;font-weight:400;color:#cfd6d2;font-size:clamp(18px,2.4vw,27px);letter-spacing:-.01em;margin-top:14px}
+.case-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:44px;border-top:1px solid var(--line);padding-top:26px}
+.case-meta .k{font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.case-meta .v{font-size:15px;color:#d3dad5}
+.case-desc{max-width:760px;margin:46px 0 0;font-size:clamp(18px,2.2vw,23px);line-height:1.55;font-weight:400;color:#ccd3ce}
+.case-desc .hl{color:var(--accent)}
+
+/* media blocks */
+.feature{margin:clamp(40px,7vh,90px) 0;position:relative}
+.feature video,.feature img{width:100%;border-radius:14px;border:1px solid var(--line);background:#000}
+.feature .vframe{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line);box-shadow:0 40px 90px -50px var(--accent)}
+.feature .vframe video{border:0;border-radius:0;display:block}
+.cap-line{display:flex;gap:14px;align-items:baseline;margin-top:16px;color:var(--muted);font-size:14px}
+.cap-line .n{color:var(--accent);font-weight:500;letter-spacing:.06em}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.mediacard{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--surface);aspect-ratio:16/10}
+.mediacard.vert{aspect-ratio:9/16}
+.mediacard video,.mediacard img{width:100%;height:100%;object-fit:cover}
+.mediacard .lbl{position:absolute;left:14px;bottom:12px;z-index:2;font-size:12.5px;letter-spacing:.08em;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.7)}
+.mediacard::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55),transparent 45%);pointer-events:none}
+
+/* gallery scroller */
+.galwrap{margin-top:14px}
+.galhead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:18px}
+.galhead h3{font-size:clamp(22px,3vw,34px)}
+.galhead .hint{font-size:12.5px;color:var(--faint);letter-spacing:.1em}
+.scroller{display:grid;grid-auto-flow:column;grid-auto-columns:max-content;gap:16px;overflow-x:auto;padding-bottom:18px;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:var(--accent) transparent}
+.scroller::-webkit-scrollbar{height:7px}
+.scroller::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
+.scroller::-webkit-scrollbar-track{background:rgba(255,255,255,.06)}
+.shot{scroll-snap-align:start;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:var(--surface);cursor:zoom-in;position:relative;height:440px}
+.shot img{height:100%;width:auto;display:block;object-fit:cover;transition:transform .6s ease,opacity .3s}
+.shot:hover img{transform:scale(1.04)}
+.scroller[data-gallery="hatz"] .shot{height:360px}
+
+/* arte / piezas a tamaño completo */
+.fullpair{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.fullpair figure{margin:0}
+.fullpair img{width:100%;height:auto;border-radius:12px;border:1px solid var(--line);cursor:zoom-in;display:block}
+.fullpair figcaption{margin-top:11px;color:var(--muted);font-size:13.5px;letter-spacing:.03em}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}
+
+/* marquee divider */
+.marquee{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;padding:22px 0;white-space:nowrap}
+.marquee .track{display:inline-block;animation:mq 28s linear infinite}
+.marquee span{font-family:var(--serif);font-style:normal;font-weight:300;font-size:clamp(24px,3.6vw,46px);letter-spacing:-.01em;color:var(--faint);margin:0 22px}
+.marquee span b{font-weight:600;color:var(--text)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* iconos de línea (heredan color con currentColor, estilo del trofeo) */
+.ico{display:inline-block;vertical-align:middle;fill:none;stroke:currentColor;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.marquee .ico{width:.86em;height:.86em;color:var(--accent);margin:0 .04em;vertical-align:-.04em;stroke-width:3.4}
+.cap .ico{width:14px;height:14px;color:var(--accent);margin-right:8px;vertical-align:-2px;stroke-width:4;opacity:.85;transition:.25s}
+.cap:hover .ico{opacity:1}
+
+/* banda de banderas (reutiliza patrón .marquee) */
+.flagband{border-top:1px solid var(--line);overflow:hidden;padding:16px 0;white-space:nowrap;background:rgba(255,255,255,.012)}
+.flagband .track{display:inline-block;white-space:nowrap;animation:mq 36s linear infinite}
+.flagband img{display:inline-block;height:26px;width:auto;margin:0 16px;vertical-align:middle;border-radius:4px;opacity:.62;filter:saturate(.92);box-shadow:0 1px 0 rgba(255,255,255,.06),0 2px 8px rgba(0,0,0,.3);transition:opacity .3s,transform .3s}
+.flagband img:hover{opacity:1;transform:translateY(-2px)}
+@media(prefers-reduced-motion:reduce){.flagband .track{animation:none}}
+
+/* contact */
+.contact{padding:clamp(90px,16vh,180px) 0 70px;text-align:center;position:relative}
+.contact h2{font-size:clamp(42px,9vw,110px);font-weight:600;letter-spacing:-.04em;line-height:.94}
+.contact h2 em{font-style:normal;font-weight:300;color:var(--accent)}
+.contact .mail{display:inline-block;margin-top:34px;font-family:var(--serif);font-size:clamp(22px,3.4vw,40px);border-bottom:1px solid var(--line);padding-bottom:8px;transition:border-color .3s,color .3s}
+.contact .mail:hover{border-color:var(--accent);color:var(--accent)}
+.socials{display:flex;gap:26px;justify-content:center;margin-top:40px;color:var(--muted);font-size:13.5px;letter-spacing:.1em}
+.socials a:hover{color:var(--text)}
+footer{border-top:1px solid var(--line);padding:30px 0;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--faint);font-size:12.5px;letter-spacing:.06em}
+
+/* lightbox */
+.lb{position:fixed;inset:0;z-index:200;background:rgba(6,7,9,.94);display:none;align-items:center;justify-content:center;padding:30px;backdrop-filter:blur(6px)}
+.lb.open{display:flex}
+.lb img{max-width:92vw;max-height:90vh;border-radius:8px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.lb .x{position:absolute;top:22px;right:28px;font-size:30px;color:#fff;cursor:pointer;line-height:1;opacity:.8}
+.lb .x:hover{opacity:1}
+.lb .nav-btn{position:absolute;top:50%;transform:translateY(-50%);font-size:42px;color:#fff;cursor:pointer;opacity:.55;padding:10px 18px;user-select:none}
+.lb .nav-btn:hover{opacity:1}
+.lb .prev{left:10px}.lb .next{right:10px}
+
+/* ---------- Dinámica creativa ---------- */
+/* cursor personalizado */
+.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;border-radius:50%;pointer-events:none;z-index:600;will-change:transform}
+.cursor-dot{width:7px;height:7px;background:var(--accent);margin:-3.5px 0 0 -3.5px}
+.cursor-ring{width:38px;height:38px;border:1.5px solid var(--accent);margin:-19px 0 0 -19px;opacity:.7;transition:width .25s,height .25s,margin .25s,background .25s,opacity .25s}
+.cursor-ring.hover{width:66px;height:66px;margin:-33px 0 0 -33px;background:rgba(25,224,138,.14);opacity:1}
+.cursor-ring.zoom::after{content:"VER";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--sans);font-size:9px;letter-spacing:.18em;color:var(--accent)}
+body.has-cursor{cursor:none}
+body.has-cursor a,body.has-cursor button,body.has-cursor .shot,body.has-cursor [data-zoom],body.has-cursor video,body.has-cursor .workitem{cursor:none}
+@media(hover:none){.cursor-dot,.cursor-ring{display:none}}
+
+/* reveal con máscara (cortina) para media */
+.reveal-clip{clip-path:inset(0 0 100% 0);transition:clip-path 1s cubic-bezier(.16,1,.3,1)}
+.reveal-clip.in{clip-path:inset(0 0 0 0)}
+
+/* línea de progreso de lectura */
+.progress{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent);z-index:80;transition:width .1s linear}
+
+/* parallax hero */
+.hero-media{will-change:transform}
+
+/* aparición por palabras del título hero */
+.hero h1 .word{display:inline-block;overflow:hidden;vertical-align:top}
+.hero h1 .word>span{display:inline-block;transform:translateY(105%);transition:transform .9s cubic-bezier(.16,1,.3,1)}
+.hero h1.go .word>span{transform:none}
+
+/* ===== Juego de entrada: acertijo + llave ===== */
+.gate{position:fixed;inset:0;z-index:500;background:radial-gradient(130% 120% at 50% 8%,#0f1d15,#06090b 68%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 24px;
+  transition:opacity .9s ease,transform 1s cubic-bezier(.7,0,.2,1);overflow:hidden}
+.gate.out{opacity:0;transform:scale(1.05);pointer-events:none}
+.lock-svg{width:66px;height:78px;margin-bottom:20px}
+.lock-svg *{fill:none;stroke:var(--muted);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;transition:stroke .5s,filter .5s}
+.lock.open .lock-svg *{stroke:var(--accent);filter:drop-shadow(0 0 9px var(--accent))}
+.lock.open{animation:trophypop .6s cubic-bezier(.2,1.3,.3,1)}
+@keyframes trophypop{0%{transform:scale(1)}45%{transform:scale(1.16)}100%{transform:scale(1)}}
+.lock.shake{animation:lockshake .4s}
+@keyframes lockshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.gate-kicker{font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:12px}
+.gate-title{font-family:var(--serif);font-weight:600;font-size:clamp(30px,6vw,68px);letter-spacing:-.03em;line-height:.98;color:var(--text)}
+.riddle{color:#cfd6d2;font-size:clamp(17px,2.2vw,22px);font-weight:300;margin:20px auto 0;max-width:540px;line-height:1.45}
+.riddle em{font-style:normal;color:var(--accent)}
+.keys{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:30px;max-width:620px}
+.key{background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--text);
+  font-family:var(--sans);font-size:15px;padding:14px 22px;border-radius:40px;cursor:pointer;
+  transition:border-color .25s,background .25s,color .25s,transform .25s}
+.key:hover{border-color:var(--accent);background:rgba(25,224,138,.08);transform:translateY(-2px)}
+.key.wrong{border-color:#c0413a;color:#e88;animation:lockshake .4s}
+.key.right{border-color:var(--accent);background:var(--accent);color:#08100b;font-weight:600}
+.riddle-hint{min-height:20px;margin-top:20px;font-size:13.5px;letter-spacing:.04em;color:var(--muted);transition:color .25s}
+.gate-skip{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);background:none;border:0;color:var(--faint);font-family:var(--sans);font-size:13px;letter-spacing:.08em;cursor:pointer;transition:color .25s;padding:8px}
+.gate-skip:hover{color:var(--text)}
+.gol-flash{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:6;
+  font-family:var(--serif);font-weight:600;font-size:clamp(46px,10vw,120px);letter-spacing:-.02em;color:var(--accent);
+  opacity:0;transform:scale(.6);text-shadow:0 0 60px var(--accent)}
+.gol-flash.show{animation:golpop 1.3s cubic-bezier(.2,1.2,.3,1) forwards}
+@keyframes golpop{0%{opacity:0;transform:scale(.5)}30%{opacity:1;transform:scale(1.05)}70%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.12)}}
+@media(prefers-reduced-motion:reduce){.gate{display:none}}
+
+@media(max-width:900px){
+  body{font-size:16px}
+  .about-grid{grid-template-columns:1fr}
+  .facts{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:26px}
+  .two,.three{grid-template-columns:1fr}
+  .case-meta{grid-template-columns:1fr 1fr;gap:20px}
+  .navlinks{display:none}
+  .navlinks.show{display:flex;position:absolute;top:100%;right:14px;flex-direction:column;background:rgba(14,16,20,.97);border:1px solid var(--line);border-radius:14px;padding:18px 22px;gap:16px}
+  .burger{display:flex}
+  .shot{height:300px}
+  .scroller[data-gallery="hatz"] .shot{height:240px}
+  .fullpair{grid-template-columns:1fr}
+  .workitem{grid-template-columns:40px 1fr;gap:14px}
+  .workitem .go{display:none}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<!-- ===== sprite de íconos de línea (estilo trofeo: fill:none, stroke 4, round) ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <!-- balón -->
+    <symbol id="i-ball" viewBox="0 0 48 48">
+      <circle cx="24" cy="24" r="19"/>
+      <path d="M24 13 L33 19.5 L29.5 30 H18.5 L15 19.5 Z"/>
+      <path d="M24 5 V13 M33 19.5 L41.5 17 M29.5 30 L35 38 M18.5 30 L13 38 M15 19.5 L6.5 17"/>
+    </symbol>
+    <!-- botín / guayo -->
+    <symbol id="i-boot" viewBox="0 0 48 48">
+      <path d="M7 18 C7 16 9 15 11 15 L23 15 C29 15 33 18 39 22 C42 24 43 26 43 29 L43 31 C43 32 42 33 41 33 L11 33 C9 33 7 31 7 29 Z"/>
+      <path d="M7 33 L43 33"/>
+      <path d="M14 33 V37 M21 33 V37 M28 33 V37 M35 33 V37"/>
+      <path d="M16 15 L18 22 M22 15.5 L24 22 M28 16.5 L30 22"/>
+    </symbol>
+    <!-- silbato -->
+    <symbol id="i-whistle" viewBox="0 0 48 48">
+      <path d="M14 18 H37 A10 10 0 0 1 37 38 A10 10 0 0 1 27.5 31 H14 A6 6 0 0 1 14 18 Z"/>
+      <circle cx="37" cy="28" r="3.4"/>
+      <path d="M22 18 V13 H28 V18"/>
+      <path d="M9 14 L13 17 M6 21 L11 22"/>
+    </symbol>
+    <!-- arco con red -->
+    <symbol id="i-goal" viewBox="0 0 48 48">
+      <path d="M6 12 H42 V36 H6 Z"/>
+      <path d="M6 12 L12 18 V36 M42 12 L36 18 V36 M12 18 H36"/>
+      <path d="M14 18 V36 M20 18 V36 M26 18 V36 M30 18 V36 M12 24 H36 M12 30 H36"/>
+    </symbol>
+    <!-- camiseta -->
+    <symbol id="i-jersey" viewBox="0 0 48 48">
+      <path d="M18 7 L9 12 L6 21 L13 24 L13 41 H35 L35 24 L42 21 L39 12 L30 7"/>
+      <path d="M18 7 A6 5 0 0 0 30 7"/>
+    </symbol>
+    <!-- estrella de campeón -->
+    <symbol id="i-star" viewBox="0 0 48 48">
+      <path d="M24 5 L29.7 17.3 L43 19 L33.2 28.1 L35.8 41.3 L24 34.8 L12.2 41.3 L14.8 28.1 L5 19 L18.3 17.3 Z"/>
+    </symbol>
+    <!-- banderín de córner -->
+    <symbol id="i-corner" viewBox="0 0 48 48">
+      <path d="M14 43 V7"/>
+      <path d="M14 9 L36 14 L14 20"/>
+      <path d="M9 43 H22"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ===== Portada-juego: acertijo + llave ===== -->
+<div class="gate" id="gate">
+  <div class="lock" id="lock">
+    <svg class="lock-svg" viewBox="0 0 64 72" aria-hidden="true">
+      <path d="M18 8 H46 V22 A14 14 0 0 1 18 22 Z"/>
+      <path d="M18 11 H9 A7 7 0 0 0 18 25"/>
+      <path d="M46 11 H55 A7 7 0 0 1 46 25"/>
+      <path d="M32 36 V44"/>
+      <path d="M22 48 H42"/>
+    </svg>
+  </div>
+  <p class="gate-kicker">Portafolio de Maholy · Edición Mundial</p>
+  <h1 class="gate-title">Una de Mundial<br>para entrar</h1>
+  <p class="riddle" id="riddleQ"></p>
+  <div class="keys" id="keys"></div>
+  <p class="riddle-hint" id="riddleHint"></p>
+  <button class="gate-skip" id="gateSkip">Entrar directo →</button>
+  <div class="gol-flash" id="golFlash">¡GOL!</div>
+</div>
+
+<nav id="nav">
+  <a href="#top" class="brand">Maholy<b>.</b></a>
+  <button class="burger" id="burger" aria-label="Menú"><span></span><span></span><span></span></button>
+  <div class="navlinks" id="navlinks">
+    <a href="#trabajo">Trabajo</a>
+    <a href="#rockexplore">Rockexplore</a>
+    <a href="#austrodrill">Austrodrill</a>
+    <a href="#sobre">Sobre mí</a>
+    <a href="#contacto" class="nav-cta">Hablemos</a>
+  </div>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<header class="hero" id="top">
+  <div class="hero-media">
+    <video autoplay muted loop playsinline poster="assets/poster/rock-corporativo.jpg">
+      <source src="assets/video/rock-corporativo.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="hero-inner">
+    <div class="wrap">
+      <p class="eyebrow reveal in">Edición de video · Diseño gráfico · Producción audiovisual</p>
+      <h1 class="reveal in">MAHOLY<span class="sub">Hago que tu marca conecte en los primeros segundos.</span></h1>
+      <div class="tagrow reveal in d1">
+        <p class="lead">En la cancha del contenido gana quien comunica con ritmo, claridad y fuerza. Eso es lo que edito: video e imagen que no pasan desapercibidos.</p>
+      </div>
+      <a href="#trabajo" class="scrollcue">Ver trabajo seleccionado <span class="ln"></span></a>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== SOBRE ===================== -->
+<section class="band" id="sobre">
+  <div class="wrap">
+    <div class="about-grid">
+      <p class="big reveal">Hoy ninguna marca compite solo por su producto: compite por <em>cómo lo cuenta</em>. Edito video, retoco imagen y armo campañas que hacen que una marca se vea imbatible —con el ritmo, la precisión y el timing de quien sabe que cada segundo de atención <span class="hl">se gana</span>—. Lo he hecho para marcas industriales exigentes; la misma jugada funciona para cualquier equipo que salga a la cancha a ganar.</p>
+      <div class="facts reveal d1">
+        <div class="fact"><div class="k">Especialidad</div><div class="v">Edición de video e imagen · Producción audiovisual</div></div>
+        <div class="fact"><div class="k">Disciplinas</div>
+          <div class="caps">
+            <span class="cap"><svg class="ico" aria-hidden="true"><use href="#i-ball"/></svg>Edición de video</span>
+            <span class="cap"><svg class="ico" aria-hidden="true"><use href="#i-goal"/></svg>Postproducción</span>
+            <span class="cap"><svg class="ico" aria-hidden="true"><use href="#i-whistle"/></svg>Motion graphics</span>
+            <span class="cap"><svg class="ico" aria-hidden="true"><use href="#i-star"/></svg>Retoque & composición</span>
+            <span class="cap"><svg class="ico" aria-hidden="true"><use href="#i-jersey"/></svg>Reels para redes</span>
+            <span class="cap"><svg class="ico" aria-hidden="true"><use href="#i-corner"/></svg>Diseño de campañas</span>
+            <span class="cap"><svg class="ico" aria-hidden="true"><use href="#i-boot"/></svg>Editorial & brochure</span>
+            <span class="cap"><svg class="ico" aria-hidden="true"><use href="#i-star"/></svg>Corrección de color</span>
+          </div>
+        </div>
+        <div class="fact"><div class="k">Clientes</div><div class="v">Rockexplore S.A.S · Austrodrill Supplies</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== WORK INDEX ===================== -->
+<section class="band" id="trabajo" style="padding-top:0">
+  <div class="wrap">
+    <div class="sechead reveal">
+      <h2>Trabajo<br><span class="serif-italic">seleccionado</span></h2>
+      <span class="idx">02 — LOS CONVOCADOS</span>
+    </div>
+    <div class="worklist reveal d1">
+      <a class="workitem" data-theme="rock" href="#rockexplore">
+        <span class="num">01</span>
+        <span class="ttl">Rockexplore<small>Video corporativo · Reels · Campañas · Brochure — Perforación direccional</small></span>
+        <span class="go">Ver caso <span class="arr">→</span></span>
+      </a>
+      <a class="workitem" data-theme="austro" href="#austrodrill">
+        <span class="num">02</span>
+        <span class="ttl">Austrodrill Supplies<small>Edición de video e imagen · Postproducción · Material comercial</small></span>
+        <span class="go">Ver caso <span class="arr">→</span></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CASE: ROCKEXPLORE ===================== -->
+<section class="case band" id="rockexplore" style="padding-top:0">
+  <div class="wrap">
+    <div class="case-hero">
+      <p class="case-tag reveal"><span class="dot"></span> Caso 01 — Producción audiovisual & diseño</p>
+      <h2 class="reveal">Rockexplore</h2>
+      <p class="role reveal d1">Servicios de perforación direccional — video, campañas y editorial.</p>
+      <div class="case-meta reveal d2">
+        <div><div class="k">Cliente</div><div class="v">Rockexplore S.A.S</div></div>
+        <div><div class="k">Mi rol</div><div class="v">Edición de video · Diseño gráfico</div></div>
+        <div><div class="k">Entregables</div><div class="v">Video corporativo · Reels · Campañas · Brochure</div></div>
+        <div><div class="k">Sector</div><div class="v">Minería / Perforación</div></div>
+      </div>
+      <p class="case-desc reveal">Producción audiovisual y gráfica de forma continua: edité el <span class="hl">video corporativo</span>, los reels para redes y el flyer animado, y diseñé las campañas mensuales —del Día del Agua a las efemérides de la mujer minera— manteniendo una línea visual coherente con la marca.</p>
+    </div>
+
+    <!-- Video corporativo -->
+    <div class="feature reveal">
+      <div class="vframe">
+        <video controls preload="none" playsinline poster="assets/poster/rock-corporativo.jpg">
+          <source src="assets/video/rock-corporativo.mp4" type="video/mp4"></video>
+      </div>
+      <div class="cap-line"><span class="n">VIDEO</span> Video corporativo de Rockexplore — edición, subtitulado y postproducción.</div>
+    </div>
+
+    <!-- Reels / flyer / rod -->
+    <div class="feature reveal">
+      <div class="three">
+        <div class="mediacard vert"><video preload="none" muted loop playsinline controls poster="assets/poster/rock-reels.jpg"><source src="assets/video/rock-reels.mp4" type="video/mp4"></video><span class="lbl">Reels · redes sociales</span></div>
+        <div class="mediacard vert"><video preload="none" muted loop playsinline controls poster="assets/poster/rock-flyer.jpg"><source src="assets/video/rock-flyer.mp4" type="video/mp4"></video><span class="lbl">Flyer animado</span></div>
+        <div class="mediacard vert"><video preload="none" muted loop playsinline controls poster="assets/poster/rock-rod.jpg"><source src="assets/video/rock-rod.mp4" type="video/mp4"></video><span class="lbl">Pieza ROD Handler</span></div>
+      </div>
+      <div class="cap-line"><span class="n">VIDEO · REELS</span> Edición y postproducción de piezas verticales para redes sociales.</div>
+    </div>
+
+    <!-- Campañas gráficas -->
+    <div class="galwrap reveal">
+      <div class="galhead"><h3>Campañas gráficas</h3><span class="hint">↔ desliza · clic para ampliar</span></div>
+      <div class="scroller" data-gallery="rockcamp"></div>
+    </div>
+
+    <!-- Brochure gallery -->
+    <div class="galwrap reveal" style="margin-top:46px">
+      <div class="galhead">
+        <h3>Brochure corporativo</h3>
+        <span class="hint">↔ desliza · clic para ampliar</span>
+      </div>
+      <div class="scroller" data-gallery="rock"></div>
+    </div>
+  </div>
+</section>
+
+<!-- marquee -->
+<div class="marquee" aria-hidden="true">
+  <div class="track">
+    <span><b>Edición</b> · motion · <b>postproducción</b> · campañas · <b>reels</b> · color · golazos visuales <svg class="ico" aria-hidden="true"><use href="#i-ball"/></svg> </span>
+    <span><b>Edición</b> · motion · <b>postproducción</b> · campañas · <b>reels</b> · color · golazos visuales <svg class="ico" aria-hidden="true"><use href="#i-ball"/></svg> </span>
+  </div>
+</div>
+
+<!-- ===================== CASE: AUSTRODRILL ===================== -->
+<section class="case band" id="austrodrill">
+  <div class="wrap">
+    <div class="case-hero">
+      <p class="case-tag reveal"><span class="dot"></span> Caso 02 — Edición de video e imagen</p>
+      <h2 class="reveal">Austrodrill<br>Supplies</h2>
+      <p class="role reveal d1">Suministros industriales y seguridad para perforación — postproducción y material.</p>
+      <div class="case-meta reveal d2">
+        <div><div class="k">Cliente</div><div class="v">Austrodrill Supplies — SMD</div></div>
+        <div><div class="k">Mi rol</div><div class="v">Edición de video e imagen</div></div>
+        <div><div class="k">Producto</div><div class="v">Casco iSAFE · Línea Hatz</div></div>
+        <div><div class="k">Entregables</div><div class="v">Presentación · Tutorial · Brochure · Gráficas</div></div>
+      </div>
+      <p class="case-desc reveal">Mi trabajo con Austrodrill se ha centrado en la <span class="hl">edición de video e imagen</span>: la postproducción de su video de presentación, el tutorial de conexión del casco de seguridad iSAFE y el diseño de su material comercial actualizado.</p>
+    </div>
+
+    <!-- Presentación -->
+    <div class="feature reveal">
+      <div class="vframe">
+        <video controls preload="none" playsinline poster="assets/poster/austro-presentacion.jpg"><source src="assets/video/austro-presentacion.mp4" type="video/mp4"></video>
+      </div>
+      <div class="cap-line"><span class="n">VIDEO</span> Video de presentación de Austrodrill — edición y postproducción.</div>
+    </div>
+
+    <!-- Pieza iSAFE + motores -->
+    <div class="feature reveal">
+      <div class="two">
+        <div class="mediacard"><video preload="none" muted loop playsinline controls poster="assets/poster/austro-isafe-3d.jpg"><source src="assets/video/austro-isafe-3d.mp4" type="video/mp4"></video><span class="lbl">Pieza promocional iSAFE</span></div>
+        <div class="mediacard"><img loading="lazy" src="assets/img/austro-motores.jpg" alt="Pieza gráfica motores Austrodrill" data-zoom><span class="lbl">Gráfica · motores</span></div>
+      </div>
+      <div class="cap-line"><span class="n">IMAGEN</span> Pieza promocional del casco iSAFE y gráfica de producto para la línea de motores.</div>
+    </div>
+
+    <!-- Brochure Austrodrill ACTUAL -->
+    <div class="galwrap reveal">
+      <div class="galhead"><h3>Brochure de producto</h3><span class="hint">↔ desliza · clic para ampliar</span></div>
+      <div class="scroller" data-gallery="austrobro"></div>
+    </div>
+  </div>
+</section>
+
+<!-- banda de banderas (divisor sutil hacia contacto) -->
+<div class="flagband" aria-hidden="true">
+  <div class="track">
+    <img src="assets/flags/ec.svg" alt=""><img src="assets/flags/ar.svg" alt=""><img src="assets/flags/br.svg" alt=""><img src="assets/flags/uy.svg" alt=""><img src="assets/flags/fr.svg" alt=""><img src="assets/flags/es.svg" alt=""><img src="assets/flags/de.svg" alt=""><img src="assets/flags/it.svg" alt=""><img src="assets/flags/pt.svg" alt=""><img src="assets/flags/nl.svg" alt=""><img src="assets/flags/gb-eng.svg" alt=""><img src="assets/flags/mx.svg" alt=""><img src="assets/flags/us.svg" alt=""><img src="assets/flags/ma.svg" alt="">
+    <img src="assets/flags/ec.svg" alt=""><img src="assets/flags/ar.svg" alt=""><img src="assets/flags/br.svg" alt=""><img src="assets/flags/uy.svg" alt=""><img src="assets/flags/fr.svg" alt=""><img src="assets/flags/es.svg" alt=""><img src="assets/flags/de.svg" alt=""><img src="assets/flags/it.svg" alt=""><img src="assets/flags/pt.svg" alt=""><img src="assets/flags/nl.svg" alt=""><img src="assets/flags/gb-eng.svg" alt=""><img src="assets/flags/mx.svg" alt=""><img src="assets/flags/us.svg" alt=""><img src="assets/flags/ma.svg" alt="">
+  </div>
+</div>
+
+<!-- ===================== CONTACTO ===================== -->
+<section class="contact" id="contacto">
+  <div class="wrap">
+    <p class="eyebrow reveal">Fichajes abiertos · cupos limitados</p>
+    <h2 class="reveal d1">¿Armamos tu<br>próxima <em>jugada</em>?</h2>
+    <a class="mail reveal d2" href="mailto:maholyloor@hanlid.com">maholyloor@hanlid.com</a>
+    <div class="socials reveal d2">
+      <a href="https://wa.me/593978942265" target="_blank" rel="noopener">WhatsApp · 0978942265</a>
+      <a href="tel:+593978942265">Llamar</a>
+      <a href="mailto:maholyloor@hanlid.com">Correo</a>
+    </div>
+  </div>
+  <footer class="wrap" style="margin-top:90px">
+    <span>© <span id="yr"></span> Maholy — Producción audiovisual</span>
+    <span>Hecho con intención · Edición & postproducción</span>
+  </footer>
+</section>
+
+<!-- dinámica creativa -->
+<div class="progress" id="progress"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+
+<!-- lightbox -->
+<div class="lb" id="lb">
+  <span class="x" id="lbx">✕</span>
+  <span class="nav-btn prev" id="lbprev">‹</span>
+  <img id="lbimg" alt="">
+  <span class="nav-btn next" id="lbnext">›</span>
+</div>
+
+<script>
+// año
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+// nav scroll
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40));
+// burger
+const bg=document.getElementById('burger'),nl=document.getElementById('navlinks');
+bg.addEventListener('click',()=>nl.classList.toggle('show'));
+nl.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>nl.classList.remove('show')));
+
+// galerías: inyecta imágenes
+const galleries={
+  rockcamp:['rock-ambiente','rock-invitacion','rock-dia-agua','rock-dia-mujer','rock-mujer-minera','rock-seguridad','rock-equipo','rock-arte-publicitario'].map(n=>`assets/img/${n}.jpg`),
+  rock:Array.from({length:20},(_,i)=>`assets/img/rock-brochure-${String(i+1).padStart(2,'0')}.jpg`),
+  austrobro:Array.from({length:21},(_,i)=>`assets/img/austrobro-${String(i+1).padStart(2,'0')}.jpg`)
+};
+const allImgs=[];
+document.querySelectorAll('[data-gallery]').forEach(box=>{
+  const key=box.dataset.gallery;(galleries[key]||[]).forEach(src=>{
+    const d=document.createElement('div');d.className='shot';
+    const im=document.createElement('img');im.loading='lazy';im.src=src;im.alt=key;im.dataset.zoom='';
+    d.appendChild(im);box.appendChild(d);
+  });
+});
+
+// reveal observer
+const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal:not(.in)').forEach(el=>io.observe(el));
+
+// lightbox
+const lb=document.getElementById('lb'),lbimg=document.getElementById('lbimg');
+let zoomList=[],zi=0;
+function refreshZoom(){zoomList=Array.from(document.querySelectorAll('[data-zoom]'))}
+function openLb(i){refreshZoom();zi=i;lbimg.src=zoomList[zi].src;lb.classList.add('open')}
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-zoom]');
+  if(t){refreshZoom();openLb(zoomList.indexOf(t))}
+});
+document.getElementById('lbx').onclick=()=>lb.classList.remove('open');
+lb.addEventListener('click',e=>{if(e.target===lb)lb.classList.remove('open')});
+function step(d){zi=(zi+d+zoomList.length)%zoomList.length;lbimg.src=zoomList[zi].src}
+document.getElementById('lbnext').onclick=()=>step(1);
+document.getElementById('lbprev').onclick=()=>step(-1);
+addEventListener('keydown',e=>{if(!lb.classList.contains('open'))return;
+  if(e.key==='Escape')lb.classList.remove('open');
+  if(e.key==='ArrowRight')step(1);if(e.key==='ArrowLeft')step(-1)});
+
+// hover-play en mediacards de video
+document.querySelectorAll('.mediacard video').forEach(v=>{
+  v.closest('.mediacard').addEventListener('mouseenter',()=>{v.play().catch(()=>{})});
+  v.closest('.mediacard').addEventListener('mouseleave',()=>{v.pause()});
+});
+
+/* ============ DINÁMICA CREATIVA ============ */
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// barra de progreso de lectura
+const bar=document.getElementById('progress');
+addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  const p=h.scrollTop/(h.scrollHeight-h.clientHeight||1);
+  bar.style.width=(p*100)+'%';
+},{passive:true});
+
+// parallax del hero
+const heroMedia=document.querySelector('.hero-media');
+if(heroMedia && !reduce){
+  addEventListener('scroll',()=>{
+    const y=Math.min(scrollY,900);
+    heroMedia.style.transform='translate3d(0,'+(y*0.28)+'px,0) scale('+(1+y*0.0004)+')';
+  },{passive:true});
+}
+
+// revelado del título hero por máscara
+(function(){
+  const h1=document.querySelector('.hero h1');
+  if(!h1) return;
+  const node=h1.firstChild; // texto "MAHOLY"
+  if(node && node.nodeType===3){
+    const txt=node.textContent.trim();
+    const w=document.createElement('span'); w.className='word';
+    const inner=document.createElement('span'); inner.textContent=txt;
+    w.appendChild(inner); h1.replaceChild(w,node);
+  }
+  requestAnimationFrame(()=>requestAnimationFrame(()=>h1.classList.add('go')));
+})();
+
+// cursor personalizado (solo punteros finos)
+if(matchMedia('(hover:hover) and (pointer:fine)').matches && !reduce){
+  document.body.classList.add('has-cursor');
+  const dot=document.getElementById('cursorDot'), ring=document.getElementById('cursorRing');
+  let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+  addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.transform='translate('+mx+'px,'+my+'px)';});
+  (function loop(){rx+=(mx-rx)*0.18;ry+=(my-ry)*0.18;ring.style.transform='translate('+rx+'px,'+ry+'px)';requestAnimationFrame(loop);})();
+  const zoomSel='[data-zoom],.shot';
+  document.addEventListener('mouseover',e=>{
+    if(e.target.closest(zoomSel)){ring.classList.add('hover','zoom');}
+    else if(e.target.closest('a,button,video,.workitem')){ring.classList.add('hover');ring.classList.remove('zoom');}
+  });
+  document.addEventListener('mouseout',e=>{
+    if(e.target.closest('a,button,video,.workitem,'+zoomSel)){ring.classList.remove('hover','zoom');}
+  });
+}
+
+// tilt 3D sutil en piezas
+if(!reduce){
+  document.querySelectorAll('.vframe,.mediacard').forEach(card=>{
+    card.style.transformStyle='preserve-3d';
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      const px=(e.clientX-r.left)/r.width-0.5, py=(e.clientY-r.top)/r.height-0.5;
+      card.style.transform='perspective(900px) rotateY('+(px*5)+'deg) rotateX('+(-py*5)+'deg)';
+    });
+    card.addEventListener('mouseleave',()=>{card.style.transform='';card.style.transition='transform .5s ease';setTimeout(()=>card.style.transition='',500);});
+  });
+}
+
+// ===== Portada-juego: acertijo + llave =====
+(function(){
+  const gate=document.getElementById('gate'), lock=document.getElementById('lock'),
+        keys=document.getElementById('keys'), hint=document.getElementById('riddleHint'),
+        flash=document.getElementById('golFlash'), skip=document.getElementById('gateSkip');
+  if(!gate) return;
+  const already=(()=>{try{return sessionStorage.getItem('maholy_in')==='1';}catch(_){return false;}})();
+  let done=false;
+  function unlock(){
+    if(done) return; done=true;
+    gate.classList.add('out');
+    document.documentElement.style.overflow=''; document.body.style.overflow='';
+    try{sessionStorage.setItem('maholy_in','1');}catch(_){}
+    setTimeout(()=>{gate.style.display='none';},1000);
+  }
+  if(reduce || already){ gate.style.display='none'; return; }
+  document.documentElement.style.overflow='hidden'; document.body.style.overflow='hidden';
+
+  // Preguntas reales del Mundial (verificadas). correct = índice de la opción correcta.
+  const QUESTIONS=[
+    {q:'El día de <em>“La Mano de Dios”</em> de Maradona…<br>¿en qué Mundial fue?', o:['España 1982','México 1986','Italia 1990'], correct:1},
+    {q:'¿En qué Mundial Argentina ganó su <em>tercera estrella</em> con Messi?', o:['Brasil 2014','Rusia 2018','Qatar 2022'], correct:2},
+    {q:'El histórico <em>“Maracanazo”</em> (Uruguay 2–1 Brasil)…<br>¿en qué Mundial ocurrió?', o:['Brasil 1950','Suiza 1954','Chile 1962'], correct:0},
+    {q:'¿En qué Mundial <em>debutó Ecuador</em> por primera vez?', o:['Francia 1998','Corea–Japón 2002','Alemania 2006'], correct:1},
+    {q:'¿En qué Mundial se usó por primera vez el <em>VAR</em>?', o:['Brasil 2014','Rusia 2018','Qatar 2022'], correct:1}
+  ];
+  const Q=QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)];
+  document.getElementById('riddleQ').innerHTML=Q.q;
+  Q.o.forEach((txt,i)=>{
+    const b=document.createElement('button'); b.className='key'; b.textContent=txt;
+    if(i===Q.correct) b.dataset.correct='1';
+    keys.appendChild(b);
+  });
+
+  const wrongMsgs=['Uff, esa no entró. Probá otra jugada.','Casi… pero el VAR dice que no. Intentá de nuevo.'];
+  let tries=0;
+  keys.querySelectorAll('.key').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      if(done) return;
+      if(btn.dataset.correct==='1'){
+        btn.classList.add('right'); lock.classList.add('open');
+        hint.style.color='var(--accent)'; hint.textContent='¡Golazo! Lo inolvidable se cuenta bien. Pasá.';
+        flash.classList.add('show'); setTimeout(unlock,1000);
+      }else{
+        btn.classList.add('wrong'); lock.classList.add('shake');
+        hint.textContent=wrongMsgs[tries%wrongMsgs.length]; tries++;
+        setTimeout(()=>{btn.classList.remove('wrong'); lock.classList.remove('shake');},500);
+      }
+    });
+  });
+  if(skip) skip.addEventListener('click',unlock);
+})();
+</script>
+</body>
+</html>
