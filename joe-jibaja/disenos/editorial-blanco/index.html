@@ -490,6 +490,98 @@ section{ position:relative; }
 .footer .credit{ font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--humo); }
 .footer .credit b{ color:var(--ambar); font-weight:600; }
 
+/* ============================== SHOWCASE FIJADO (pin + scrub) ============================== */
+.showcase{ background:var(--carbon); border-top:1px solid var(--linea); position:relative; }
+/* Cabecera del bloque (título grande Anton) */
+.showcase-head{
+  padding:clamp(4.5rem,11vh,8rem) clamp(1.4rem,5vw,4rem) clamp(2rem,5vh,3.4rem);
+}
+.showcase-head h2{
+  font-family:var(--display); font-weight:400; text-transform:uppercase;
+  font-size:clamp(2.4rem,7.6vw,6.6rem); line-height:.9; letter-spacing:.005em;
+  color:var(--blanco); text-shadow:0 0 50px rgba(61,240,122,.25);
+}
+.showcase-head h2 em{ color:var(--ambar); font-style:normal; text-shadow:0 0 60px var(--glow); }
+.showcase-head p{ margin-top:1.3rem; max-width:52ch; color:var(--humo); font-size:1.02rem; line-height:1.7; }
+
+/* Escenario fijado: ocupa el viewport mientras se recorre el scroll de scrub */
+.showcase-stage{
+  position:relative; width:100vw; height:100svh; min-height:600px; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+}
+/* Pila de vistas: cada estado es una capa apilada que se mezcla por opacidad+escala */
+.sc-views{ position:absolute; inset:0; z-index:1; }
+.sc-view{
+  position:absolute; inset:-6% 0; height:112%; width:100%;
+  opacity:0; will-change:transform,opacity,clip-path;
+  clip-path:inset(6% 6% 6% 6%);
+}
+.sc-view img{ filter:saturate(1.07) contrast(1.05); }
+.sc-view-shade{
+  position:absolute; inset:0;
+  background:
+    radial-gradient(120% 90% at 50% 40%, transparent 32%, rgba(7,11,8,.6) 100%),
+    linear-gradient(to top, rgba(7,11,8,.9) 0%, rgba(7,11,8,.15) 50%, rgba(7,11,8,.45) 100%);
+}
+/* Visor de cámara sobre el escenario, coherente con el resto */
+.showcase-stage .viewfinder{ inset:clamp(14px,2.2vw,28px); z-index:4; }
+
+/* Capa de datos sincronizados (specs) */
+.sc-data{
+  position:absolute; z-index:5; inset:0; pointer-events:none;
+  padding:clamp(2rem,6vw,4.5rem) clamp(1.4rem,5vw,4rem);
+  display:flex; flex-direction:column; justify-content:space-between;
+}
+.sc-data-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; }
+/* Contador de estado tipo visor: 01 / 04 */
+.sc-counter{
+  font-family:var(--display); font-size:clamp(1.4rem,3vw,2.2rem); line-height:1;
+  color:var(--blanco); letter-spacing:.04em;
+}
+.sc-counter em{ color:var(--ambar); font-style:normal; }
+.sc-counter .sep{ color:var(--humo); margin:0 .15em; }
+.sc-progress{ width:min(180px,32vw); height:1px; background:var(--linea); position:relative; margin-top:.9rem; overflow:hidden; }
+.sc-progress i{ position:absolute; left:0; top:0; height:100%; width:0%; background:var(--ambar); box-shadow:0 0 14px var(--glow); }
+.sc-title-now{
+  text-align:right;
+  font-family:var(--display); text-transform:uppercase; font-weight:400;
+  font-size:clamp(1.6rem,4.4vw,3.4rem); line-height:.95; color:var(--blanco);
+  text-shadow:0 0 40px rgba(0,0,0,.6); max-width:60vw;
+}
+.sc-title-now .line{ display:block; }
+.sc-title-now .ambar{ color:var(--ambar); text-shadow:0 0 50px var(--glow); }
+
+/* Specs: bloque inferior con cada dato apareciendo por estado */
+.sc-specs{ display:flex; flex-wrap:wrap; gap:1rem 2.6rem; align-items:flex-end; }
+.sc-spec{
+  display:flex; flex-direction:column; gap:.45rem;
+  opacity:0; transform:translateY(18px);
+  border-left:1px solid var(--linea); padding-left:1rem;
+}
+.sc-spec .k{ font-size:.66rem; letter-spacing:.28em; text-transform:uppercase; color:var(--ambar); font-weight:700; }
+.sc-spec .v{ font-family:var(--display); font-weight:400; text-transform:uppercase; font-size:clamp(1.3rem,2.6vw,2rem); line-height:1; color:var(--blanco); }
+.sc-editable-note{
+  position:absolute; bottom:clamp(.9rem,2.4vh,1.6rem); left:50%; transform:translateX(-50%);
+  z-index:6; font-size:.58rem; letter-spacing:.3em; text-transform:uppercase; color:var(--humo);
+  opacity:.7; text-align:center; pointer-events:none;
+}
+
+/* Fallback / reduced-motion / móvil sin pin: vistas apiladas en secuencia vertical */
+.showcase.no-pin .showcase-stage{ height:auto; min-height:0; display:block; }
+.showcase.no-pin .sc-views{ position:relative; inset:auto; }
+.showcase.no-pin .sc-view{
+  position:relative; inset:auto; height:auto; opacity:1; clip-path:none;
+  aspect-ratio:16/10; margin-bottom:1px;
+}
+.showcase.no-pin .sc-data{
+  position:relative; inset:auto; padding:1.8rem clamp(1.4rem,5vw,4rem) 3rem;
+}
+.showcase.no-pin .sc-data-top{ flex-direction:column; align-items:flex-start; gap:1.4rem; }
+.showcase.no-pin .sc-title-now{ text-align:left; max-width:none; }
+.showcase.no-pin .sc-spec{ opacity:1; transform:none; }
+.showcase.no-pin .sc-editable-note{ position:relative; transform:none; left:auto; margin-top:1.4rem; text-align:left; }
+.showcase.no-pin .showcase-stage .viewfinder{ display:none; }
+
 /* ============================== REVEAL HELPERS ============================== */
 .reveal{ will-change:transform,opacity; }
 
@@ -523,6 +615,9 @@ section{ position:relative; }
   .stat{ flex:1 1 30%; }
   .service-row .num{ width:2.2rem; }
   .renders-grid{ grid-template-columns:1fr 1fr; }
+  /* Showcase: en pantallas medianas/móviles cae a secuencia vertical (sin pin) */
+  .sc-data-top{ flex-direction:column; align-items:flex-start; gap:1.2rem; }
+  .sc-title-now{ text-align:left; max-width:none; }
 }
 @media (max-width:560px){
   .hero-title .line{ font-size:clamp(3rem,15vw,5rem); }
@@ -631,6 +726,56 @@ section{ position:relative; }
   <div class="eyebrow reveal">Selección de obra</div>
   <h2 class="reveal">Proyectos<br>monumentales</h2>
   <p class="reveal">Una secuencia de obras donde la escala se vuelve experiencia. Cada render es una promesa construible: estructura, luz y materia llevadas al límite.</p>
+</section>
+
+<!-- ============================== SHOWCASE FIJADO — PROYECTO DESTACADO ============================== -->
+<!-- Visual central fijada (pin + scrub): el proyecto se "recorre" cambiando de
+     vista (exterior → interior → detalle de fachada → vista aérea) mientras los
+     datos aparecen sincronizados. Datos de muestra: EDITABLES. -->
+<section class="showcase" id="destacado">
+  <div class="showcase-head">
+    <div class="eyebrow reveal">Proyecto destacado</div>
+    <h2 class="reveal">Coliseo<br><em>Metropolitano</em></h2>
+    <p class="reveal">Recorre la obra como si la habitaras: desplázate para atravesar el exterior, el interior, el detalle de fachada y la vista aérea. Cada dato aparece sincronizado con la vista.</p>
+  </div>
+
+  <div class="showcase-stage">
+    <!-- Pila de vistas/estados (cross-fade + zoom + parallax con scrub) -->
+    <div class="sc-views">
+      <div class="sc-view" data-view="0"><img src="../../assets/fotos/verde-4.jpg" alt="Vista exterior: fachada ondulante paramétrica con vegetación" /><div class="sc-view-shade"></div></div>
+      <div class="sc-view" data-view="1"><img src="../../assets/img/arena-interior.jpg" alt="Vista interior: coliseo multiuso con graderío y pantalla central" /><div class="sc-view-shade"></div></div>
+      <div class="sc-view" data-view="2"><img src="../../assets/fotos/verde-1.jpg" alt="Detalle de fachada: envolvente vegetal y estructura vertical" /><div class="sc-view-shade"></div></div>
+      <div class="sc-view" data-view="3"><img src="../../assets/fotos/verde-2.jpg" alt="Vista aérea: terrazas y jardines escalonados del conjunto" /><div class="sc-view-shade"></div></div>
+    </div>
+
+    <!-- Visor de cámara coherente con el resto del sitio -->
+    <div class="viewfinder"><span class="vf-corner tr"></span><span class="vf-corner bl"></span></div>
+
+    <!-- Datos sincronizados por estado -->
+    <div class="sc-data">
+      <div class="sc-data-top">
+        <div>
+          <div class="sc-counter"><em class="sc-cur">01</em><span class="sep">/</span>04</div>
+          <div class="sc-progress"><i class="sc-progress-bar"></i></div>
+        </div>
+        <div class="sc-title-now">
+          <span class="line sc-vista" data-vistas='["Vista exterior","Vista interior","Detalle de fachada","Vista aérea"]'>Vista exterior</span>
+          <span class="line ambar">Coliseo Metropolitano</span>
+        </div>
+      </div>
+
+      <!-- Specs del proyecto (datos de muestra, EDITABLES). Aparecen progresivamente. -->
+      <div class="sc-specs">
+        <div class="sc-spec" data-spec="0"><span class="k">Tipología</span><span class="v">Coliseo multiuso</span></div>
+        <div class="sc-spec" data-spec="1"><span class="k">Área construida</span><span class="v">18.500 m²</span></div>
+        <div class="sc-spec" data-spec="2"><span class="k">Aforo</span><span class="v">8.000 espectadores</span></div>
+        <div class="sc-spec" data-spec="3"><span class="k">Sistema</span><span class="v">Estructura paramétrica</span></div>
+        <div class="sc-spec" data-spec="3"><span class="k">Año</span><span class="v">2025</span></div>
+      </div>
+    </div>
+
+    <div class="sc-editable-note">Datos de muestra · editables</div>
+  </div>
 </section>
 
 <!-- ===== PROYECTO 01 — foto verde a sangre ===== -->
@@ -916,7 +1061,9 @@ if (reduce || skipLoader) {
 }
 
 if (reduce) {
-  /* nada más: estado estático ya aplicado arriba */
+  /* Showcase sin movimiento: vistas apiladas en secuencia vertical, todo visible */
+  const sc = document.getElementById('destacado');
+  if (sc) sc.classList.add('no-pin');
 } else {
   /* Preparar split del hero antes de la intro */
   document.querySelectorAll('.hero-title .line').forEach(line => {
@@ -1121,8 +1268,92 @@ if (reduce) {
     el.addEventListener('mouseleave', () => cursor.classList.remove('is-grow'));
   });
 
+  /* ====================================================================
+     SHOWCASE FIJADO — pin + scrub (recorrido del proyecto destacado)
+     La visual central se queda fija y, al hacer scroll, transiciona entre
+     4 estados (exterior → interior → detalle → aérea) con cross-fade +
+     zoom/scale + leve parallax. Los datos aparecen sincronizados.
+     En móvil/táctil: se desactiva el pin y las vistas quedan en secuencia.
+     ==================================================================== */
+  (function initShowcase(){
+    const showcase = document.getElementById('destacado');
+    if (!showcase) return;
+    const stage   = showcase.querySelector('.showcase-stage');
+    const views   = gsap.utils.toArray('.sc-view', showcase);
+    const specs   = gsap.utils.toArray('.sc-spec', showcase);
+    const curEl   = showcase.querySelector('.sc-cur');
+    const barEl   = showcase.querySelector('.sc-progress-bar');
+    const vistaEl = showcase.querySelector('.sc-vista');
+    const vistas  = JSON.parse(vistaEl.dataset.vistas || '[]');
+    const N = views.length;
+
+    // ¿Pin disponible? Solo en escritorio con puntero fino y sin reduce-motion.
+    const canPin = !reduce && window.matchMedia('(min-width:901px) and (pointer:fine)').matches;
+
+    if (!canPin) {
+      // Secuencia vertical apilada: todo visible, sin animación de scrub.
+      showcase.classList.add('no-pin');
+      views.forEach(v => gsap.set(v, { clearProps: 'all', autoAlpha: 1 }));
+      specs.forEach(s => gsap.set(s, { clearProps: 'all', opacity: 1, y: 0 }));
+      return;
+    }
+
+    // Estado inicial: solo la primera vista visible y a escala viva.
+    gsap.set(views, { autoAlpha: 0, scale: 1.18, yPercent: 0 });
+    gsap.set(views[0], { autoAlpha: 1, scale: 1.04 });
+
+    // Timeline maestra ligada al scrub. Distancia: N pantallas de recorrido.
+    const tl = gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: {
+        trigger: stage,
+        start: 'top top',
+        end: () => '+=' + (window.innerHeight * (N + 0.4)),
+        pin: true,
+        scrub: 0.6,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        onUpdate: self => {
+          // Estado activo según el progreso (0..N-1).
+          const idx = Math.min(N - 1, Math.floor(self.progress * N));
+          curEl.textContent = String(idx + 1).padStart(2, '0');
+          if (vistas[idx]) vistaEl.textContent = vistas[idx];
+          barEl.style.width = (self.progress * 100).toFixed(1) + '%';
+        }
+      }
+    });
+
+    // Transiciones entre vistas: cross-fade + zoom + leve deriva (parallax).
+    for (let i = 0; i < N; i++) {
+      // Cada vista "respira" mientras está activa (zoom continuo sutil).
+      tl.to(views[i], { scale: 1.12, yPercent: -3, duration: 1 }, i);
+      // Cross-fade hacia la siguiente vista (clip-path + opacidad + escala).
+      if (i < N - 1) {
+        tl.to(views[i],   { autoAlpha: 0, scale: 1.22, clipPath: 'inset(14% 14% 14% 14%)', duration: 0.55 }, i + 0.55);
+        tl.fromTo(views[i+1],
+          { autoAlpha: 0, scale: 1.18, yPercent: 4, clipPath: 'inset(12% 12% 12% 12%)' },
+          { autoAlpha: 1, scale: 1.04, yPercent: 0, clipPath: 'inset(6% 6% 6% 6%)', duration: 0.55 },
+          i + 0.55);
+      }
+    }
+
+    // Specs sincronizados: cada uno entra cuando su estado se vuelve activo.
+    specs.forEach(spec => {
+      const at = +spec.dataset.spec; // estado al que pertenece
+      tl.fromTo(spec,
+        { opacity: 0, y: 18 },
+        { opacity: 1, y: 0, duration: 0.4 },
+        Math.max(0, at + 0.15));
+      // Se atenúa ligeramente al cambiar de estado (pero permanece legible).
+      if (at < N - 1) tl.to(spec, { opacity: .35, duration: 0.4 }, at + 0.85);
+    });
+  })();
+
   /* ---------- Refrescar ScrollTrigger tras cargar imágenes (evita saltos) ---------- */
   window.addEventListener('load', () => ScrollTrigger.refresh());
+  // Refresco extra: tras crear el pin del showcase, recalcular medidas para
+  // que Lenis y ScrollTrigger queden sincronizados sin saltos.
+  ScrollTrigger.refresh();
 }
 
 syncNav();
