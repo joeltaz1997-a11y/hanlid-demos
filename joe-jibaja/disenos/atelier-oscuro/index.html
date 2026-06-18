@@ -6,12 +6,50 @@
 <title>Joe Jibaja Vega — Arquitectura monumental</title>
 <meta name="description" content="Estudio de arquitectura monumental de gran escala. Coliseos, arenas deportivas, complejos paramétricos y pabellones gastronómicos con visualización 3D fotorrealista. Tumbaco, Quito — Ecuador." />
 
-<!-- Tipografías: serif display de alto contraste + sans para UI -->
+<!-- Tipografías: serif display de alto contraste (Zodiak, self-hosted) + sans para cuerpo/UI -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
 <style>
+/* ============================================================
+   FUENTES SELF-HOSTED
+   Zodiak  → serif display de alto contraste (titulares de lujo)
+   Switzer → grotesca con carácter (kickers / etiquetas / UI fina)
+   ============================================================ */
+@font-face{
+  font-family:'Zodiak';font-style:normal;font-weight:300;font-display:swap;
+  src:url('../../assets/fonts/zodiak-300.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Zodiak';font-style:normal;font-weight:400;font-display:swap;
+  src:url('../../assets/fonts/zodiak-400.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Zodiak';font-style:normal;font-weight:700;font-display:swap;
+  src:url('../../assets/fonts/zodiak-700.woff2') format('woff2');
+}
+/* Cursiva real de Zodiak (variable 100–900): evita la cursiva sintética en el acento dorado */
+@font-face{
+  font-family:'Zodiak';font-style:italic;font-weight:100 900;font-display:swap;
+  src:url('../../assets/fonts/zodiak-italic-var.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Switzer';font-style:normal;font-weight:400;font-display:swap;
+  src:url('../../assets/fonts/switzer-400.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Switzer';font-style:normal;font-weight:500;font-display:swap;
+  src:url('../../assets/fonts/switzer-500.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Switzer';font-style:normal;font-weight:600;font-display:swap;
+  src:url('../../assets/fonts/switzer-600.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Switzer';font-style:normal;font-weight:700;font-display:swap;
+  src:url('../../assets/fonts/switzer-700.woff2') format('woff2');
+}
 /* ============================================================
    ATELIER OSCURO — Joe Jibaja Vega
    Paleta: negro carbón, hueso, acento dorado/cobre
@@ -24,8 +62,9 @@
   --oro:#C0905A;             /* acento dorado/cobre */
   --oro-soft:#cda878;
   --linea:rgba(236,232,225,0.14);
-  --serif:'Cormorant Garamond', Georgia, serif;
+  --serif:'Zodiak', 'Cormorant Garamond', Georgia, serif;
   --sans:'Manrope', system-ui, sans-serif;
+  --sans-ui:'Switzer', 'Manrope', system-ui, sans-serif;
 }
 
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -46,10 +85,10 @@ a{color:inherit;text-decoration:none;}
 
 /* Tipografía utilitaria */
 .kicker{
-  font-family:var(--sans);
-  font-size:.72rem;
+  font-family:var(--sans-ui);
+  font-size:.7rem;
   font-weight:500;
-  letter-spacing:.32em;
+  letter-spacing:.3em;
   text-transform:uppercase;
   color:var(--oro);
 }
@@ -97,7 +136,8 @@ a{color:inherit;text-decoration:none;}
 .nav-brand b{font-weight:600;}
 .nav-links{display:flex;gap:2.4rem;align-items:center;}
 .nav-links a{
-  font-size:.78rem;font-weight:500;letter-spacing:.18em;
+  font-family:var(--sans-ui);
+  font-size:.76rem;font-weight:500;letter-spacing:.18em;
   text-transform:uppercase;color:var(--hueso-soft);
   transition:color .4s ease;
 }
@@ -166,13 +206,13 @@ a{color:inherit;text-decoration:none;}
   font-family:var(--serif);
   font-weight:400;
   font-size:clamp(3.4rem,12.5vw,13vw);
-  line-height:.92;
-  letter-spacing:-.01em;
+  line-height:.9;
+  letter-spacing:-.028em;
   margin-bottom:1.6rem;
 }
 .line-mask{display:block;overflow:hidden;}
 .line{display:block;}
-.hero-title .accent{font-style:italic;color:var(--oro-soft);}
+.hero-title .accent{font-style:italic;font-weight:400;letter-spacing:-.018em;color:var(--oro-soft);}
 .hero-meta{
   display:flex;justify-content:space-between;align-items:flex-end;
   flex-wrap:wrap;gap:1.4rem;
@@ -215,7 +255,7 @@ a{color:inherit;text-decoration:none;}
 .section{padding:clamp(5rem,11vw,11rem) clamp(1.2rem,4vw,3.5rem);}
 .section-head{margin-bottom:clamp(3rem,6vw,5rem);}
 .section-num{
-  font-family:var(--sans);font-size:.72rem;letter-spacing:.32em;
+  font-family:var(--sans-ui);font-size:.7rem;font-weight:500;letter-spacing:.3em;
   text-transform:uppercase;color:var(--oro);margin-bottom:1rem;
 }
 
@@ -223,8 +263,8 @@ a{color:inherit;text-decoration:none;}
 .manifesto{max-width:1300px;margin:0 auto;}
 .manifesto-quote{
   font-family:var(--serif);font-weight:300;
-  font-size:clamp(1.8rem,5vw,4rem);line-height:1.12;
-  letter-spacing:-.01em;max-width:20ch;margin-bottom:clamp(3rem,7vw,6rem);
+  font-size:clamp(1.8rem,5vw,4rem);line-height:1.08;
+  letter-spacing:-.02em;max-width:20ch;margin-bottom:clamp(3rem,7vw,6rem);
 }
 .manifesto-quote em{font-style:italic;color:var(--oro-soft);}
 .manifesto-grid{
@@ -246,7 +286,7 @@ a{color:inherit;text-decoration:none;}
 .stat-num{
   font-family:var(--serif);font-weight:400;
   font-size:clamp(2.6rem,6vw,4.4rem);line-height:1;
-  color:var(--hueso);min-width:4ch;
+  letter-spacing:-.02em;color:var(--hueso);min-width:4ch;
 }
 .stat-num .pre{color:var(--oro);}
 .stat-label{
@@ -273,15 +313,16 @@ a{color:inherit;text-decoration:none;}
   padding:0 clamp(1.2rem,4vw,3.5rem) clamp(2.5rem,5vw,4rem);
 }
 .project-index{
-  font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;
+  font-family:var(--sans-ui);font-weight:500;
+  font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;
   color:var(--oro);margin-bottom:1rem;
 }
 .project-name{
   font-family:var(--serif);font-weight:400;
-  font-size:clamp(2.8rem,9vw,9.5rem);line-height:.95;
-  letter-spacing:-.01em;margin-bottom:1.4rem;
+  font-size:clamp(2.8rem,9vw,9.5rem);line-height:.94;
+  letter-spacing:-.03em;margin-bottom:1.4rem;
 }
-.project-name em{font-style:italic;color:var(--oro-soft);}
+.project-name em{font-style:italic;letter-spacing:-.02em;color:var(--oro-soft);}
 .project-meta{
   display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;
   gap:1rem;border-top:1px solid var(--linea);padding-top:1.3rem;
@@ -308,7 +349,8 @@ a{color:inherit;text-decoration:none;}
 .service:hover{padding-left:1.4rem;}
 .service-name{
   font-family:var(--serif);font-weight:400;
-  font-size:clamp(1.8rem,4.5vw,3.4rem);line-height:1.05;
+  font-size:clamp(1.8rem,4.5vw,3.4rem);line-height:1.04;
+  letter-spacing:-.02em;
   position:relative;z-index:1;transition:color .4s ease;
 }
 .service:hover .service-name{color:var(--oro-soft);}
@@ -338,10 +380,10 @@ a{color:inherit;text-decoration:none;}
 }
 .contact-title{
   font-family:var(--serif);font-weight:400;
-  font-size:clamp(3rem,9vw,8.5rem);line-height:.95;
-  letter-spacing:-.01em;margin:1.5rem 0 2.5rem;
+  font-size:clamp(3rem,9vw,8.5rem);line-height:.94;
+  letter-spacing:-.03em;margin:1.5rem 0 2.5rem;
 }
-.contact-title em{font-style:italic;color:var(--oro-soft);}
+.contact-title em{font-style:italic;letter-spacing:-.02em;color:var(--oro-soft);}
 .contact-grid{
   display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(2rem,5vw,5rem);
   align-items:end;border-top:1px solid var(--linea);padding-top:2.4rem;
