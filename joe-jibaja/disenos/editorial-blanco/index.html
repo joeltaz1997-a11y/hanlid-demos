@@ -170,6 +170,49 @@ body::after{
   will-change:transform;
 }
 .hero-bg img{ filter:saturate(1.08) contrast(1.05); object-position:center 38%; }
+
+/* ----- HERO como image-sequence scrub (canvas full-screen) ----- */
+.hero-canvas{
+  position:absolute; inset:0; z-index:0; width:100%; height:100%; display:block;
+}
+/* Tinte verde sutil + gradientes para legibilidad del texto, sin tapar el edificio */
+.hero-tint{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:
+    radial-gradient(120% 95% at 50% 40%, transparent 34%, rgba(7,11,8,.6) 100%),
+    linear-gradient(to top, rgba(7,11,8,.92) 0%, rgba(7,11,8,.12) 46%, rgba(7,11,8,.5) 100%),
+    linear-gradient(rgba(61,240,122,.10), rgba(61,240,122,.04));
+}
+/* Barra de progreso fina arriba (recorre el ancho según el scroll) */
+.seq-progress{
+  position:absolute; top:0; left:0; width:100%; height:3px; z-index:8;
+  background:rgba(61,240,122,.14);
+}
+.seq-progress-bar{
+  display:block; height:100%; width:0%;
+  background:var(--ambar); box-shadow:0 0 16px var(--glow);
+}
+.seq-pct{
+  position:absolute; top:1.4rem; right:clamp(1.2rem,4vw,3.5rem); z-index:8;
+  font-family:var(--display); font-size:1.1rem; letter-spacing:.06em;
+  color:var(--ambar); text-shadow:0 0 18px var(--glow);
+}
+/* Palabra central que cambia con el progreso (semitransparente, sobre el edificio) */
+.seq-word-wrap{
+  position:absolute; inset:0; z-index:6; pointer-events:none;
+  display:flex; align-items:center; justify-content:center;
+}
+.seq-word{
+  font-family:var(--display); font-weight:400; text-transform:uppercase;
+  font-size:clamp(3rem,15vw,15rem); line-height:.9; letter-spacing:.02em;
+  color:rgba(241,247,242,.16);
+  text-shadow:0 0 60px rgba(61,240,122,.18);
+  -webkit-text-stroke:1px rgba(61,240,122,.22);
+  text-align:center; user-select:none; white-space:nowrap;
+  will-change:opacity,transform;
+}
+.hero-seq .hero-content{ z-index:7; }
+.hero-seq .viewfinder{ z-index:5; }
 /* Overlay + viñeta */
 .hero-overlay{
   position:absolute; inset:0;
@@ -490,93 +533,6 @@ section{ position:relative; }
 .footer .credit{ font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--humo); }
 .footer .credit b{ color:var(--ambar); font-weight:600; }
 
-/* ============================== SHOWCASE FIJADO (pin + scrub) ============================== */
-.showcase{ background:var(--carbon); border-top:1px solid var(--linea); position:relative; }
-/* Cabecera del bloque (título grande Anton) */
-.showcase-head{
-  padding:clamp(4.5rem,11vh,8rem) clamp(1.4rem,5vw,4rem) clamp(2rem,5vh,3.4rem);
-}
-.showcase-head h2{
-  font-family:var(--display); font-weight:400; text-transform:uppercase;
-  font-size:clamp(2.4rem,7.6vw,6.6rem); line-height:.9; letter-spacing:.005em;
-  color:var(--blanco); text-shadow:0 0 50px rgba(61,240,122,.25);
-}
-.showcase-head h2 em{ color:var(--ambar); font-style:normal; text-shadow:0 0 60px var(--glow); }
-.showcase-head p{ margin-top:1.3rem; max-width:52ch; color:var(--humo); font-size:1.02rem; line-height:1.7; }
-
-/* Escenario fijado: ocupa el viewport mientras se recorre el scroll de scrub */
-.showcase-stage{
-  position:relative; width:100vw; height:100svh; min-height:600px; overflow:hidden;
-  display:flex; align-items:center; justify-content:center;
-}
-/* Lienzo de la secuencia orbital (el edificio se "recorre" frame a frame) */
-.sc-canvas{
-  position:absolute; inset:0; z-index:1; width:100%; height:100%; display:block;
-}
-/* Tinte verde sutil + viñeta para integrar la secuencia a la paleta sin tapar el edificio */
-.sc-tint{
-  position:absolute; inset:0; z-index:2; pointer-events:none;
-  background:
-    radial-gradient(120% 90% at 50% 42%, transparent 36%, rgba(7,11,8,.62) 100%),
-    linear-gradient(to top, rgba(7,11,8,.78) 0%, rgba(7,11,8,.08) 48%, rgba(7,11,8,.42) 100%),
-    linear-gradient(rgba(61,240,122,.10), rgba(61,240,122,.04));
-  mix-blend-mode:normal;
-}
-/* Visor de cámara sobre el escenario, coherente con el resto */
-.showcase-stage .viewfinder{ inset:clamp(14px,2.2vw,28px); z-index:4; }
-
-/* Capa de datos sincronizados (specs) */
-.sc-data{
-  position:absolute; z-index:5; inset:0; pointer-events:none;
-  padding:clamp(2rem,6vw,4.5rem) clamp(1.4rem,5vw,4rem);
-  display:flex; flex-direction:column; justify-content:space-between;
-}
-.sc-data-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; }
-/* Contador de estado tipo visor: 01 / 04 */
-.sc-counter{
-  font-family:var(--display); font-size:clamp(1.4rem,3vw,2.2rem); line-height:1;
-  color:var(--blanco); letter-spacing:.04em;
-}
-.sc-counter em{ color:var(--ambar); font-style:normal; }
-.sc-counter .sep{ color:var(--humo); margin:0 .15em; }
-.sc-progress{ width:min(180px,32vw); height:1px; background:var(--linea); position:relative; margin-top:.9rem; overflow:hidden; }
-.sc-progress i{ position:absolute; left:0; top:0; height:100%; width:0%; background:var(--ambar); box-shadow:0 0 14px var(--glow); }
-.sc-title-now{
-  text-align:right;
-  font-family:var(--display); text-transform:uppercase; font-weight:400;
-  font-size:clamp(1.6rem,4.4vw,3.4rem); line-height:.95; color:var(--blanco);
-  text-shadow:0 0 40px rgba(0,0,0,.6); max-width:60vw;
-}
-.sc-title-now .line{ display:block; }
-.sc-title-now .ambar{ color:var(--ambar); text-shadow:0 0 50px var(--glow); }
-
-/* Specs: bloque inferior con cada dato apareciendo por estado */
-.sc-specs{ display:flex; flex-wrap:wrap; gap:1rem 2.6rem; align-items:flex-end; }
-.sc-spec{
-  display:flex; flex-direction:column; gap:.45rem;
-  opacity:0; transform:translateY(18px);
-  border-left:1px solid var(--linea); padding-left:1rem;
-}
-.sc-spec .k{ font-size:.66rem; letter-spacing:.28em; text-transform:uppercase; color:var(--ambar); font-weight:700; }
-.sc-spec .v{ font-family:var(--display); font-weight:400; text-transform:uppercase; font-size:clamp(1.3rem,2.6vw,2rem); line-height:1; color:var(--blanco); }
-.sc-editable-note{
-  position:absolute; bottom:clamp(.9rem,2.4vh,1.6rem); left:50%; transform:translateX(-50%);
-  z-index:6; font-size:.58rem; letter-spacing:.3em; text-transform:uppercase; color:var(--humo);
-  opacity:.7; text-align:center; pointer-events:none;
-}
-
-/* Fallback / reduced-motion / móvil sin pin: canvas estático + datos en columna */
-.showcase.no-pin .showcase-stage{ height:auto; min-height:0; display:block; }
-.showcase.no-pin .sc-canvas{ position:relative; inset:auto; aspect-ratio:16/10; height:auto; }
-.showcase.no-pin .sc-data{
-  position:relative; inset:auto; padding:1.8rem clamp(1.4rem,5vw,4rem) 3rem;
-}
-.showcase.no-pin .sc-data-top{ flex-direction:column; align-items:flex-start; gap:1.4rem; }
-.showcase.no-pin .sc-title-now{ text-align:left; max-width:none; }
-.showcase.no-pin .sc-spec{ opacity:1; transform:none; }
-.showcase.no-pin .sc-editable-note{ position:relative; transform:none; left:auto; margin-top:1.4rem; text-align:left; }
-.showcase.no-pin .showcase-stage .viewfinder{ display:none; }
-
 /* ============================== REVEAL HELPERS ============================== */
 .reveal{ will-change:transform,opacity; }
 
@@ -610,9 +566,9 @@ section{ position:relative; }
   .stat{ flex:1 1 30%; }
   .service-row .num{ width:2.2rem; }
   .renders-grid{ grid-template-columns:1fr 1fr; }
-  /* Showcase: en pantallas medianas/móviles cae a secuencia vertical (sin pin) */
-  .sc-data-top{ flex-direction:column; align-items:flex-start; gap:1.2rem; }
-  .sc-title-now{ text-align:left; max-width:none; }
+  /* Hero-seq: la palabra central se reduce en móvil */
+  .seq-word{ font-size:clamp(2.6rem,17vw,6rem); }
+  .seq-pct{ font-size:.95rem; }
 }
 @media (max-width:560px){
   .hero-title .line{ font-size:clamp(3rem,15vw,5rem); }
@@ -659,11 +615,22 @@ section{ position:relative; }
   <a href="#contacto">Contacto</a>
 </div>
 
-<!-- ============================== HERO ============================== -->
-<header class="hero" id="hero">
-  <div class="hero-bg"><img src="../../assets/fotos/verde-6.jpg" alt="Fachada curva de vidrio verde paramétrica en contrapicado" /></div>
-  <div class="hero-overlay"></div>
+<!-- ============================== HERO — IMAGE-SEQUENCE SCRUB (pantalla completa) ============================== -->
+<!-- El hero ES la secuencia: un <canvas> full-screen que dibuja los 73 frames
+     de la toma orbital del edificio. Fijado con ScrollTrigger (pin + scrub):
+     al hacer scroll la cámara gira y, al 100%, continúa el resto de la página.
+     Sobre el canvas: barra de progreso (arriba), palabra central que cambia,
+     título identitario abajo e indicador de scroll. -->
+<header class="hero hero-seq" id="hero">
+  <!-- Lienzo de la secuencia orbital (cubre todo el viewport) -->
+  <canvas class="hero-canvas" id="heroCanvas" aria-label="Recorrido orbital del Coliseo Metropolitano"></canvas>
+  <!-- Tinte verde + viñeta para integrar la secuencia a la paleta sin tapar el edificio -->
+  <div class="hero-tint"></div>
   <div class="hero-vignette"></div>
+
+  <!-- Barra de progreso fina arriba + porcentaje en verde -->
+  <div class="seq-progress"><i class="seq-progress-bar"></i></div>
+  <div class="seq-pct"><span class="seq-pct-num">0</span>%</div>
 
   <!-- Visor de cámara -->
   <div class="viewfinder">
@@ -672,6 +639,12 @@ section{ position:relative; }
   </div>
   <div class="vf-rec"><span class="dot"></span> REC · 4K · ARQUITECTURA MONUMENTAL</div>
 
+  <!-- Palabra/frase central grande que cambia según el progreso -->
+  <div class="seq-word-wrap">
+    <h2 class="seq-word" id="seqWord">CONCIBE</h2>
+  </div>
+
+  <!-- Título identitario fijo abajo -->
   <div class="hero-content">
     <div class="hero-kicker">Arquitecto · Tumbaco, Quito — Ecuador</div>
     <h1 class="hero-title">
@@ -690,55 +663,6 @@ section{ position:relative; }
     <div class="bar"><i></i></div>
   </div>
 </header>
-
-<!-- ============================== SHOWCASE FIJADO — IMAGE-SEQUENCE SCRUB ============================== -->
-<!-- Técnica tipo Apple: UNA sola escena (toma orbital real, 73 frames) que se
-     transforma de forma continua con el scroll sobre un <canvas> fijado.
-     El edificio gira/se recorre frame a frame mientras los datos aparecen por
-     rangos de progreso. Datos de muestra: EDITABLES.
-     Va inmediatamente después del hero, como primera sección de contenido. -->
-<section class="showcase" id="destacado">
-  <div class="showcase-head">
-    <div class="eyebrow reveal">Proyecto destacado</div>
-    <h2 class="reveal">Coliseo<br><em>Metropolitano</em></h2>
-    <p class="reveal">Una sola toma orbital que recorre el edificio al atardecer: desplázate y la cámara gira alrededor de la fachada mientras cada dato aparece sincronizado.</p>
-  </div>
-
-  <div class="showcase-stage">
-    <!-- Lienzo de la secuencia (cámara orbital controlada por scroll) -->
-    <canvas class="sc-canvas" id="scCanvas" aria-label="Recorrido orbital del Coliseo Metropolitano"></canvas>
-    <!-- Tinte verde sutil para integrar la secuencia a la paleta sin tapar el edificio -->
-    <div class="sc-tint"></div>
-
-    <!-- Visor de cámara coherente con el resto del sitio -->
-    <div class="viewfinder"><span class="vf-corner tr"></span><span class="vf-corner bl"></span></div>
-
-    <!-- Datos sincronizados por rango de progreso -->
-    <div class="sc-data">
-      <div class="sc-data-top">
-        <div>
-          <div class="sc-counter"><em class="sc-cur">01</em><span class="sep">/</span>05</div>
-          <div class="sc-progress"><i class="sc-progress-bar"></i></div>
-        </div>
-        <div class="sc-title-now">
-          <span class="line ambar">Coliseo Metropolitano</span>
-          <span class="line sc-vista">Recorrido orbital · atardecer</span>
-        </div>
-      </div>
-
-      <!-- Specs del proyecto (datos de muestra, EDITABLES). Aparecen por rango: ~0 / .25 / .5 / .75 / .95 -->
-      <div class="sc-specs">
-        <div class="sc-spec" data-at="0.00"><span class="k">Tipología</span><span class="v">Coliseo multiuso</span></div>
-        <div class="sc-spec" data-at="0.25"><span class="k">Área construida</span><span class="v">18.500 m²</span></div>
-        <div class="sc-spec" data-at="0.50"><span class="k">Aforo</span><span class="v">8.000 espectadores</span></div>
-        <div class="sc-spec" data-at="0.75"><span class="k">Sistema</span><span class="v">Estructura paramétrica</span></div>
-        <div class="sc-spec" data-at="0.95"><span class="k">Año</span><span class="v">2025</span></div>
-      </div>
-    </div>
-
-    <div class="sc-editable-note">Datos de muestra · editables</div>
-  </div>
-</section>
 
 <!-- ============================== MANIFIESTO / ESTUDIO ============================== -->
 <section class="manifesto wrap" id="estudio">
@@ -1055,31 +979,24 @@ if (reduce || skipLoader) {
 }
 
 if (reduce) {
-  /* Showcase sin movimiento: un frame estático de la secuencia + datos visibles */
-  const sc = document.getElementById('destacado');
-  if (sc) {
-    sc.classList.add('no-pin');
-    const cv = sc.querySelector('#scCanvas');
-    if (cv) {
-      const cx = cv.getContext('2d');
-      const img = new Image();
-      img.onload = () => {
-        const r = cv.getBoundingClientRect();
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        const cw = Math.round(r.width), ch = Math.round(r.height);
-        cv.width = Math.max(1, Math.round(cw * dpr)); cv.height = Math.max(1, Math.round(ch * dpr));
-        cx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        const ir = img.naturalWidth / img.naturalHeight, cr = cw / ch;
-        let dw, dh, dx, dy;
-        if (ir > cr){ dh = ch; dw = ch * ir; dx = (cw - dw) / 2; dy = 0; }
-        else        { dw = cw; dh = cw / ir; dx = 0; dy = (ch - dh) / 2; }
-        cx.drawImage(img, dx, dy, dw, dh);
-      };
-      img.src = '../../assets/seq/seq-001.jpg';
-    }
-    sc.querySelectorAll('.sc-spec').forEach(s => { s.style.opacity = '1'; s.style.transform = 'none'; });
-    const cur = sc.querySelector('.sc-cur'); if (cur) cur.textContent = '05';
-    const bar = sc.querySelector('.sc-progress-bar'); if (bar) bar.style.width = '100%';
+  /* Hero sin movimiento: un frame estático de la secuencia + título fijo */
+  const cv = document.getElementById('heroCanvas');
+  if (cv) {
+    const cx = cv.getContext('2d');
+    const img = new Image();
+    img.onload = () => {
+      const r = cv.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const cw = Math.round(r.width), ch = Math.round(r.height);
+      cv.width = Math.max(1, Math.round(cw * dpr)); cv.height = Math.max(1, Math.round(ch * dpr));
+      cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const ir = img.naturalWidth / img.naturalHeight, cr = cw / ch;
+      let dw, dh, dx, dy;
+      if (ir > cr){ dh = ch; dw = ch * ir; dx = (cw - dw) / 2; dy = 0; }
+      else        { dw = cw; dh = cw / ir; dx = 0; dy = (ch - dh) / 2; }
+      cx.drawImage(img, dx, dy, dw, dh);
+    };
+    img.src = '../../assets/seq/seq-001.jpg';
   }
 } else {
   /* Preparar split del hero antes de la intro */
@@ -1114,21 +1031,110 @@ if (reduce) {
   setTimeout(() => { if (!started) { clearInterval(tick); bar.style.width = '100%'; pct.textContent = '100'; launch(); } }, 3200);
   }
 
-  /* ---------- HERO: parallax del fondo + deriva del contenido ---------- */
-  gsap.to('.hero-bg', {
-    yPercent: 24, scale: 1.18, ease: 'none',
-    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
-  });
-  // El contenido del hero sube más lento (capa de profundidad) y se desvanece
-  gsap.to('.hero-content', {
-    yPercent: -16, autoAlpha: 0.15, ease: 'none',
-    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
-  });
-  // El visor y el grano de cámara se separan a otra velocidad
-  gsap.to('.hero .viewfinder', {
-    scale: 1.04, ease: 'none',
-    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
-  });
+  /* ====================================================================
+     HERO — IMAGE-SEQUENCE SCRUB (pantalla completa, técnica tipo string-tune)
+     El hero se fija (pin) y, al hacer scroll, la cámara orbita el edificio
+     dibujando frame a frame sobre el canvas. Encima: barra de progreso,
+     porcentaje, palabra central que cambia y el título identitario.
+     Al 100% se suelta el pin y continúa el resto de la página.
+     ==================================================================== */
+  (function initHeroSeq(){
+    const hero    = document.getElementById('hero');
+    const canvas  = document.getElementById('heroCanvas');
+    if (!hero || !canvas) return;
+    const ctx     = canvas.getContext('2d');
+    const barEl   = hero.querySelector('.seq-progress-bar');
+    const pctEl   = hero.querySelector('.seq-pct-num');
+    const wordEl  = document.getElementById('seqWord');
+    // Palabras que cambian con el progreso (umbral → texto), del rubro arquitectura.
+    const WORDS = [
+      { at: 0.00, t: 'CONCIBE' },
+      { at: 0.33, t: 'PROYECTA' },
+      { at: 0.66, t: 'CONSTRUYE' },
+      { at: 0.90, t: 'TRASCIENDE' }
+    ];
+
+    // ---- Precarga de la secuencia (73 frames) ----
+    const FRAME_COUNT = 73;
+    const pad = n => String(n).padStart(3, '0');
+    const frames = [];
+    let loaded = 0;
+    for (let i = 1; i <= FRAME_COUNT; i++){
+      const img = new Image();
+      img.onload = () => {
+        loaded++;
+        if (i === 1) draw(0);                          // pinta el primero apenas llegue
+        if (loaded === FRAME_COUNT) ScrollTrigger.refresh(); // recalcular con todos cargados
+      };
+      img.src = `../../assets/seq/seq-${pad(i)}.jpg`;
+      frames.push(img);
+    }
+
+    // Tamaño real del lienzo (devicePixelRatio para nitidez)
+    let cw = 0, ch = 0;
+    function resizeCanvas(){
+      const r = canvas.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cw = Math.round(r.width); ch = Math.round(r.height);
+      canvas.width  = Math.max(1, Math.round(cw * dpr));
+      canvas.height = Math.max(1, Math.round(ch * dpr));
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    // Dibuja el frame `idx` cubriendo el canvas (cover, centrado)
+    let lastIdx = -1;
+    function draw(idx){
+      const img = frames[idx];
+      if (!img || !img.complete || !img.naturalWidth) return;
+      lastIdx = idx;
+      ctx.clearRect(0, 0, cw, ch);
+      const ir = img.naturalWidth / img.naturalHeight, cr = cw / ch;
+      let dw, dh, dx, dy;
+      if (ir > cr){ dh = ch; dw = ch * ir; dx = (cw - dw) / 2; dy = 0; }
+      else        { dw = cw; dh = cw / ir; dx = 0; dy = (ch - dh) / 2; }
+      ctx.drawImage(img, dx, dy, dw, dh);
+    }
+    function redraw(){ if (lastIdx >= 0) draw(lastIdx); }
+
+    // Actualiza barra, porcentaje y palabra central según el progreso
+    let curWord = '';
+    function syncOverlay(progress){
+      barEl.style.width = (progress * 100).toFixed(1) + '%';
+      pctEl.textContent = Math.round(progress * 100);
+      let w = WORDS[0].t;
+      for (const it of WORDS) if (progress >= it.at) w = it.t;
+      if (w !== curWord){
+        curWord = w;
+        // Cambio de palabra con un pequeño fundido (sin romper el scrub)
+        gsap.fromTo(wordEl, { autoAlpha: 0.0, scale: 0.96 }, { autoAlpha: 1, scale: 1, duration: 0.4, ease: 'power2.out', overwrite: true });
+        wordEl.textContent = w;
+      }
+    }
+
+    resizeCanvas();
+    draw(0);
+    syncOverlay(0);
+
+    // ScrollTrigger: hero fijado, scrub continuo. end largo para recorrer 73 frames.
+    ScrollTrigger.create({
+      trigger: hero,
+      start: 'top top',
+      end: '+=400%',
+      pin: true,
+      scrub: 1,
+      anticipatePin: 1,
+      invalidateOnRefresh: true,
+      onRefresh: () => { resizeCanvas(); redraw(); },
+      onUpdate: self => {
+        const p = self.progress;
+        const idx = Math.min(FRAME_COUNT - 1, Math.round(p * (FRAME_COUNT - 1)));
+        if (idx !== lastIdx) draw(idx);
+        syncOverlay(p);
+      }
+    });
+
+    window.addEventListener('resize', () => { resizeCanvas(); redraw(); });
+  })();
 
   /* ---------- TÍTULOS GIGANTES por palabra (estudio, proyectos-intro, servicios, contacto) ---------- */
   document.querySelectorAll('.manifesto-quote, .projects-intro h2, .services-head h2, .contact h2')
@@ -1284,127 +1290,6 @@ if (reduce) {
     el.addEventListener('mouseenter', () => cursor.classList.add('is-grow'));
     el.addEventListener('mouseleave', () => cursor.classList.remove('is-grow'));
   });
-
-  /* ====================================================================
-     SHOWCASE — IMAGE-SEQUENCE SCRUB (técnica tipo Apple sobre <canvas>)
-     UNA sola escena (toma orbital real, 73 frames) que se transforma de
-     forma continua con el scroll: la cámara gira alrededor del edificio.
-     El canvas se fija (pin) y en cada update se dibuja el frame que toca
-     según el progreso. Los datos/specs aparecen por rangos de progreso.
-     En móvil/táctil/reduce: frame estático, sin pin, datos en columna.
-     ==================================================================== */
-  (function initShowcase(){
-    const showcase = document.getElementById('destacado');
-    if (!showcase) return;
-    const stage  = showcase.querySelector('.showcase-stage');
-    const canvas = showcase.querySelector('#scCanvas');
-    const ctx    = canvas.getContext('2d');
-    const specs  = gsap.utils.toArray('.sc-spec', showcase);
-    const curEl  = showcase.querySelector('.sc-cur');
-    const barEl  = showcase.querySelector('.sc-progress-bar');
-
-    // ---- Precarga de la secuencia (73 frames) ----
-    const FRAME_COUNT = 73;
-    const pad = n => String(n).padStart(3, '0');
-    const frameURL = i => `../../assets/seq/seq-${pad(i)}.jpg`;
-    const frames = [];
-    let loaded = 0, firstReady = false;
-    for (let i = 1; i <= FRAME_COUNT; i++){
-      const img = new Image();
-      img.onload = () => {
-        loaded++;
-        if (!firstReady && i === 1){ firstReady = true; draw(0); } // pinta el primero apenas llegue
-        if (loaded === FRAME_COUNT) ScrollTrigger.refresh(); // recalcular cuando estén todos
-      };
-      img.src = frameURL(i);
-      frames.push(img);
-    }
-
-    // Tamaño del lienzo en píxeles reales (con devicePixelRatio para nitidez)
-    let cw = 0, ch = 0;
-    function resizeCanvas(){
-      const r = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      cw = Math.round(r.width); ch = Math.round(r.height);
-      canvas.width  = Math.max(1, Math.round(cw * dpr));
-      canvas.height = Math.max(1, Math.round(ch * dpr));
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
-
-    // Dibuja el frame `idx` cubriendo el canvas (object-fit: cover, centrado)
-    let lastIdx = -1;
-    function draw(idx){
-      const img = frames[idx];
-      if (!img || !img.complete || !img.naturalWidth) return;
-      lastIdx = idx;
-      ctx.clearRect(0, 0, cw, ch);
-      const ir = img.naturalWidth / img.naturalHeight;
-      const cr = cw / ch;
-      let dw, dh, dx, dy;
-      if (ir > cr){ dh = ch; dw = ch * ir; dx = (cw - dw) / 2; dy = 0; }   // imagen más ancha → recorta lados
-      else        { dw = cw; dh = cw / ir; dx = 0; dy = (ch - dh) / 2; }   // imagen más alta → recorta arriba/abajo
-      ctx.drawImage(img, dx, dy, dw, dh);
-    }
-    function redraw(){ if (lastIdx >= 0) draw(lastIdx); }
-
-    // Specs/datos por rango de progreso (data-at). Estado actual para el contador.
-    const specMeta = specs.map(s => ({ el: s, at: parseFloat(s.dataset.at) || 0 }));
-    function syncData(progress){
-      // Contador 01–05 según cuántos specs ya se "abrieron"
-      let active = 1;
-      specMeta.forEach(m => {
-        const on = progress >= m.at;
-        gsap.set(m.el, { opacity: on ? 1 : 0, y: on ? 0 : 18 });
-        if (on) active = Math.min(specMeta.length, specMeta.indexOf(m) + 1);
-      });
-      curEl.textContent = String(active).padStart(2, '0');
-      barEl.style.width = (progress * 100).toFixed(1) + '%';
-    }
-
-    // ¿Pin disponible? Solo escritorio con puntero fino y sin reduce-motion.
-    const canPin = !reduce && window.matchMedia('(min-width:901px) and (pointer:fine)').matches;
-
-    resizeCanvas();
-
-    if (!canPin) {
-      // Sin pin: canvas estático (primer frame) + datos visibles en columna.
-      showcase.classList.add('no-pin');
-      resizeCanvas();
-      const paint = () => draw(0);
-      if (frames[0].complete) paint(); else frames[0].onload = () => { resizeCanvas(); paint(); };
-      specMeta.forEach(m => gsap.set(m.el, { opacity: 1, y: 0 }));
-      curEl.textContent = String(specMeta.length).padStart(2, '0');
-      barEl.style.width = '100%';
-      window.addEventListener('resize', () => { resizeCanvas(); paint(); });
-      return;
-    }
-
-    // Estado inicial
-    draw(0);
-    syncData(0);
-
-    // ScrollTrigger: canvas fijado, scrub continuo. end ~ +300% del viewport.
-    ScrollTrigger.create({
-      trigger: stage,
-      start: 'top top',
-      end: '+=300%',
-      pin: true,
-      scrub: 1,
-      anticipatePin: 1,
-      invalidateOnRefresh: true,
-      onRefresh: resizeCanvas,
-      onUpdate: self => {
-        const p = self.progress;
-        // Frame continuo según el progreso → el edificio gira sin cortes.
-        const idx = Math.min(FRAME_COUNT - 1, Math.round(p * (FRAME_COUNT - 1)));
-        if (idx !== lastIdx) draw(idx);
-        syncData(p);
-      }
-    });
-
-    // Redibujar en resize (responsive): recalcula tamaño y repinta el frame actual.
-    window.addEventListener('resize', () => { resizeCanvas(); redraw(); });
-  })();
 
   /* ---------- Refrescar ScrollTrigger tras cargar imágenes (evita saltos) ---------- */
   window.addEventListener('load', () => ScrollTrigger.refresh());
