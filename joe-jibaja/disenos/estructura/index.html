@@ -3,1161 +3,966 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Joe Jibaja Vega — Arquitectura de Gran Escala</title>
-<meta name="description" content="Joe Jibaja Vega, arquitecto. Equipamiento deportivo, cultural y comercial de gran escala. Diseño paramétrico y visualización 3D fotorrealista. Tumbaco, Quito — Ecuador.">
+<title>Joe Jibaja Vega — Arquitectura Monumental</title>
+<meta name="description" content="Joe Jibaja Vega, Arquitecto. Arquitectura monumental de gran escala con visualización 3D fotorrealista. Tumbaco, Quito - Ecuador.">
 
-<!-- Google Fonts: Anton (titulares), Space Mono (técnico), Archivo (cuerpo) -->
+<!-- Tipografías: grotesca display + cuerpo -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800;900&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 /* ============================================================
-   TOKENS — Sistema de diseño "ESTRUCTURA"
-   Blueprint moderno + brutalismo refinado
+   VARIABLES Y RESET
    ============================================================ */
 :root{
-  --hueso:#F2F1EE;        /* fondo técnico claro */
-  --hueso-2:#E9E7E2;      /* hueso más profundo para bloques */
-  --grafito:#16181C;      /* secciones oscuras / tinta */
-  --grafito-2:#1E2127;    /* grafito elevado */
-  --tinta:#111316;        /* texto principal */
-  --rojo:#D6442F;         /* acento arquitectónico */
-  --rojo-hover:#C8341F;   /* acento intenso */
-  --linea:#C9C6BF;        /* líneas guía sobre hueso */
-  --linea-osc:#2C2F36;    /* líneas guía sobre grafito */
-  --mut:#6F6B63;          /* texto mono atenuado */
-  --mut-osc:#8A8E97;      /* mono sobre grafito */
-
-  --mono:'Space Mono', monospace;
-  --titular:'Anton', sans-serif;
-  --cuerpo:'Archivo', sans-serif;
-
-  --ancho:1320px;
-  --gut:clamp(20px,4vw,64px);   /* margen lateral */
-  --ease:cubic-bezier(.22,.61,.36,1); /* firme, sin bounce */
+  --azul:#2E6BFF;          /* acento azul eléctrico */
+  --azul-soft:#5b8cff;
+  --negro:#0a0c10;         /* fondo oscuro cinematográfico */
+  --negro-2:#0e1118;
+  --hueso:#f4f2ee;         /* claro aireado */
+  --hueso-2:#e9e6df;
+  --gris:#9aa0ab;
+  --vidrio:rgba(255,255,255,.06);
+  --borde-vidrio:rgba(255,255,255,.14);
+  --display:'Archivo', sans-serif;
+  --cuerpo:'Manrope', sans-serif;
 }
 
-/* ============================================================
-   RESET
-   ============================================================ */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{ -webkit-text-size-adjust:100%; }
 body{
   font-family:var(--cuerpo);
   background:var(--hueso);
-  color:var(--tinta);
-  line-height:1.5;
+  color:var(--negro);
   overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
-  text-rendering:optimizeLegibility;
+  line-height:1.5;
 }
-img{display:block;max-width:100%;height:auto}
-a{color:inherit;text-decoration:none}
-button{font-family:inherit;cursor:pointer;border:none;background:none}
-::selection{background:var(--rojo);color:#fff}
+img{display:block;width:100%;height:100%;object-fit:cover;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;}
+::selection{background:var(--azul);color:#fff;}
+
+/* Tipografía display utilitaria */
+.display{ font-family:var(--display); font-weight:900; line-height:.92; letter-spacing:-.02em; }
+.kicker{ font-family:var(--cuerpo); font-weight:600; font-size:clamp(.7rem,1.1vw,.82rem); letter-spacing:.32em; text-transform:uppercase; }
+
+/* Máscaras de línea para stagger de entrada */
+.line-mask{ overflow:hidden; display:block; }
+.line{ display:block; will-change:transform; }
+
+/* Palabras / caracteres divididos para stagger fino */
+.word{ display:inline-block; overflow:hidden; vertical-align:top; }
+.word > span{ display:inline-block; will-change:transform; }
+
+/* Barra de progreso de scroll (cinematográfica) */
+.scroll-prog{
+  position:fixed; top:0; left:0; height:2px; width:100%; z-index:9997;
+  transform:scaleX(0); transform-origin:left;
+  background:linear-gradient(90deg,var(--azul),var(--azul-soft));
+  box-shadow:0 0 14px rgba(46,107,255,.7);
+}
+
+/* Línea que se dibuja bajo kickers / títulos */
+.draw-line{ display:inline-block; height:1px; background:var(--azul); width:46px; vertical-align:middle; transform:scaleX(0); transform-origin:left; }
 
 /* ============================================================
-   UTILIDADES
+   LOADER (cortina de intro)
    ============================================================ */
-.contenedor{
-  width:100%;
-  max-width:var(--ancho);
-  margin:0 auto;
-  padding-inline:var(--gut);
+.loader{
+  position:fixed; inset:0; z-index:9999;
+  background:var(--negro);
+  display:flex; align-items:center; justify-content:center;
 }
-.mono{
-  font-family:var(--mono);
-  text-transform:uppercase;
-  letter-spacing:.08em;
-  font-size:.72rem;
-  color:var(--mut);
+.loader__mark{
+  font-family:var(--display); font-weight:900;
+  color:var(--hueso); font-size:clamp(1.4rem,4vw,2.6rem);
+  letter-spacing:-.02em; overflow:hidden;
 }
-.mono--rojo{color:var(--rojo)}
-.num-seccion{
-  font-family:var(--mono);
-  color:var(--rojo);
-  font-weight:700;
-  font-size:.72rem;
-  letter-spacing:.1em;
+.loader__mark span{ display:inline-block; }
+.loader__mark .accent{ color:var(--azul); }
+/* Barra de carga del loader */
+.loader__bar{
+  position:absolute; left:0; bottom:0; height:3px; width:100%;
+  background:linear-gradient(90deg,var(--azul),var(--azul-soft));
+  transform:scaleX(0); transform-origin:left;
 }
-
-/* Etiqueta de esquina tipo plano (marca de cota) */
-.esquina{position:absolute;width:14px;height:14px;pointer-events:none}
-.esquina::before,.esquina::after{content:"";position:absolute;background:var(--rojo)}
-.esquina::before{width:100%;height:1.5px;top:0;left:0}
-.esquina::after{width:1.5px;height:100%;top:0;left:0}
-.esquina.tr{top:0;right:0;transform:scaleX(-1)}
-.esquina.bl{bottom:0;left:0;transform:scaleY(-1)}
-.esquina.br{bottom:0;right:0;transform:scale(-1)}
-
-/* ============================================================
-   RETÍCULA DE FONDO — líneas guía verticales sutiles
-   ============================================================ */
-.reticula-fondo{
-  position:fixed;
-  inset:0;
-  z-index:0;
-  pointer-events:none;
-  max-width:var(--ancho);
-  margin:0 auto;
-  padding-inline:var(--gut);
-  display:grid;
-  grid-template-columns:repeat(12,1fr);
-}
-.reticula-fondo span{
-  border-left:1px solid var(--linea);
-  opacity:.5;
-}
-.reticula-fondo span:first-child{border-left:none}
-@media(max-width:760px){
-  .reticula-fondo{grid-template-columns:repeat(4,1fr)}
+.loader__pct{
+  position:absolute; right:clamp(20px,5vw,60px); bottom:clamp(22px,5vh,40px);
+  font-family:var(--display); font-weight:800; color:var(--hueso);
+  font-size:clamp(2rem,7vw,5rem); letter-spacing:-.03em; line-height:1; opacity:.9;
 }
 
 /* ============================================================
-   HEADER
+   MARQUEE — banda de texto en movimiento
    ============================================================ */
-.cabecera{
-  position:fixed;
-  top:0;left:0;right:0;
-  z-index:100;
-  background:rgba(242,241,238,.82);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--linea);
-  transition:transform .4s var(--ease),background .3s ease;
+.marquee{
+  background:var(--negro); color:#fff; overflow:hidden; white-space:nowrap;
+  padding:clamp(20px,4vh,40px) 0; border-top:1px solid rgba(255,255,255,.08);
+  border-bottom:1px solid rgba(255,255,255,.08);
 }
-.cabecera.oculta{transform:translateY(-100%)}
-.cabecera__fila{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  height:64px;
+.marquee-track{ display:inline-flex; will-change:transform; }
+.marquee-track span{
+  font-family:var(--display); font-weight:900; text-transform:uppercase;
+  font-size:clamp(1.8rem,5.5vw,4.2rem); letter-spacing:-.02em; line-height:1;
+  padding:0 clamp(20px,3vw,46px); display:inline-block;
 }
-.monograma{
-  display:flex;
-  align-items:baseline;
-  gap:12px;
-}
-.monograma__jjv{
-  font-family:var(--titular);
-  font-size:1.5rem;
-  letter-spacing:.02em;
-  line-height:1;
-}
-.monograma__sub{
-  font-family:var(--mono);
-  font-size:.64rem;
-  letter-spacing:.12em;
-  color:var(--mut);
-  text-transform:uppercase;
-}
-.nav{display:flex;gap:34px;align-items:center}
-.nav a{
-  display:flex;
-  align-items:baseline;
-  gap:7px;
-  font-family:var(--mono);
-  font-size:.78rem;
-  text-transform:uppercase;
-  letter-spacing:.06em;
-  position:relative;
-  padding-block:6px;
-}
-.nav a .n{font-size:.6rem;color:var(--rojo);font-weight:700}
-.nav a::after{
-  content:"";
-  position:absolute;
-  left:0;bottom:0;
-  width:0;height:1.5px;
-  background:var(--rojo);
-  transition:width .35s var(--ease);
-}
-.nav a:hover::after{width:100%}
-
-/* Botón hamburguesa */
-.hamburguesa{
-  display:none;
-  width:42px;height:42px;
-  position:relative;
-  z-index:120;
-}
-.hamburguesa span{
-  position:absolute;
-  left:9px;right:9px;
-  height:2px;
-  background:var(--tinta);
-  transition:transform .35s var(--ease),opacity .25s ease;
-}
-.hamburguesa span:nth-child(1){top:14px}
-.hamburguesa span:nth-child(2){top:20px}
-.hamburguesa span:nth-child(3){top:26px}
-.menu-abierto .hamburguesa span:nth-child(1){transform:translateY(6px) rotate(45deg)}
-.menu-abierto .hamburguesa span:nth-child(2){opacity:0}
-.menu-abierto .hamburguesa span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+.marquee-track .o{ color:transparent; -webkit-text-stroke:1.2px rgba(255,255,255,.55); text-stroke:1.2px rgba(255,255,255,.55); }
+.marquee-track .dot{ color:var(--azul); padding:0 clamp(14px,2vw,30px); }
 
 /* ============================================================
-   HERO
+   CURSOR PERSONALIZADO
    ============================================================ */
-.hero{
-  position:relative;
-  min-height:100vh;
-  padding-top:64px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  overflow:hidden;
-  z-index:1;
+.cursor{
+  position:fixed; top:0; left:0; width:9px; height:9px; border-radius:50%;
+  background:var(--azul); pointer-events:none; z-index:9998;
+  transform:translate(-50%,-50%); mix-blend-mode:difference;
 }
-.hero__grid{
-  display:grid;
-  grid-template-columns:1fr minmax(280px,40%);
-  gap:clamp(24px,4vw,56px);
-  align-items:center;
-  padding-block:clamp(40px,7vh,90px);
-}
-/* Etiquetas mono alrededor del hero */
-.hero__metas{
-  display:flex;
-  flex-wrap:wrap;
-  gap:20px 34px;
-  margin-bottom:28px;
-}
-.hero__metas .meta{display:flex;flex-direction:column;gap:3px}
-.hero__metas .meta .lab{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;color:var(--mut);text-transform:uppercase}
-.hero__metas .meta .val{font-family:var(--mono);font-size:.82rem;letter-spacing:.04em;color:var(--tinta);font-weight:700}
+@media (hover:none){ .cursor{ display:none; } }
 
-.hero__titular{
-  font-family:var(--titular);
-  font-weight:400;
-  line-height:.9;
-  letter-spacing:.005em;
+/* ============================================================
+   NAVBAR FLOTANTE
+   ============================================================ */
+.nav{
+  position:fixed; top:0; left:0; width:100%; z-index:1000;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:clamp(18px,3vw,30px) clamp(20px,5vw,60px);
+  transition:background .5s ease, padding .5s ease, color .5s ease;
+  color:#fff;
+}
+.nav.solid{
+  background:rgba(10,12,16,.82);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  padding-top:14px; padding-bottom:14px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.nav__brand{
+  font-family:var(--display); font-weight:800;
+  font-size:clamp(.95rem,1.5vw,1.1rem); letter-spacing:-.01em;
+}
+.nav__brand b{ color:var(--azul); }
+.nav__links{ display:flex; gap:clamp(22px,3vw,40px); align-items:center; }
+.nav__links a{ font-weight:500; font-size:.92rem; letter-spacing:.01em; }
+.nav__links a.nav__cta{
+  border:1px solid rgba(255,255,255,.35); border-radius:100px;
+  padding:8px 20px; font-weight:600;
+}
+.nav__links a.nav__cta:hover{ background:var(--azul); border-color:var(--azul); }
+
+.link-underline{ position:relative; }
+.link-underline::after{
+  content:''; position:absolute; left:0; bottom:-3px; width:100%; height:1px;
+  background:currentColor; transform:scaleX(0); transform-origin:right;
+  transition:transform .5s cubic-bezier(.22,1,.36,1);
+}
+.link-underline:hover::after{ transform:scaleX(1); transform-origin:left; }
+
+/* Hamburguesa móvil */
+.nav__burger{ display:none; flex-direction:column; gap:5px; width:30px; }
+.nav__burger span{ display:block; height:2px; width:100%; background:#fff; transition:transform .4s ease, opacity .3s ease; }
+.menu-open .nav__burger span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+.menu-open .nav__burger span:nth-child(2){ opacity:0; }
+.menu-open .nav__burger span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+
+/* Overlay menú móvil */
+.menu-mobile{
+  position:fixed; inset:0; z-index:999; background:var(--negro);
+  display:flex; flex-direction:column; justify-content:center; gap:6px;
+  padding:0 28px; transform:translateY(-100%); transition:transform .7s cubic-bezier(.76,0,.24,1);
+}
+.menu-open .menu-mobile{ transform:translateY(0); }
+.menu-mobile a{
+  font-family:var(--display); font-weight:800; color:var(--hueso);
+  font-size:clamp(2.2rem,11vw,3.6rem); line-height:1.1; letter-spacing:-.02em;
+}
+.menu-mobile a span{ color:var(--azul); font-family:var(--cuerpo); font-weight:600; font-size:.9rem; margin-right:14px; vertical-align:middle; letter-spacing:.1em; }
+.menu-mobile .menu-foot{ margin-top:36px; color:var(--gris); font-size:.85rem; font-weight:500; }
+
+/* ============================================================
+   HERO — imagen a sangre + título gigante
+   ============================================================ */
+.hero{ position:relative; width:100vw; height:100svh; overflow:hidden; background:var(--negro); }
+.hero-bg{
+  position:absolute; inset:-6% 0; width:100%; height:112%;
+  will-change:transform;
+}
+.hero-bg::after{
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(8,10,15,.35) 0%, rgba(8,10,15,.08) 32%, rgba(8,10,15,.55) 100%);
+}
+.hero-inner{
+  position:absolute; inset:0; z-index:3;
+  display:flex; flex-direction:column; justify-content:flex-end;
+  padding:0 clamp(20px,5vw,60px) clamp(80px,11vh,120px);
+  color:#fff;
+}
+.hero-kicker{ display:flex; align-items:center; gap:14px; margin-bottom:clamp(14px,3vh,26px); }
+.hero-kicker .dot{ width:9px; height:9px; border-radius:50%; background:var(--azul); box-shadow:0 0 18px var(--azul); }
+.hero-title{
+  font-family:var(--display); font-weight:900;
+  font-size:clamp(3rem,13vw,11.5rem); line-height:.86; letter-spacing:-.03em;
   text-transform:uppercase;
 }
-.hero__linea{
-  display:block;
-  font-size:clamp(2.8rem,11vw,8.6rem);
-  overflow:hidden;
+/* segunda línea en outline semitransparente que se funde con la imagen */
+.hero-title .outline{
+  color:transparent;
+  -webkit-text-stroke:1.4px rgba(255,255,255,.78);
+  text-stroke:1.4px rgba(255,255,255,.78);
 }
-.hero__linea .palabra{
-  display:inline-block;
-  transform:translateY(105%);
-  transition:transform .9s var(--ease);
+.hero-meta{
+  display:flex; flex-wrap:wrap; gap:clamp(16px,4vw,46px); align-items:flex-end;
+  justify-content:space-between; margin-top:clamp(20px,4vh,40px);
 }
-.hero__linea--rojo{color:var(--rojo)}
-.hero.entrar .hero__linea .palabra{transform:translateY(0)}
-.hero__linea:nth-child(1) .palabra{transition-delay:.05s}
-.hero__linea:nth-child(2) .palabra{transition-delay:.16s}
-.hero__linea:nth-child(3) .palabra{transition-delay:.27s}
+.hero-meta p{ max-width:34ch; font-size:clamp(.92rem,1.4vw,1.06rem); color:rgba(255,255,255,.84); font-weight:400; }
+.hero-loc{ font-weight:600; font-size:.9rem; letter-spacing:.04em; display:flex; align-items:center; gap:10px; white-space:nowrap; }
+.hero-loc::before{ content:''; width:30px; height:1px; background:rgba(255,255,255,.5); display:inline-block; }
 
-.hero__intro{
-  max-width:46ch;
-  margin-top:30px;
-  font-size:clamp(1rem,1.4vw,1.18rem);
-  color:#34373d;
-  line-height:1.6;
-  opacity:0;
-  transform:translateY(20px);
-  transition:opacity .8s var(--ease) .5s,transform .8s var(--ease) .5s;
+/* Indicador de scroll */
+.scroll-cue{
+  position:absolute; left:50%; bottom:24px; z-index:4; transform:translateX(-50%);
+  display:flex; flex-direction:column; align-items:center; gap:8px; color:rgba(255,255,255,.7);
 }
-.hero.entrar .hero__intro{opacity:1;transform:none}
-
-/* Imagen enmarcada del hero */
-.hero__lamina{
-  position:relative;
-  aspect-ratio:3/4;
-  border:1px solid var(--tinta);
-  overflow:hidden;
-  opacity:0;
-  transform:translateY(28px) scale(.98);
-  transition:opacity 1s var(--ease) .35s,transform 1s var(--ease) .35s;
-}
-.hero.entrar .hero__lamina{opacity:1;transform:none}
-.hero__lamina img{width:100%;height:100%;object-fit:cover;filter:saturate(1.02)}
-.hero__lamina .tag-lamina{
-  position:absolute;top:0;left:0;
-  background:var(--rojo);color:#fff;
-  font-family:var(--mono);font-size:.62rem;font-weight:700;
-  letter-spacing:.1em;padding:6px 10px;
-}
-.hero__lamina .coord-lamina{
-  position:absolute;bottom:0;right:0;
-  background:var(--tinta);color:var(--hueso);
-  font-family:var(--mono);font-size:.58rem;
-  letter-spacing:.08em;padding:6px 10px;
-}
-
-/* Banda guía inferior del hero con líneas que se dibujan */
-.hero__guias{
-  display:flex;
-  align-items:center;
-  gap:18px;
-  padding-block:22px;
-  border-top:1px solid var(--linea);
-}
-.hero__guias .scroll{
-  font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--mut);
-  display:flex;align-items:center;gap:10px;
-}
-.hero__guias .scroll .punto{
-  width:7px;height:7px;border-radius:50%;background:var(--rojo);
-  animation:pulso 1.8s var(--ease) infinite;
-}
-@keyframes pulso{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.6)}}
-.hero__guias .linea-draw{
-  flex:1;height:1px;background:var(--linea);position:relative;overflow:hidden;
-}
-.hero__guias .linea-draw::after{
-  content:"";position:absolute;inset:0;background:var(--rojo);
-  transform:scaleX(0);transform-origin:left;
-  transition:transform 1.4s var(--ease) .7s;
-}
-.hero.entrar .hero__guias .linea-draw::after{transform:scaleX(1)}
-.hero__guias .coord-final{font-family:var(--mono);font-size:.62rem;color:var(--mut);letter-spacing:.08em}
+.scroll-cue .bar{ width:1px; height:46px; background:linear-gradient(180deg,rgba(255,255,255,.7),transparent); overflow:hidden; position:relative; }
+.scroll-cue .bar::after{ content:''; position:absolute; top:0; left:0; width:100%; height:40%; background:var(--azul); animation:cue 1.8s ease-in-out infinite; }
+@keyframes cue{ 0%{transform:translateY(-100%);} 100%{transform:translateY(250%);} }
+.scroll-cue span{ font-size:.62rem; letter-spacing:.28em; text-transform:uppercase; font-weight:600; }
 
 /* ============================================================
-   TÍTULOS DE SECCIÓN
+   MANIFIESTO / ESTUDIO (claro, aireado)
    ============================================================ */
-.seccion{position:relative;z-index:1;padding-block:clamp(70px,12vh,140px)}
-.cab-seccion{
-  display:flex;
-  align-items:flex-end;
-  justify-content:space-between;
-  gap:24px;
-  padding-bottom:28px;
-  margin-bottom:54px;
-  border-bottom:1px solid var(--linea);
+.estudio{ background:var(--hueso); padding:clamp(90px,16vh,180px) clamp(20px,5vw,60px); }
+.estudio__grid{ max-width:1380px; margin:0 auto; display:grid; grid-template-columns:1fr; gap:clamp(40px,7vw,90px); }
+.estudio__lead{
+  font-family:var(--display); font-weight:700;
+  font-size:clamp(1.7rem,4.6vw,4rem); line-height:1.04; letter-spacing:-.02em;
+  max-width:18ch;
 }
-.cab-seccion__izq{display:flex;flex-direction:column;gap:14px}
-.cab-seccion__titulo{
-  font-family:var(--titular);
-  font-size:clamp(2rem,5.5vw,4.2rem);
-  line-height:.92;
-  text-transform:uppercase;
-  letter-spacing:.01em;
-}
-.cab-seccion__der{font-family:var(--mono);font-size:.66rem;color:var(--mut);text-align:right;letter-spacing:.08em;line-height:1.7}
+.estudio__lead em{ font-style:normal; color:var(--azul); }
+.estudio__cols{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:clamp(30px,4vw,56px); align-items:start; }
+.estudio__cols p{ color:#3a3f49; font-size:clamp(.98rem,1.4vw,1.1rem); max-width:42ch; }
+.estudio__tag{ font-family:var(--display); font-weight:700; color:var(--azul); font-size:.8rem; letter-spacing:.2em; text-transform:uppercase; margin-bottom:14px; display:block; }
 
 /* ============================================================
-   ESTUDIO / MANIFIESTO
+   STATS — tarjetas de vidrio sobre fondo oscuro
    ============================================================ */
-.estudio__grid{
-  display:grid;
-  grid-template-columns:1.1fr 1fr;
-  gap:clamp(30px,5vw,80px);
-  align-items:start;
+.stats{ position:relative; background:var(--negro); padding:clamp(90px,15vh,160px) clamp(20px,5vw,60px); overflow:hidden; }
+.stats::before{
+  content:''; position:absolute; inset:0;
+  background:
+    radial-gradient(circle at 18% 25%, rgba(46,107,255,.22), transparent 42%),
+    radial-gradient(circle at 85% 80%, rgba(46,107,255,.14), transparent 46%);
 }
-.estudio__texto p{
-  font-size:clamp(1.05rem,1.6vw,1.4rem);
-  line-height:1.6;
-  color:#27292e;
-  margin-bottom:24px;
+.stats__head{ position:relative; max-width:1380px; margin:0 auto clamp(46px,7vh,74px); color:#fff; }
+.stats__head .kicker{ color:var(--azul-soft); display:block; margin-bottom:18px; }
+.stats__head h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.8rem,4.4vw,3.4rem); line-height:1.02; letter-spacing:-.02em; max-width:20ch; }
+.stats__grid{
+  position:relative; max-width:1380px; margin:0 auto;
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:clamp(18px,2vw,26px);
 }
-.estudio__texto p strong{color:var(--tinta);font-weight:700}
-.estudio__firma{
-  margin-top:36px;
-  display:flex;align-items:center;gap:16px;
-  font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:var(--mut);
+.glass{
+  background:var(--vidrio); border:1px solid var(--borde-vidrio); border-radius:22px;
+  backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+  padding:clamp(28px,3.4vw,44px); color:#fff; position:relative; overflow:hidden;
 }
-.estudio__firma::before{content:"";width:42px;height:1.5px;background:var(--rojo)}
-
-/* Cifras gigantes */
-.cifras{display:grid;grid-template-columns:1fr;gap:0;border-top:1px solid var(--linea)}
-.cifra{
-  display:grid;
-  grid-template-columns:auto 1fr;
-  gap:18px;
-  align-items:baseline;
-  padding-block:26px;
-  border-bottom:1px solid var(--linea);
-}
-.cifra__num{
-  font-family:var(--titular);
-  font-size:clamp(2.8rem,7vw,5rem);
-  line-height:.85;
-  letter-spacing:.005em;
-}
-.cifra__num .signo{color:var(--rojo)}
-.cifra__info{display:flex;flex-direction:column;gap:5px;padding-bottom:6px}
-.cifra__lab{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
-.cifra__desc{font-size:.92rem;color:#3a3d43}
+.glass::after{ content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent); }
+.glass .stat-line{ display:flex; align-items:flex-start; }
+.glass .pre{ font-family:var(--display); font-weight:800; font-size:clamp(2.4rem,6vw,4.4rem); line-height:.9; color:var(--azul-soft); margin-right:4px; }
+.stat-num{ font-family:var(--display); font-weight:900; font-size:clamp(2.8rem,8vw,6rem); line-height:.86; letter-spacing:-.03em; }
+.glass .suf{ font-family:var(--display); font-weight:800; font-size:clamp(1rem,2.2vw,1.6rem); color:rgba(255,255,255,.7); align-self:flex-end; margin-left:6px; margin-bottom:.4em; }
+.glass .label{ margin-top:18px; color:rgba(255,255,255,.66); font-weight:500; font-size:clamp(.86rem,1.2vw,.98rem); max-width:24ch; }
 
 /* ============================================================
-   PROYECTOS — índice de obra / tabla técnica visual
+   PROYECTOS — secciones a sangre
    ============================================================ */
-.proyectos{background:var(--grafito);color:var(--hueso)}
-.proyectos .cab-seccion{border-color:var(--linea-osc)}
-.proyectos .cab-seccion__der{color:var(--mut-osc)}
-.proyectos .num-seccion{color:var(--rojo)}
+.proyectos-intro{ background:var(--hueso); padding:clamp(80px,13vh,150px) clamp(20px,5vw,60px) clamp(40px,6vh,70px); }
+.proyectos-intro .kicker{ color:var(--azul); display:block; margin-bottom:18px; }
+.proyectos-intro h2{ font-family:var(--display); font-weight:800; font-size:clamp(2rem,6vw,4.6rem); line-height:.96; letter-spacing:-.02em; max-width:16ch; }
 
-.obra{border-top:1px solid var(--linea-osc)}
-.obra__fila{
-  position:relative;
-  display:grid;
-  grid-template-columns:64px 1fr auto;
-  gap:24px;
-  align-items:center;
-  padding-block:30px;
-  border-bottom:1px solid var(--linea-osc);
-  cursor:pointer;
-  transition:padding .5s var(--ease);
+.project{
+  position:relative; width:100vw; height:92svh; overflow:hidden; background:var(--negro);
 }
-.obra__fila::before{ /* línea roja que recorre en hover */
-  content:"";position:absolute;left:0;top:-1px;
-  width:0;height:2px;background:var(--rojo);
-  transition:width .6s var(--ease);
+.project-img{ position:absolute; inset:0; overflow:hidden; }
+.project-img img{ width:100%; height:100%; transform:scale(1.3); will-change:transform; }
+.project-img::after{
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(8,10,15,.45) 0%, rgba(8,10,15,.05) 40%, rgba(8,10,15,.7) 100%);
 }
-.obra__fila:hover::before,.obra__fila:focus-within::before{width:100%}
-.obra__fila:hover{padding-left:14px}
-.obra__n{font-family:var(--mono);font-size:.82rem;font-weight:700;color:var(--rojo);letter-spacing:.06em}
-.obra__cuerpo{display:flex;flex-direction:column;gap:8px;min-width:0}
-.obra__nombre{
-  font-family:var(--titular);
-  font-size:clamp(1.5rem,3.6vw,2.8rem);
-  line-height:.95;
-  text-transform:uppercase;
-  letter-spacing:.01em;
-  transition:color .35s ease;
+.project-inner{
+  position:absolute; inset:0; z-index:3; color:#fff;
+  display:flex; flex-direction:column; justify-content:space-between;
+  padding:clamp(90px,12vh,130px) clamp(20px,5vw,60px) clamp(40px,7vh,64px);
 }
-.obra__fila:hover .obra__nombre{color:var(--rojo)}
-.obra__metas{display:flex;flex-wrap:wrap;gap:8px 22px}
-.obra__metas span{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;color:var(--mut-osc);text-transform:uppercase}
-.obra__metas span b{color:var(--hueso);font-weight:700}
-.obra__flecha{
-  font-family:var(--mono);font-size:1.1rem;color:var(--mut-osc);
-  transition:transform .4s var(--ease),color .35s ease;
+.project-top{ display:flex; justify-content:space-between; align-items:flex-start; }
+.project-num{ font-family:var(--display); font-weight:800; font-size:clamp(.9rem,1.4vw,1.05rem); color:var(--azul-soft); }
+.project-type{ font-weight:600; font-size:.82rem; letter-spacing:.18em; text-transform:uppercase; text-align:right; color:rgba(255,255,255,.82); }
+.project-name{
+  font-family:var(--display); font-weight:900; text-transform:uppercase;
+  font-size:clamp(2.4rem,10vw,8.4rem); line-height:.86; letter-spacing:-.03em;
 }
-.obra__fila:hover .obra__flecha{transform:translateX(6px);color:var(--rojo)}
+.project-foot{ display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px; margin-top:18px; }
+.project-foot p{ max-width:40ch; color:rgba(255,255,255,.8); font-size:clamp(.9rem,1.3vw,1.02rem); }
+.project-year{ font-family:var(--display); font-weight:800; font-size:clamp(1rem,2vw,1.4rem); color:rgba(255,255,255,.9); }
 
-/* Panel de imagen expandible */
-.obra__media{
-  grid-column:1/-1;
-  display:grid;
-  grid-template-rows:0fr;
-  transition:grid-template-rows .6s var(--ease);
+/* ============================================================
+   SERVICIOS — lista grande oscura
+   ============================================================ */
+.servicios{ background:var(--negro-2); color:#fff; padding:clamp(90px,15vh,170px) clamp(20px,5vw,60px); }
+.servicios__head{ max-width:1380px; margin:0 auto clamp(40px,6vh,70px); }
+.servicios__head .kicker{ color:var(--azul-soft); display:block; margin-bottom:18px; }
+.servicios__head h2{ font-family:var(--display); font-weight:800; font-size:clamp(1.9rem,5vw,3.6rem); line-height:1; letter-spacing:-.02em; max-width:18ch; }
+.servicios__list{ max-width:1380px; margin:0 auto; border-top:1px solid rgba(255,255,255,.12); }
+.serv-item{
+  display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:clamp(16px,4vw,40px);
+  padding:clamp(24px,4vh,42px) 0; border-bottom:1px solid rgba(255,255,255,.12);
+  position:relative; transition:padding-left .5s cubic-bezier(.22,1,.36,1);
 }
-.obra__media-inner{overflow:hidden;min-height:0}
-.obra__fila.activa .obra__media{grid-template-rows:1fr}
-.obra__fila.activa{padding-bottom:30px}
-.obra__lamina{
-  position:relative;
-  margin-top:24px;
-  aspect-ratio:16/8;
-  border:1px solid var(--linea-osc);
-  overflow:hidden;
+.serv-item::before{
+  content:''; position:absolute; inset:0; background:var(--azul); transform:scaleY(0); transform-origin:bottom;
+  z-index:0; transition:transform .55s cubic-bezier(.76,0,.24,1); border-radius:2px;
 }
-.obra__lamina img{
-  width:100%;height:100%;object-fit:cover;
-  transform:scale(1.06);
-  transition:transform 1s var(--ease);
-}
-.obra__fila.activa .obra__lamina img{transform:scale(1)}
-.obra__lamina .tag{
-  position:absolute;top:0;left:0;
-  background:var(--rojo);color:#fff;
-  font-family:var(--mono);font-size:.6rem;font-weight:700;letter-spacing:.1em;
-  padding:6px 11px;
-}
-.obra__lamina .esc{
-  position:absolute;bottom:0;right:0;
-  background:var(--grafito);color:var(--hueso);
-  font-family:var(--mono);font-size:.58rem;letter-spacing:.08em;
-  padding:6px 11px;border-top:1px solid var(--linea-osc);border-left:1px solid var(--linea-osc);
+.serv-item > *{ position:relative; z-index:1; }
+.serv-num{ font-family:var(--display); font-weight:700; color:var(--azul-soft); font-size:clamp(.85rem,1.2vw,1rem); transition:color .4s ease; }
+.serv-name{ font-family:var(--display); font-weight:800; font-size:clamp(1.5rem,5vw,3.4rem); line-height:1; letter-spacing:-.02em; }
+.serv-desc{ text-align:right; color:rgba(255,255,255,.6); font-size:clamp(.82rem,1.1vw,.95rem); max-width:26ch; justify-self:end; transition:color .4s ease; }
+@media (hover:hover){
+  .serv-item:hover::before{ transform:scaleY(1); transform-origin:top; }
+  .serv-item:hover{ padding-left:clamp(18px,3vw,40px); }
+  .serv-item:hover .serv-num{ color:#fff; }
+  .serv-item:hover .serv-desc{ color:rgba(255,255,255,.92); }
 }
 
 /* ============================================================
-   SERVICIOS — retícula numerada
+   CONTACTO / CTA — full-screen a sangre
    ============================================================ */
-.servicios__grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  border-top:1px solid var(--linea);
-  border-left:1px solid var(--linea);
+.contacto{ position:relative; width:100vw; min-height:100svh; overflow:hidden; background:var(--negro); display:flex; align-items:center; }
+.contacto-bg{ position:absolute; inset:-6% 0; height:112%; will-change:transform; }
+.contacto-bg::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(8,10,15,.78), rgba(8,10,15,.6) 40%, rgba(8,10,15,.9)); }
+.contacto-inner{
+  position:relative; z-index:3; width:100%; max-width:1380px; margin:0 auto;
+  padding:clamp(110px,14vh,150px) clamp(20px,5vw,60px); color:#fff;
 }
-.servicio{
-  position:relative;
-  padding:clamp(28px,4vw,52px) clamp(24px,3vw,44px);
-  border-right:1px solid var(--linea);
-  border-bottom:1px solid var(--linea);
-  overflow:hidden;
-  transition:background .4s ease;
+.contacto-inner .kicker{ color:var(--azul-soft); display:block; margin-bottom:22px; }
+.contacto-title{ font-family:var(--display); font-weight:900; text-transform:uppercase; font-size:clamp(2.6rem,12vw,9rem); line-height:.84; letter-spacing:-.03em; }
+.contacto-title .outline{ color:transparent; -webkit-text-stroke:1.3px rgba(255,255,255,.7); text-stroke:1.3px rgba(255,255,255,.7); }
+.contacto-grid{
+  margin-top:clamp(40px,7vh,72px); display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:clamp(28px,4vw,50px); align-items:start;
 }
-.servicio::after{ /* barrido rojo en hover */
-  content:"";position:absolute;left:0;bottom:0;
-  width:100%;height:3px;background:var(--rojo);
-  transform:scaleX(0);transform-origin:left;
-  transition:transform .5s var(--ease);
+.contacto-data span{ display:block; color:var(--azul-soft); font-weight:600; font-size:.72rem; letter-spacing:.22em; text-transform:uppercase; margin-bottom:10px; }
+.contacto-data a, .contacto-data p{ font-family:var(--display); font-weight:700; font-size:clamp(1.05rem,1.8vw,1.4rem); letter-spacing:-.01em; color:#fff; }
+.contacto-btns{ display:flex; flex-direction:column; gap:14px; }
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:12px;
+  padding:18px 30px; border-radius:100px; font-weight:600; font-size:.98rem; letter-spacing:.01em;
+  transition:background .4s ease, color .4s ease, border-color .4s ease; will-change:transform;
 }
-.servicio:hover{background:var(--hueso-2)}
-.servicio:hover::after{transform:scaleX(1)}
-.servicio__n{
-  font-family:var(--mono);font-size:.72rem;font-weight:700;
-  color:var(--rojo);letter-spacing:.1em;margin-bottom:26px;display:block;
-}
-.servicio__titulo{
-  font-family:var(--titular);
-  font-size:clamp(1.4rem,2.6vw,2rem);
-  line-height:.98;text-transform:uppercase;letter-spacing:.01em;
-  margin-bottom:14px;
-}
-.servicio__desc{font-size:.96rem;color:#41444a;max-width:38ch;line-height:1.55}
-
-/* ============================================================
-   CONTACTO
-   ============================================================ */
-.contacto{background:var(--grafito);color:var(--hueso);position:relative;z-index:1}
-.contacto .cab-seccion{border-color:var(--linea-osc)}
-.contacto .cab-seccion__der{color:var(--mut-osc)}
-.contacto__grid{
-  display:grid;
-  grid-template-columns:1.2fr 1fr;
-  gap:clamp(34px,5vw,80px);
-  align-items:start;
-}
-.contacto__lema{
-  font-family:var(--titular);
-  font-size:clamp(2rem,5vw,4rem);
-  line-height:.95;text-transform:uppercase;letter-spacing:.01em;
-}
-.contacto__lema em{color:var(--rojo);font-style:normal}
-.contacto__sub{margin-top:24px;max-width:44ch;color:#b9bcc2;font-size:1.05rem;line-height:1.6}
-
-.datos{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--linea-osc)}
-.dato{
-  display:flex;flex-direction:column;gap:6px;
-  padding-block:22px;border-bottom:1px solid var(--linea-osc);
-}
-.dato__lab{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mut-osc)}
-.dato__val{font-size:1.15rem;letter-spacing:.01em}
-.dato__val a{transition:color .3s ease;border-bottom:1px solid transparent}
-.dato__val a:hover{color:var(--rojo);border-bottom-color:var(--rojo)}
-/* marca de placeholder editable */
-.editable{
-  position:relative;
-  background:rgba(214,68,47,.12);
-  border:1px dashed var(--rojo);
-  padding:1px 7px;border-radius:2px;
-}
-
-.acciones{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px}
-.boton{
-  display:inline-flex;align-items:center;gap:12px;
-  font-family:var(--mono);font-size:.78rem;font-weight:700;
-  text-transform:uppercase;letter-spacing:.08em;
-  padding:16px 26px;border:1px solid var(--hueso);
-  transition:background .35s var(--ease),color .35s var(--ease),border-color .35s ease;
-}
-.boton .fl{transition:transform .4s var(--ease)}
-.boton:hover .fl{transform:translateX(5px)}
-.boton--rojo{background:var(--rojo);border-color:var(--rojo);color:#fff}
-.boton--rojo:hover{background:var(--rojo-hover);border-color:var(--rojo-hover)}
-.boton--ghost:hover{background:var(--hueso);color:var(--grafito)}
+.btn--primary{ background:var(--azul); color:#fff; }
+.btn--primary:hover{ background:#fff; color:var(--negro); }
+.btn--ghost{ border:1px solid rgba(255,255,255,.35); color:#fff; }
+.btn--ghost:hover{ background:#fff; color:var(--negro); border-color:#fff; }
 
 /* ============================================================
    FOOTER
    ============================================================ */
-.pie{background:var(--grafito);color:var(--mut-osc);border-top:1px solid var(--linea-osc);position:relative;z-index:1}
-.pie__fila{
-  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:18px;
-  padding-block:30px;
-}
-.pie__nombre{font-family:var(--titular);font-size:1.3rem;color:var(--hueso);letter-spacing:.02em;text-transform:uppercase}
-.pie__metas{display:flex;flex-wrap:wrap;gap:8px 28px}
-.pie__metas span{font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase}
-.pie__credito{font-family:var(--mono);font-size:.64rem;letter-spacing:.08em}
-.pie__credito b{color:var(--rojo)}
-
-/* ============================================================
-   REVEAL — entradas por scroll
-   ============================================================ */
-.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
-.reveal.visible{opacity:1;transform:none}
-.reveal[data-d="1"]{transition-delay:.08s}
-.reveal[data-d="2"]{transition-delay:.16s}
-.reveal[data-d="3"]{transition-delay:.24s}
-.reveal[data-d="4"]{transition-delay:.32s}
-
-/* ============================================================
-   MENÚ MÓVIL (overlay)
-   ============================================================ */
-.menu-movil{
-  position:fixed;inset:0;z-index:110;
-  background:var(--grafito);color:var(--hueso);
-  display:flex;flex-direction:column;justify-content:center;
-  padding:var(--gut);
-  transform:translateY(-100%);
-  transition:transform .5s var(--ease);
-  pointer-events:none;
-}
-.menu-abierto .menu-movil{transform:translateY(0);pointer-events:auto}
-.menu-movil a{
-  display:flex;align-items:baseline;gap:14px;
-  font-family:var(--titular);font-size:clamp(2.2rem,11vw,3.4rem);
-  text-transform:uppercase;letter-spacing:.01em;
-  padding-block:14px;border-bottom:1px solid var(--linea-osc);
-}
-.menu-movil a .n{font-family:var(--mono);font-size:.8rem;color:var(--rojo)}
-.menu-movil__pie{margin-top:38px;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;color:var(--mut-osc)}
+.footer{ background:var(--negro); color:rgba(255,255,255,.55); padding:clamp(34px,5vh,48px) clamp(20px,5vw,60px); border-top:1px solid rgba(255,255,255,.08); }
+.footer__row{ max-width:1380px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
+.footer__brand{ font-family:var(--display); font-weight:800; color:#fff; font-size:1.05rem; letter-spacing:-.01em; }
+.footer__brand b{ color:var(--azul); }
+.footer__credit{ font-size:.8rem; letter-spacing:.04em; }
+.footer__credit b{ color:rgba(255,255,255,.85); font-weight:600; }
 
 /* ============================================================
    RESPONSIVE
    ============================================================ */
-@media(max-width:980px){
-  .estudio__grid{grid-template-columns:1fr;gap:48px}
-  .contacto__grid{grid-template-columns:1fr;gap:44px}
+@media (max-width:860px){
+  .nav__links{ display:none; }
+  .nav__burger{ display:flex; }
+  .hero-meta{ flex-direction:column; align-items:flex-start; gap:18px; }
+  .hero-loc{ white-space:normal; }
+  .project{ height:88svh; }
+  .serv-item{ grid-template-columns:auto 1fr; }
+  .serv-desc{ display:none; }
 }
-@media(max-width:860px){
-  .hero__grid{grid-template-columns:1fr}
-  .hero__lamina{display:none}   /* en móvil el titular manda; sin lámina lateral */
-  .servicios__grid{grid-template-columns:1fr}
-}
-@media(max-width:760px){
-  .nav{display:none}
-  .hamburguesa{display:block}
-  .obra__fila{grid-template-columns:42px 1fr auto;gap:14px}
-  .obra__metas{gap:6px 16px}
-  .cab-seccion{flex-direction:column;align-items:flex-start;gap:18px}
-  .cab-seccion__der{text-align:left}
-  .pie__fila{flex-direction:column;align-items:flex-start}
-}
-@media(max-width:480px){
-  .hero__metas{gap:14px 22px}
-  .cifra{grid-template-columns:1fr;gap:10px}
+@media (max-width:560px){
+  .hero-title{ font-size:clamp(2.6rem,17vw,4.4rem); }
+  .project-name{ font-size:clamp(2rem,14vw,4rem); }
+  .contacto-title{ font-size:clamp(2.4rem,16vw,5rem); }
 }
 
-/* ============================================================
-   ACCESIBILIDAD — reduce motion
-   ============================================================ */
-@media(prefers-reduced-motion:reduce){
-  *,*::before,*::after{
-    animation-duration:.001ms!important;
-    animation-iteration-count:1!important;
-    transition-duration:.001ms!important;
-    scroll-behavior:auto!important;
-  }
-  .reveal,.hero__intro,.hero__lamina{opacity:1;transform:none}
-  .hero__linea .palabra{transform:none}
-}
+/* Estado inicial oculto para reveals (evita flash antes de GSAP) */
+.js-ready .reveal,
+.js-ready .reveal-words,
+.js-ready .reveal-stagger-card{ visibility:hidden; }
 </style>
 </head>
+
 <body>
 
-<!-- Retícula de fondo: 12 columnas guía (4 en móvil) -->
-<div class="reticula-fondo" aria-hidden="true">
-  <span></span><span></span><span></span><span></span><span></span><span></span>
-  <span></span><span></span><span></span><span></span><span></span><span></span>
+<!-- ============ CURSOR ============ -->
+<div class="cursor" aria-hidden="true"></div>
+
+<!-- ============ BARRA DE PROGRESO DE SCROLL ============ -->
+<div class="scroll-prog" aria-hidden="true"></div>
+
+<!-- ============ LOADER ============ -->
+<div class="loader" aria-hidden="true">
+  <div class="loader__mark"><span>JOE&nbsp;</span><span class="accent">JIBAJA</span><span>&nbsp;VEGA</span></div>
+  <span class="loader__pct">0</span>
+  <span class="loader__bar"></span>
 </div>
 
-<!-- ============================ HEADER ============================ -->
-<header class="cabecera" id="cabecera">
-  <div class="contenedor cabecera__fila">
-    <a href="#inicio" class="monograma" aria-label="Joe Jibaja Vega — inicio">
-      <span class="monograma__jjv">JJV</span>
-      <span class="monograma__sub">Arquitectura</span>
-    </a>
-    <nav class="nav" aria-label="Navegación principal">
-      <a href="#estudio"><span class="n">N°01</span> Estudio</a>
-      <a href="#proyectos"><span class="n">N°02</span> Proyectos</a>
-      <a href="#servicios"><span class="n">N°03</span> Servicios</a>
-      <a href="#contacto"><span class="n">N°04</span> Contacto</a>
-    </nav>
-    <button class="hamburguesa" id="hamburguesa" aria-label="Abrir menú" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
+<!-- ============ NAVBAR ============ -->
+<header class="nav" id="nav">
+  <a href="#hero" class="nav__brand">Joe Jibaja<b>.</b> Vega</a>
+  <nav class="nav__links">
+    <a href="#estudio" class="link-underline">Estudio</a>
+    <a href="#proyectos" class="link-underline">Proyectos</a>
+    <a href="#servicios" class="link-underline">Servicios</a>
+    <a href="#contacto" class="nav__cta magnetic">Contacto</a>
+  </nav>
+  <button class="nav__burger" id="burger" aria-label="Abrir menú">
+    <span></span><span></span><span></span>
+  </button>
 </header>
 
-<!-- Menú móvil overlay -->
-<nav class="menu-movil" id="menuMovil" aria-label="Navegación móvil">
-  <a href="#estudio"><span class="n">N°01</span> Estudio</a>
-  <a href="#proyectos"><span class="n">N°02</span> Proyectos</a>
-  <a href="#servicios"><span class="n">N°03</span> Servicios</a>
-  <a href="#contacto"><span class="n">N°04</span> Contacto</a>
-  <div class="menu-movil__pie">LAT. 0°12'S · LON. 78°24'W — TUMBACO, QUITO</div>
-</nav>
+<!-- ============ MENÚ MÓVIL ============ -->
+<div class="menu-mobile" id="menuMobile">
+  <a href="#estudio"><span>01</span>Estudio</a>
+  <a href="#proyectos"><span>02</span>Proyectos</a>
+  <a href="#servicios"><span>03</span>Servicios</a>
+  <a href="#contacto"><span>04</span>Contacto</a>
+  <p class="menu-foot">Tumbaco, Quito — Ecuador<br>contacto@joejibajavega.com</p>
+</div>
 
-<!-- ============================ HERO ============================ -->
-<section class="hero" id="inicio">
-  <div class="contenedor">
-    <div class="hero__grid">
-      <!-- Columna texto -->
-      <div class="hero__col-texto">
-        <!-- Etiquetas técnicas mono -->
-        <div class="hero__metas">
-          <div class="meta"><span class="lab">Ubicación</span><span class="val">Tumbaco · Quito · EC</span></div>
-          <div class="meta"><span class="lab">Coordenadas</span><span class="val">0°12'S 78°24'W</span></div>
-          <div class="meta"><span class="lab">Disciplina</span><span class="val">Arquitectura</span></div>
-          <div class="meta"><span class="lab">Escala</span><span class="val">1:1</span></div>
-        </div>
-
-        <h1 class="hero__titular">
-          <span class="hero__linea"><span class="palabra">Joe Jibaja</span></span>
-          <span class="hero__linea"><span class="palabra">Vega</span></span>
-          <span class="hero__linea hero__linea--rojo"><span class="palabra">Arquitecto</span></span>
-        </h1>
-
-        <p class="hero__intro">
-          Arquitectura de gran escala: equipamiento deportivo, cultural y comercial.
-          Del concepto al render, con diseño paramétrico y visualización 3D fotorrealista.
-        </p>
-      </div>
-
-      <!-- Lámina enmarcada (hero) -->
-      <figure class="hero__lamina">
-        <span class="esquina tr"></span><span class="esquina bl"></span>
-        <img src="../../assets/img/exterior-atardecer.jpg" alt="Fachada curva paramétrica acristalada a la hora azul" fetchpriority="high">
-        <span class="tag-lamina">LÁM. 00 / PORTADA</span>
-        <span class="coord-lamina">RENDER · 0°12'S</span>
-      </figure>
+<!-- ============ HERO ============ -->
+<section class="hero" id="hero">
+  <div class="hero-bg"><img src="../../assets/img/exterior-atardecer.jpg" alt="Fachada curva acristalada en la hora azul"></div>
+  <div class="hero-inner">
+    <div class="hero-kicker">
+      <span class="dot"></span>
+      <span class="kicker">Arquitecto · Tumbaco — Quito, Ecuador</span>
     </div>
-
-    <!-- Banda guía inferior -->
-    <div class="hero__guias">
-      <span class="scroll"><span class="punto"></span>Desliza</span>
-      <span class="linea-draw"></span>
-      <span class="coord-final">EJE Y — 2026</span>
+    <h1 class="hero-title">
+      <span class="line-mask"><span class="line">Arquitectura</span></span>
+      <span class="line-mask"><span class="line outline">Monumental</span></span>
+    </h1>
+    <div class="hero-meta">
+      <p class="reveal">Diseño de gran escala y visualización 3D fotorrealista. Coliseos, arenas deportivas y complejos paramétricos concebidos para perdurar.</p>
+      <span class="hero-loc reveal">0°12′ S — 78°24′ O · Tumbaco</span>
     </div>
   </div>
+  <div class="scroll-cue"><div class="bar"></div><span>Scroll</span></div>
 </section>
 
-<!-- ============================ ESTUDIO ============================ -->
-<section class="seccion estudio" id="estudio">
-  <div class="contenedor">
-    <div class="cab-seccion reveal">
-      <div class="cab-seccion__izq">
-        <span class="num-seccion">N°01 / ESTUDIO</span>
-        <h2 class="cab-seccion__titulo">El Estudio</h2>
-      </div>
-      <div class="cab-seccion__der">
-        MANIFIESTO<br>EST. JJV — ARQUITECTURA<br>TUMBACO, QUITO
-      </div>
-    </div>
-
-    <div class="estudio__grid">
-      <!-- Texto / manifiesto -->
-      <div class="estudio__texto reveal">
-        <p>
-          Proyecto <strong>arquitectura de gran escala</strong> donde la estructura es el argumento.
-          Coliseos, arenas, complejos deportivos y pabellones que ordenan el territorio y dan
-          forma al encuentro de miles de personas.
-        </p>
-        <p>
-          Cada obra nace de una lógica precisa: ejes, retículas y geometría paramétrica que se
-          traducen en <strong>volúmenes habitables y fotorrealistas</strong> mucho antes de la primera
-          excavación. Del concepto al render, sin perder el control del detalle.
-        </p>
-        <p>
-          Una arquitectura con carácter de autor: rigurosa en lo técnico, ambiciosa en lo formal,
-          construible en lo real.
-        </p>
-        <div class="estudio__firma">JOE JIBAJA VEGA — ARQUITECTO</div>
-      </div>
-
-      <!-- Cifras gigantes (PLACEHOLDERS editables) -->
-      <div class="cifras reveal" data-d="1">
-        <div class="cifra">
-          <div class="cifra__num"><span class="signo">+</span><span class="contador" data-objetivo="15">0</span></div>
-          <div class="cifra__info">
-            <span class="cifra__lab">Años de trayectoria</span>
-            <span class="cifra__desc">Práctica continua en proyectos de equipamiento.</span>
-          </div>
-        </div>
-        <div class="cifra">
-          <div class="cifra__num"><span class="signo">+</span><span class="contador" data-objetivo="250" data-sufijo="K">0</span></div>
-          <div class="cifra__info">
-            <span class="cifra__lab">Metros cuadrados proyectados</span>
-            <span class="cifra__desc">Superficie total diseñada y visualizada en 3D.</span>
-          </div>
-        </div>
-        <div class="cifra">
-          <div class="cifra__num"><span class="signo">+</span><span class="contador" data-objetivo="30">0</span></div>
-          <div class="cifra__info">
-            <span class="cifra__lab">Proyectos desarrollados</span>
-            <span class="cifra__desc">Del anteproyecto a la dirección de obra.</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================ PROYECTOS ============================ -->
-<section class="seccion proyectos" id="proyectos">
-  <div class="contenedor">
-    <div class="cab-seccion reveal">
-      <div class="cab-seccion__izq">
-        <span class="num-seccion">N°02 / OBRA</span>
-        <h2 class="cab-seccion__titulo">Índice de Obra</h2>
-      </div>
-      <div class="cab-seccion__der">
-        SELECCIÓN 2018–2026<br>05 LÁMINAS<br>EXPANDIR PARA VER
-      </div>
-    </div>
-
-    <div class="obra" id="obra">
-      <!-- N°01 -->
-      <article class="obra__fila" tabindex="0" role="button" aria-expanded="false">
-        <span class="obra__n">N°01</span>
-        <div class="obra__cuerpo">
-          <h3 class="obra__nombre">Coliseo Multiuso</h3>
-          <div class="obra__metas">
-            <span><b>Tipología</b> Deportivo / Cultural</span>
-            <span><b>Año</b> 2025</span>
-            <span><b>Estado</b> Anteproyecto</span>
-          </div>
-        </div>
-        <span class="obra__flecha">[ + ]</span>
-        <div class="obra__media">
-          <div class="obra__media-inner">
-            <figure class="obra__lamina">
-              <span class="esquina tr"></span><span class="esquina bl"></span>
-              <img src="../../assets/img/arena-interior.jpg" alt="Interior de coliseo de básquet con gradas llenas y pantalla central" loading="lazy">
-              <span class="tag">LÁM. 01 / INTERIOR</span>
-              <span class="esc">CAP. 8.000 — ESC. 1:200</span>
-            </figure>
-          </div>
-        </div>
-      </article>
-
-      <!-- N°02 -->
-      <article class="obra__fila" tabindex="0" role="button" aria-expanded="false">
-        <span class="obra__n">N°02</span>
-        <div class="obra__cuerpo">
-          <h3 class="obra__nombre">Complejo Deportivo Paramétrico</h3>
-          <div class="obra__metas">
-            <span><b>Tipología</b> Equipamiento</span>
-            <span><b>Año</b> 2024</span>
-            <span><b>Estado</b> Proyecto ejecutivo</span>
-          </div>
-        </div>
-        <span class="obra__flecha">[ + ]</span>
-        <div class="obra__media">
-          <div class="obra__media-inner">
-            <figure class="obra__lamina">
-              <span class="esquina tr"></span><span class="esquina bl"></span>
-              <img src="../../assets/img/fachada-noche.jpg" alt="Fachada paramétrica iluminada de verde por la noche" loading="lazy">
-              <span class="tag">LÁM. 02 / FACHADA</span>
-              <span class="esc">ENVOLVENTE — ESC. 1:150</span>
-            </figure>
-          </div>
-        </div>
-      </article>
-
-      <!-- N°03 -->
-      <article class="obra__fila" tabindex="0" role="button" aria-expanded="false">
-        <span class="obra__n">N°03</span>
-        <div class="obra__cuerpo">
-          <h3 class="obra__nombre">Centro de Alto Rendimiento</h3>
-          <div class="obra__metas">
-            <span><b>Tipología</b> Deportivo</span>
-            <span><b>Año</b> 2024</span>
-            <span><b>Estado</b> Diseño</span>
-          </div>
-        </div>
-        <span class="obra__flecha">[ + ]</span>
-        <div class="obra__media">
-          <div class="obra__media-inner">
-            <figure class="obra__lamina">
-              <span class="esquina tr"></span><span class="esquina bl"></span>
-              <img src="../../assets/img/gimnasio.jpg" alt="Gimnasio interior con ring de boxeo y personas entrenando" loading="lazy">
-              <span class="tag">LÁM. 03 / INTERIOR</span>
-              <span class="esc">PROGRAMA — ESC. 1:100</span>
-            </figure>
-          </div>
-        </div>
-      </article>
-
-      <!-- N°04 -->
-      <article class="obra__fila" tabindex="0" role="button" aria-expanded="false">
-        <span class="obra__n">N°04</span>
-        <div class="obra__cuerpo">
-          <h3 class="obra__nombre">Pabellón Gastronómico</h3>
-          <div class="obra__metas">
-            <span><b>Tipología</b> Comercial</span>
-            <span><b>Año</b> 2023</span>
-            <span><b>Estado</b> Anteproyecto</span>
-          </div>
-        </div>
-        <span class="obra__flecha">[ + ]</span>
-        <div class="obra__media">
-          <div class="obra__media-inner">
-            <figure class="obra__lamina">
-              <span class="esquina tr"></span><span class="esquina bl"></span>
-              <img src="../../assets/img/terraza-restaurante.jpg" alt="Terraza y restaurante nocturno con estructura roja iluminada" loading="lazy">
-              <span class="tag">LÁM. 04 / TERRAZA</span>
-              <span class="esc">ESTRUCTURA — ESC. 1:75</span>
-            </figure>
-          </div>
-        </div>
-      </article>
-
-      <!-- N°05 -->
-      <article class="obra__fila" tabindex="0" role="button" aria-expanded="false">
-        <span class="obra__n">N°05</span>
-        <div class="obra__cuerpo">
-          <h3 class="obra__nombre">Explanada y Accesos</h3>
-          <div class="obra__metas">
-            <span><b>Tipología</b> Urbano / Paisaje</span>
-            <span><b>Año</b> 2026</span>
-            <span><b>Estado</b> Concepto</span>
-          </div>
-        </div>
-        <span class="obra__flecha">[ + ]</span>
-        <div class="obra__media">
-          <div class="obra__media-inner">
-            <figure class="obra__lamina">
-              <span class="esquina tr"></span><span class="esquina bl"></span>
-              <img src="../../assets/img/exterior-rampa.jpg" alt="Exterior diurno con explanada y rampa roja frente a edificio acristalado" loading="lazy">
-              <span class="tag">LÁM. 05 / ACCESO</span>
-              <span class="esc">PLAZA — ESC. 1:250</span>
-            </figure>
-          </div>
-        </div>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- ============================ SERVICIOS ============================ -->
-<section class="seccion servicios" id="servicios">
-  <div class="contenedor">
-    <div class="cab-seccion reveal">
-      <div class="cab-seccion__izq">
-        <span class="num-seccion">N°03 / SERVICIOS</span>
-        <h2 class="cab-seccion__titulo">Servicios</h2>
-      </div>
-      <div class="cab-seccion__der">
-        ALCANCE COMPLETO<br>DEL CONCEPTO<br>A LA OBRA
-      </div>
-    </div>
-
-    <div class="servicios__grid">
-      <article class="servicio reveal">
-        <span class="servicio__n">N°01</span>
-        <h3 class="servicio__titulo">Diseño Arquitectónico</h3>
-        <p class="servicio__desc">Concepción integral del proyecto: programa, partido y forma para equipamientos de gran escala.</p>
-      </article>
-      <article class="servicio reveal" data-d="1">
-        <span class="servicio__n">N°02</span>
-        <h3 class="servicio__titulo">Diseño Paramétrico</h3>
-        <p class="servicio__desc">Geometría generativa y envolventes complejas controladas por lógica y datos, no por azar.</p>
-      </article>
-      <article class="servicio reveal" data-d="2">
-        <span class="servicio__n">N°03</span>
-        <h3 class="servicio__titulo">Visualización 3D</h3>
-        <p class="servicio__desc">Renders fotorrealistas que comunican la obra y convencen antes de construir.</p>
-      </article>
-      <article class="servicio reveal" data-d="3">
-        <span class="servicio__n">N°04</span>
-        <h3 class="servicio__titulo">Anteproyecto y Proyecto Ejecutivo</h3>
-        <p class="servicio__desc">Documentación técnica completa, coordinada y lista para licitación y construcción.</p>
-      </article>
-      <article class="servicio reveal">
-        <span class="servicio__n">N°05</span>
-        <h3 class="servicio__titulo">Dirección de Obra</h3>
-        <p class="servicio__desc">Supervisión en sitio para que lo proyectado se construya con la precisión del plano.</p>
-      </article>
-      <!-- Sexta celda: cierre técnico para completar la retícula 2x3 -->
-      <article class="servicio reveal" data-d="1" style="background:var(--hueso-2)">
-        <span class="servicio__n">EJE</span>
-        <h3 class="servicio__titulo">Del Concepto al Render</h3>
-        <p class="servicio__desc">Un único interlocutor a lo largo de todo el proceso. Coherencia total entre idea, dibujo y obra.</p>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- ============================ CONTACTO ============================ -->
-<section class="seccion contacto" id="contacto">
-  <div class="contenedor">
-    <div class="cab-seccion reveal">
-      <div class="cab-seccion__izq">
-        <span class="num-seccion">N°04 / CONTACTO</span>
-        <h2 class="cab-seccion__titulo">Contacto</h2>
-      </div>
-      <div class="cab-seccion__der">
-        INICIEMOS<br>UN PROYECTO<br>TUMBACO, QUITO
-      </div>
-    </div>
-
-    <div class="contacto__grid">
-      <!-- Lema + acciones -->
+<!-- ============ ESTUDIO / MANIFIESTO ============ -->
+<section class="estudio" id="estudio">
+  <div class="estudio__grid">
+    <p class="estudio__lead reveal">Diseñamos estructuras que <em>definen el horizonte</em> de una ciudad y resisten el paso del tiempo.</p>
+    <div class="estudio__cols">
       <div class="reveal">
-        <p class="contacto__lema">Construyamos algo <em>de gran escala.</em></p>
-        <p class="contacto__sub">
-          Cuéntame tu proyecto de equipamiento deportivo, cultural o comercial.
-          Del primer boceto al render final, lo llevamos del concepto a la obra.
-        </p>
-        <div class="acciones">
-          <!-- PLACEHOLDER: reemplazar email real si difiere -->
-          <a class="boton boton--rojo" href="mailto:contacto@joejibajavega.com">
-            Escribir email <span class="fl">→</span>
-          </a>
-          <!-- PLACEHOLDER: reemplazar número de WhatsApp real -->
-          <a class="boton boton--ghost" href="https://wa.me/5939XXXXXXXX" target="_blank" rel="noopener">
-            WhatsApp <span class="fl">→</span>
-          </a>
-        </div>
+        <span class="estudio__tag">El estudio</span>
+        <p>Más de quince años proyectando arquitectura monumental: del trazo paramétrico a la dirección de obra. Cada proyecto nace de una ambición clara y se resuelve con precisión técnica y visualización fotorrealista que anticipa lo construido.</p>
       </div>
-
-      <!-- Datos (con marcas de placeholder editable) -->
-      <div class="datos reveal" data-d="1">
-        <div class="dato">
-          <span class="dato__lab">Email</span>
-          <span class="dato__val"><a href="mailto:contacto@joejibajavega.com">contacto@joejibajavega.com</a></span>
-        </div>
-        <div class="dato">
-          <span class="dato__lab">Teléfono · WhatsApp</span>
-          <span class="dato__val"><span class="editable">[+593 9 · · · · · · · · ]</span></span>
-        </div>
-        <div class="dato">
-          <span class="dato__lab">Ubicación</span>
-          <span class="dato__val">Tumbaco, Quito — Ecuador</span>
-        </div>
-        <div class="dato">
-          <span class="dato__lab">Coordenadas</span>
-          <span class="dato__val" style="font-family:var(--mono);font-size:.95rem">0°12'S · 78°24'W</span>
-        </div>
+      <div class="reveal">
+        <span class="estudio__tag">El método</span>
+        <p>Geometría paramétrica, ingeniería de gran luz y representación cinematográfica. Integramos forma, estructura y experiencia para que coliseos, arenas y pabellones funcionen a escala humana y urbana por igual.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================ FOOTER ============================ -->
-<footer class="pie">
-  <div class="contenedor pie__fila">
-    <span class="pie__nombre">Joe Jibaja Vega</span>
-    <div class="pie__metas">
-      <span>LAT. 0°12'S</span>
-      <span>LON. 78°24'W</span>
-      <span>TUMBACO · QUITO · EC</span>
-      <span>© 2026</span>
+<!-- ============ STATS (vidrio sobre oscuro) ============ -->
+<section class="stats">
+  <div class="stats__head reveal">
+    <span class="kicker">Trayectoria <span class="draw-line"></span></span>
+    <h2 class="reveal-words">Cifras que respaldan cada proyecto de gran escala.</h2>
+  </div>
+  <div class="stats__grid">
+    <div class="glass reveal-stagger-card">
+      <div class="stat-line"><span class="pre">+</span><span class="stat-num" data-count="15">0</span></div>
+      <p class="label">Años proyectando arquitectura monumental.</p>
     </div>
-    <span class="pie__credito">Sitio por <b>Hanlid</b></span>
+    <div class="glass reveal-stagger-card">
+      <div class="stat-line"><span class="pre">+</span><span class="stat-num" data-count="250000">0</span></div>
+      <p class="label">Metros cuadrados diseñados y construidos.</p>
+    </div>
+    <div class="glass reveal-stagger-card">
+      <div class="stat-line"><span class="pre">+</span><span class="stat-num" data-count="30">0</span></div>
+      <p class="label">Proyectos de gran escala desarrollados.</p>
+    </div>
+    <div class="glass reveal-stagger-card">
+      <div class="stat-line"><span class="stat-num" data-count="100">0</span><span class="suf">%</span></div>
+      <p class="label">Visualización 3D fotorrealista en cada entrega.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>Arquitectura Monumental</span><span class="dot">●</span><span class="o">Visualización 3D</span><span class="dot">●</span><span>Gran Escala</span><span class="dot">●</span><span class="o">Diseño Paramétrico</span><span class="dot">●</span>
+    <span>Arquitectura Monumental</span><span class="dot">●</span><span class="o">Visualización 3D</span><span class="dot">●</span><span>Gran Escala</span><span class="dot">●</span><span class="o">Diseño Paramétrico</span><span class="dot">●</span>
+  </div>
+</div>
+
+<!-- ============ PROYECTOS ============ -->
+<section class="proyectos-intro" id="proyectos">
+  <span class="kicker reveal">Obra seleccionada <span class="draw-line"></span></span>
+  <h2 class="reveal-words">Proyectos que ocupan el territorio.</h2>
+</section>
+
+<!-- Proyecto 01 -->
+<section class="project">
+  <div class="project-img"><img src="../../assets/img/arena-interior.jpg" alt="Arena deportiva interior con pantalla central"></div>
+  <div class="project-inner">
+    <div class="project-top">
+      <span class="project-num">01 / 05</span>
+      <span class="project-type">Arena deportiva · Estructura de gran luz</span>
+    </div>
+    <div>
+      <h3 class="project-name">Coliseo<br>Multiuso</h3>
+      <div class="project-foot">
+        <p>Arena de uso múltiple con cubierta de gran luz y pantalla central, optimizada para espectáculos y alto aforo.</p>
+        <span class="project-year">2024</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Proyecto 02 -->
+<section class="project">
+  <div class="project-img"><img src="../../assets/img/fachada-noche.jpg" alt="Fachada paramétrica iluminada en la noche"></div>
+  <div class="project-inner">
+    <div class="project-top">
+      <span class="project-num">02 / 05</span>
+      <span class="project-type">Complejo paramétrico · Envolvente</span>
+    </div>
+    <div>
+      <h3 class="project-name">Complejo<br>Paramétrico</h3>
+      <div class="project-foot">
+        <p>Envolvente paramétrica de geometría variable e iluminación dinámica que convierte la fachada en hito urbano nocturno.</p>
+        <span class="project-year">2024</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Proyecto 03 -->
+<section class="project">
+  <div class="project-img"><img src="../../assets/img/gimnasio.jpg" alt="Centro de alto rendimiento con ring de boxeo"></div>
+  <div class="project-inner">
+    <div class="project-top">
+      <span class="project-num">03 / 05</span>
+      <span class="project-type">Centro de alto rendimiento · Deportivo</span>
+    </div>
+    <div>
+      <h3 class="project-name">Alto<br>Rendimiento</h3>
+      <div class="project-foot">
+        <p>Centro de entrenamiento integral con áreas especializadas, luz natural controlada y programa deportivo de élite.</p>
+        <span class="project-year">2023</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Proyecto 04 -->
+<section class="project">
+  <div class="project-img"><img src="../../assets/img/terraza-restaurante.jpg" alt="Pabellón gastronómico con estructura roja iluminada"></div>
+  <div class="project-inner">
+    <div class="project-top">
+      <span class="project-num">04 / 05</span>
+      <span class="project-type">Pabellón gastronómico · Terraza</span>
+    </div>
+    <div>
+      <h3 class="project-name">Pabellón<br>Gastronómico</h3>
+      <div class="project-foot">
+        <p>Estructura ligera de acento cromático y terraza nocturna concebida como experiencia social y punto de encuentro.</p>
+        <span class="project-year">2023</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Proyecto 05 -->
+<section class="project">
+  <div class="project-img"><img src="../../assets/img/exterior-rampa.jpg" alt="Explanada exterior diurna con accesos"></div>
+  <div class="project-inner">
+    <div class="project-top">
+      <span class="project-num">05 / 05</span>
+      <span class="project-type">Explanada y accesos · Urbanismo</span>
+    </div>
+    <div>
+      <h3 class="project-name">Explanada<br>y Accesos</h3>
+      <div class="project-foot">
+        <p>Espacio público y circulaciones a gran escala que articulan el ingreso, ordenan flujos y conectan con la ciudad.</p>
+        <span class="project-year">2022</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERVICIOS ============ -->
+<section class="servicios" id="servicios">
+  <div class="servicios__head">
+    <span class="kicker reveal">Capacidades <span class="draw-line"></span></span>
+    <h2 class="reveal-words">Del concepto paramétrico a la obra terminada.</h2>
+  </div>
+  <div class="servicios__list">
+    <div class="serv-item">
+      <span class="serv-num">01</span>
+      <span class="serv-name">Diseño arquitectónico</span>
+      <span class="serv-desc">Concepto, partido y desarrollo formal de gran escala.</span>
+    </div>
+    <div class="serv-item">
+      <span class="serv-num">02</span>
+      <span class="serv-name">Diseño paramétrico</span>
+      <span class="serv-desc">Geometría algorítmica y envolventes complejas optimizadas.</span>
+    </div>
+    <div class="serv-item">
+      <span class="serv-num">03</span>
+      <span class="serv-name">Visualización 3D</span>
+      <span class="serv-desc">Renders fotorrealistas y recorridos cinematográficos.</span>
+    </div>
+    <div class="serv-item">
+      <span class="serv-num">04</span>
+      <span class="serv-name">Anteproyecto y ejecutivo</span>
+      <span class="serv-desc">Documentación técnica completa para construcción.</span>
+    </div>
+    <div class="serv-item">
+      <span class="serv-num">05</span>
+      <span class="serv-name">Dirección de obra</span>
+      <span class="serv-desc">Supervisión y control en sitio hasta la entrega.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACTO ============ -->
+<section class="contacto" id="contacto">
+  <div class="contacto-bg"><img src="../../assets/img/exterior-cancha.jpg" alt="Exterior diurno con cancha de fútbol"></div>
+  <div class="contacto-inner">
+    <span class="kicker">Hablemos de tu proyecto</span>
+    <h2 class="contacto-title">
+      <span class="line-mask"><span class="line">Construyamos</span></span>
+      <span class="line-mask"><span class="line outline">a Escala</span></span>
+    </h2>
+    <div class="contacto-grid">
+      <div class="contacto-data reveal">
+        <span>Correo</span>
+        <a href="mailto:contacto@joejibajavega.com" class="link-underline">contacto@joejibajavega.com</a>
+      </div>
+      <div class="contacto-data reveal">
+        <span>Teléfono</span>
+        <p>+593 9 ·· ··· ···</p>
+      </div>
+      <div class="contacto-data reveal">
+        <span>Ubicación</span>
+        <p>Tumbaco, Quito — Ecuador</p>
+      </div>
+      <div class="contacto-btns reveal">
+        <a href="mailto:contacto@joejibajavega.com" class="btn btn--primary magnetic">Escribir un correo</a>
+        <a href="https://wa.me/5939000000000" target="_blank" rel="noopener" class="btn btn--ghost magnetic">WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="footer__row">
+    <span class="footer__brand">Joe Jibaja<b>.</b> Vega — Arquitecto</span>
+    <span class="footer__credit">© 2024 · Sitio por <b>Hanlid</b></span>
   </div>
 </footer>
 
+<!-- ============================================================
+     SCRIPTS — GSAP + ScrollTrigger + Lenis
+     ============================================================ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lenis/1.1.13/lenis.min.js"></script>
 <script>
-/* ============================================================
-   "ESTRUCTURA" — Interacciones
-   Sin librerías. IntersectionObserver + listeners.
-   Respeta prefers-reduced-motion.
-   ============================================================ */
+gsap.registerPlugin(ScrollTrigger);
+document.documentElement.classList.add('js-ready');
+
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- Helper: dividir texto en palabras enmascaradas ---------- */
+function splitWords(el){
+  if (el.dataset.split) return;
+  const words = el.textContent.trim().split(/\s+/);
+  el.innerHTML = words.map(w => `<span class="word"><span>${w}</span></span>`).join(' ');
+  el.dataset.split = '1';
+}
+
+/* ---------- Lenis + ScrollTrigger (raf único) ---------- */
+/* Lenis es opcional: si su CDN no carga, el sitio degrada a scroll nativo
+   sin romper GSAP/ScrollTrigger ni las animaciones. */
+let lenis;
+if (!reduce && typeof Lenis !== 'undefined'){
+  lenis = new Lenis({ duration:1.1, easing:t=>Math.min(1,1.001-Math.pow(2,-10*t)), smoothWheel:true });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(t => lenis.raf(t*1000));
+  gsap.ticker.lagSmoothing(0);
+}
+ScrollTrigger.config({ ignoreMobileResize:true });
+
+/* ---------- Watchdog del loader (independiente de GSAP/Lenis) ----------
+   Pase lo que pase, oculta el loader a los 3.5s para que nunca quede
+   colgado tapando la página. No depende de que GSAP, Lenis o el timeline
+   de intro existan o terminen. */
 (function(){
-  'use strict';
-  const reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-
-  /* ---- 1. Entrada del HERO ---- */
-  const hero = document.getElementById('inicio');
-  if(reduce){
-    hero.classList.add('entrar');
-  }else{
-    // pequeño retardo para que las fuentes carguen y la animación se note
-    requestAnimationFrame(()=>setTimeout(()=>hero.classList.add('entrar'),120));
+  var killed = false;
+  function killLoader(){
+    if (killed) return; killed = true;
+    var l = document.querySelector('.loader');
+    if (!l) return;
+    l.style.transition = 'opacity .6s ease, transform .6s ease';
+    l.style.opacity = '0';
+    l.style.transform = 'translateY(-100%)';
+    setTimeout(function(){ l.style.display = 'none'; }, 650);
   }
-
-  /* ---- 2. Reveal por scroll ---- */
-  const reveals = document.querySelectorAll('.reveal');
-  if(reduce){
-    reveals.forEach(el=>el.classList.add('visible'));
-  }else{
-    const obs = new IntersectionObserver((entradas,o)=>{
-      entradas.forEach(e=>{
-        if(e.isIntersecting){
-          e.target.classList.add('visible');
-          o.unobserve(e.target);
-        }
-      });
-    },{threshold:.16,rootMargin:'0px 0px -8% 0px'});
-    reveals.forEach(el=>obs.observe(el));
-  }
-
-  /* ---- 3. Contadores de cifras ---- */
-  const contadores = document.querySelectorAll('.contador');
-  function animarContador(el){
-    const objetivo = parseInt(el.dataset.objetivo,10) || 0;
-    const sufijo = el.dataset.sufijo || '';
-    if(reduce){ el.textContent = objetivo + sufijo; return; }
-    const dur = 1400;
-    const inicio = performance.now();
-    function paso(ahora){
-      const t = Math.min((ahora-inicio)/dur,1);
-      // easing out cúbico, firme y sin rebote
-      const e = 1 - Math.pow(1-t,3);
-      el.textContent = Math.round(objetivo*e) + sufijo;
-      if(t<1) requestAnimationFrame(paso);
-    }
-    requestAnimationFrame(paso);
-  }
-  const obsCont = new IntersectionObserver((entradas,o)=>{
-    entradas.forEach(e=>{
-      if(e.isIntersecting){ animarContador(e.target); o.unobserve(e.target); }
-    });
-  },{threshold:.5});
-  contadores.forEach(c=>obsCont.observe(c));
-
-  /* ---- 4. Proyectos: expandir/colapsar láminas ---- */
-  const filas = document.querySelectorAll('.obra__fila');
-  function alternarFila(fila){
-    const activa = fila.classList.contains('activa');
-    // colapsar todas (acordeón)
-    filas.forEach(f=>{
-      f.classList.remove('activa');
-      f.setAttribute('aria-expanded','false');
-      const fl = f.querySelector('.obra__flecha');
-      if(fl) fl.textContent = '[ + ]';
-    });
-    if(!activa){
-      fila.classList.add('activa');
-      fila.setAttribute('aria-expanded','true');
-      const fl = fila.querySelector('.obra__flecha');
-      if(fl) fl.textContent = '[ − ]';
-    }
-  }
-  filas.forEach(fila=>{
-    fila.addEventListener('click',()=>alternarFila(fila));
-    fila.addEventListener('keydown',ev=>{
-      if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); alternarFila(fila); }
-    });
-  });
-  // abrir la primera lámina por defecto para que la sección no luzca vacía
-  if(filas[0]) alternarFila(filas[0]);
-
-  /* ---- 5. Header: ocultar al bajar, mostrar al subir ---- */
-  const cab = document.getElementById('cabecera');
-  let ultimoY = window.scrollY;
-  let ticking = false;
-  function onScroll(){
-    const y = window.scrollY;
-    if(y > ultimoY && y > 140){ cab.classList.add('oculta'); }
-    else { cab.classList.remove('oculta'); }
-    ultimoY = y;
-    ticking = false;
-  }
-  window.addEventListener('scroll',()=>{
-    if(!ticking){ window.requestAnimationFrame(onScroll); ticking = true; }
-  },{passive:true});
-
-  /* ---- 6. Menú móvil ---- */
-  const ham = document.getElementById('hamburguesa');
-  const menu = document.getElementById('menuMovil');
-  function toggleMenu(abrir){
-    document.body.classList.toggle('menu-abierto',abrir);
-    ham.setAttribute('aria-expanded', abrir ? 'true' : 'false');
-    ham.setAttribute('aria-label', abrir ? 'Cerrar menú' : 'Abrir menú');
-  }
-  ham.addEventListener('click',()=>{
-    toggleMenu(!document.body.classList.contains('menu-abierto'));
-  });
-  menu.querySelectorAll('a').forEach(a=>{
-    a.addEventListener('click',()=>toggleMenu(false));
-  });
-  // cerrar con Escape
-  document.addEventListener('keydown',ev=>{
-    if(ev.key==='Escape' && document.body.classList.contains('menu-abierto')) toggleMenu(false);
-  });
+  setTimeout(killLoader, 3500);
 })();
+
+/* ---------- Navbar: sólido al scroll ---------- */
+const nav = document.getElementById('nav');
+const onScrollNav = () => nav.classList.toggle('solid', window.scrollY > 80);
+addEventListener('scroll', onScrollNav); onScrollNav();
+
+/* ---------- Menú móvil ---------- */
+const burger = document.getElementById('burger');
+const body = document.body;
+burger.addEventListener('click', () => body.classList.toggle('menu-open'));
+document.querySelectorAll('#menuMobile a').forEach(a =>
+  a.addEventListener('click', () => body.classList.remove('menu-open'))
+);
+
+/* ---------- Smooth scroll en anclas (vía Lenis) ---------- */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (!target) return;
+    e.preventDefault();
+    if (lenis) lenis.scrollTo(target, { offset:0, duration:1.2 });
+    else target.scrollIntoView({ behavior:'smooth' });
+  });
+});
+
+/* ============================================================
+   ANIMACIONES (solo si NO reduce)
+   ============================================================ */
+if (!reduce){
+
+  /* ---- 0. Barra de progreso de scroll global ---- */
+  gsap.to('.scroll-prog', {
+    scaleX:1, ease:'none',
+    scrollTrigger:{ start:0, end:'max', scrub:.3 }
+  });
+
+  /* ---- 1. Intro: loader con contador + cortina + título hero ---- */
+  const counter = { v:0 };
+  const pct = document.querySelector('.loader__pct');
+  const intro = gsap.timeline({ defaults:{ ease:'expo.out' }, delay:.1 });
+  intro
+    .to(counter, { v:100, duration:1.1, ease:'power2.inOut',
+      onUpdate:() => pct.textContent = Math.round(counter.v) }, 0)
+    .to('.loader__bar', { scaleX:1, duration:1.1, ease:'power2.inOut' }, 0)
+    .to('.loader__mark span', { yPercent:-130, autoAlpha:0, duration:.55, stagger:.05, ease:'power3.in' }, .85)
+    .to('.loader__pct', { autoAlpha:0, duration:.4, ease:'power2.in' }, .9)
+    .to('.loader', { yPercent:-100, duration:1.05, ease:'power4.inOut' }, 1.0)
+    .from('.hero-title .line', { yPercent:120, rotate:2, duration:1.2, stagger:.14 }, 1.35)
+    .from('.hero-kicker', { autoAlpha:0, y:24, duration:.9 }, 1.55)
+    .from('.hero-meta .reveal', { autoAlpha:0, y:30, duration:.9, stagger:.12 }, 1.7)
+    .from('.scroll-cue', { autoAlpha:0, y:20, duration:.8 }, 1.85)
+    .set('.loader', { display:'none' });
+
+  /* ---- 2. Hero: parallax de fondo + texto que se hunde al hacer scroll ---- */
+  gsap.to('.hero-bg', {
+    yPercent:24, scale:1.16, ease:'none',
+    scrollTrigger:{ trigger:'.hero', start:'top top', end:'bottom top', scrub:true }
+  });
+  gsap.to('.hero-inner', {
+    yPercent:-14, autoAlpha:.25, ease:'none',
+    scrollTrigger:{ trigger:'.hero', start:'top top', end:'bottom top', scrub:true }
+  });
+  /* Título hero: leve drift horizontal por línea para profundidad */
+  gsap.to('.hero-title .outline', {
+    xPercent:6, ease:'none',
+    scrollTrigger:{ trigger:'.hero', start:'top top', end:'bottom top', scrub:true }
+  });
+
+  /* ---- 3. Reveal genérico fade-up + clip-path ---- */
+  gsap.utils.toArray('.reveal').forEach(el => {
+    gsap.set(el, { visibility:'visible' });
+    gsap.from(el, {
+      y:60, autoAlpha:0, clipPath:'inset(0 0 100% 0)', duration:.95, ease:'power3.out',
+      scrollTrigger:{ trigger:el, start:'top 88%', once:true }
+    });
+  });
+
+  /* ---- 3b. Reveal por PALABRAS (titulares grandes) ---- */
+  gsap.utils.toArray('.reveal-words').forEach(h => {
+    splitWords(h);
+    gsap.set(h, { visibility:'visible' });
+    gsap.from(h.querySelectorAll('.word > span'), {
+      yPercent:115, rotate:3, duration:1, stagger:.08, ease:'expo.out',
+      scrollTrigger:{ trigger:h, start:'top 85%', once:true }
+    });
+  });
+
+  /* ---- 3c. Líneas que se dibujan junto a los kickers ---- */
+  gsap.utils.toArray('.draw-line').forEach(ln => {
+    gsap.to(ln, {
+      scaleX:1, duration:.9, ease:'power3.out',
+      scrollTrigger:{ trigger:ln, start:'top 92%', once:true }
+    });
+  });
+
+  /* ---- 4. Estudio: lead con reveal por palabras + tarjetas ---- */
+  (() => {
+    const lead = document.querySelector('.estudio__lead');
+    if (lead){
+      gsap.set(lead, { visibility:'visible' });
+      gsap.from(lead, {
+        autoAlpha:0, y:50, clipPath:'inset(0 0 100% 0)', duration:1.1, ease:'power3.out',
+        scrollTrigger:{ trigger:lead, start:'top 85%', once:true }
+      });
+    }
+  })();
+
+  /* ---- 5. Stats: tarjetas de vidrio en batch + brillo ---- */
+  gsap.utils.toArray('.reveal-stagger-card').forEach(el => gsap.set(el, { visibility:'visible' }));
+  ScrollTrigger.batch('.reveal-stagger-card', {
+    start:'top 90%', once:true,
+    onEnter:b => gsap.from(b, { y:70, autoAlpha:0, scale:.94, duration:1, stagger:.13, ease:'power3.out' })
+  });
+
+  /* ---- 6. Contadores de stats ---- */
+  gsap.utils.toArray('.stat-num').forEach(el => {
+    const end = +el.dataset.count, obj = { v:0 };
+    ScrollTrigger.create({ trigger:el, start:'top 92%', once:true, onEnter:() => {
+      gsap.to(obj, { v:end, duration:1.8, ease:'power2.out',
+        onUpdate:() => el.textContent = Math.round(obj.v).toLocaleString('es') });
+    }});
+  });
+
+  /* ---- 7. Marquee infinito + reacción a la velocidad de scroll ---- */
+  const mq = gsap.to('.marquee-track', { xPercent:-50, repeat:-1, duration:22, ease:'none' });
+  let mqBoost = 1;
+  ScrollTrigger.create({
+    trigger:'.marquee', start:'top bottom', end:'bottom top',
+    onUpdate:self => {
+      const v = self.getVelocity();
+      gsap.to('.marquee-track', { skewX: gsap.utils.clamp(-7,7, v/-300), duration:.5, ease:'power2.out', overwrite:'auto' });
+      /* acelera el marquee según la intensidad del scroll */
+      mqBoost = 1 + gsap.utils.clamp(0, 4, Math.abs(v)/900);
+    }
+  });
+  /* reset suave del timeScale del marquee hacia 1 */
+  gsap.ticker.add(() => {
+    mqBoost = gsap.utils.interpolate(mqBoost, 1, .05);
+    mq.timeScale(mqBoost);
+  });
+
+  /* ---- 8. Proyectos: wipe clip-path + scale scrub + nombre por palabras ---- */
+  gsap.utils.toArray('.project').forEach(sec => {
+    const box = sec.querySelector('.project-img');
+    const img = box.querySelector('img');
+    const name = sec.querySelector('.project-name');
+    const top = sec.querySelector('.project-top');
+    const foot = sec.querySelector('.project-foot');
+
+    /* wipe de la imagen */
+    gsap.from(box, {
+      clipPath:'inset(0 0 100% 0)', duration:1.2, ease:'power4.inOut',
+      scrollTrigger:{ trigger:sec, start:'top 78%', once:true }
+    });
+    /* scale parallax atado al scroll */
+    gsap.fromTo(img, { scale:1.32, yPercent:-4 }, {
+      scale:1, yPercent:4, ease:'none',
+      scrollTrigger:{ trigger:sec, start:'top bottom', end:'bottom top', scrub:true }
+    });
+
+    /* nombre gigante: reveal por líneas (respetando <br>) con clip ascendente */
+    if (name){
+      const lines = name.innerHTML.split(/<br\s*\/?>/i)
+        .map(t => `<span class="line-mask"><span class="line">${t.trim()}</span></span>`).join('');
+      name.innerHTML = lines;
+      gsap.from(name.querySelectorAll('.line'), {
+        yPercent:120, duration:1.1, stagger:.1, ease:'expo.out',
+        scrollTrigger:{ trigger:sec, start:'top 70%', once:true }
+      });
+      /* drift del nombre durante el recorrido (cinematográfico) */
+      gsap.to(name, {
+        yPercent:-22, ease:'none',
+        scrollTrigger:{ trigger:sec, start:'top bottom', end:'bottom top', scrub:true }
+      });
+    }
+    /* meta superior e inferior */
+    if (top) gsap.from(top.children, {
+      autoAlpha:0, y:-20, duration:.8, stagger:.1, ease:'power3.out',
+      scrollTrigger:{ trigger:sec, start:'top 65%', once:true }
+    });
+    if (foot) gsap.from(foot.children, {
+      autoAlpha:0, y:26, duration:.9, stagger:.12, ease:'power3.out',
+      scrollTrigger:{ trigger:sec, start:'top 60%', once:true }
+    });
+  });
+
+  /* ---- 9. Servicios: entrada escalonada con clip + número que cuenta ---- */
+  gsap.from('.serv-item', {
+    y:46, autoAlpha:0, clipPath:'inset(0 0 100% 0)', duration:.9, stagger:.1, ease:'power3.out',
+    scrollTrigger:{ trigger:'.servicios__list', start:'top 82%', once:true }
+  });
+
+  /* ---- 10. Contacto: parallax de fondo + título por líneas (pin sutil) ---- */
+  gsap.to('.contacto-bg', {
+    yPercent:18, scale:1.08, ease:'none',
+    scrollTrigger:{ trigger:'.contacto', start:'top bottom', end:'bottom top', scrub:true }
+  });
+  gsap.from('.contacto-title .line', {
+    yPercent:120, duration:1.2, stagger:.12, ease:'expo.out',
+    scrollTrigger:{ trigger:'.contacto', start:'top 70%', once:true }
+  });
+
+  /* ---- 11. Footer: aparición ---- */
+  gsap.from('.footer__row > *', {
+    autoAlpha:0, y:20, duration:.8, stagger:.12, ease:'power3.out',
+    scrollTrigger:{ trigger:'.footer', start:'top 95%', once:true }
+  });
+
+  /* ---- 12. Botón / elemento magnético ---- */
+  gsap.utils.toArray('.magnetic').forEach(btn => {
+    btn.addEventListener('mousemove', e => {
+      const r = btn.getBoundingClientRect();
+      gsap.to(btn, { x:(e.clientX-r.left-r.width/2)*.34, y:(e.clientY-r.top-r.height/2)*.34, duration:.6, ease:'power3.out' });
+    });
+    btn.addEventListener('mouseleave', () => gsap.to(btn, { x:0, y:0, duration:.7, ease:'elastic.out(1,.4)' }));
+  });
+
+  /* ---- 13. Cursor personalizado con crecimiento en interactivos ---- */
+  const cur = document.querySelector('.cursor');
+  addEventListener('mousemove', e => gsap.to(cur, { x:e.clientX, y:e.clientY, duration:.5, ease:'power3.out' }));
+  document.querySelectorAll('a, button, .magnetic, .serv-item').forEach(el => {
+    el.addEventListener('mouseenter', () => gsap.to(cur, { scale:2.6, duration:.3 }));
+    el.addEventListener('mouseleave', () => gsap.to(cur, { scale:1, duration:.3 }));
+  });
+
+  /* refrescar medidas tras carga de imágenes/fuentes */
+  addEventListener('load', () => ScrollTrigger.refresh());
+
+} else {
+  /* ---------- prefers-reduced-motion: estado final estático ---------- */
+  document.querySelector('.loader').style.display = 'none';
+  document.querySelector('.scroll-prog').style.display = 'none';
+  gsap.set('.hero-bg, .project-img img, .contacto-bg', { scale:1, clearProps:'all' });
+  document.querySelectorAll('.reveal, .reveal-stagger-card, .reveal-words').forEach(el => el.style.visibility='visible');
+  document.querySelectorAll('.draw-line').forEach(ln => ln.style.transform='scaleX(1)');
+  gsap.utils.toArray('.stat-num').forEach(el => el.textContent = (+el.dataset.count).toLocaleString('es'));
+  /* marquee estático (sin loop) */
+  ScrollTrigger.getAll().forEach(s => s.kill());
+}
 </script>
 </body>
 </html>

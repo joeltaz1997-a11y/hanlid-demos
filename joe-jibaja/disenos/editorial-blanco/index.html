@@ -3,944 +3,1040 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Joe Jibaja Vega — Arquitectura de gran escala</title>
-<meta name="description" content="Joe Jibaja Vega, arquitecto en Tumbaco, Quito. Diseño de equipamiento deportivo, cultural y comercial de gran escala. Del concepto al render fotorrealista." />
+<title>Joe Jibaja Vega · Arquitectura monumental</title>
+<meta name="description" content="Joe Jibaja Vega — Arquitectura monumental de gran escala con visualización 3D fotorrealista. Tumbaco, Quito · Ecuador." />
 
-<!-- Google Fonts: Fraunces (títulos editoriales) + Archivo (UI/cuerpo) -->
+<!-- Tipografías: grotesca de presencia (Anton) + cuerpo (Manrope) -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
 <style>
-  /* ============================================================
-     EDITORIAL BLANCO — sistema de diseño
-     Minimalismo de estudio. Lujo por sustracción.
-     ============================================================ */
-
-  :root {
-    /* Paleta */
-    --blanco: #FAFAF8;        /* blanco hueso, fondo principal */
-    --tinta: #141414;         /* tinta casi negra, texto */
-    --gris-medio: #6B6A66;    /* grises tipográficos */
-    --gris-suave: #9B9A95;    /* texto secundario tenue */
-    --arena: #B9AE9C;         /* acento sutil, opcional */
-    --hairline: #E2E0DA;      /* líneas finísimas */
-
-    /* Tipografía */
-    --serif: 'Fraunces', Georgia, serif;
-    --sans: 'Archivo', system-ui, sans-serif;
-
-    /* Ritmo */
-    --margen: clamp(1.5rem, 5vw, 6rem);
-    --gap-seccion: clamp(6rem, 14vh, 12rem);
-  }
-
-  *, *::before, *::after { box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    margin: 0;
-    background: var(--blanco);
-    color: var(--tinta);
-    font-family: var(--sans);
-    font-weight: 400;
-    font-size: clamp(1rem, 1.05vw + 0.7rem, 1.125rem);
-    line-height: 1.65;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-    overflow-x: hidden;
-  }
-
-  img { display: block; max-width: 100%; }
-
-  a { color: inherit; text-decoration: none; }
-
-  /* Kicker: etiqueta fina con mucho letter-spacing */
-  .kicker {
-    font-family: var(--sans);
-    font-weight: 500;
-    font-size: 0.72rem;
-    letter-spacing: 0.32em;
-    text-transform: uppercase;
-    color: var(--gris-medio);
-  }
-
-  /* Títulos editoriales en serif fino */
-  .titulo {
-    font-family: var(--serif);
-    font-weight: 300;
-    line-height: 1.04;
-    letter-spacing: -0.01em;
-    margin: 0;
-  }
-
-  /* ============================================================
-     HEADER minimal transparente
-     ============================================================ */
-
-  .header {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: clamp(1.1rem, 2.5vh, 1.8rem) var(--margen);
-    transition: background-color 0.4s ease, border-color 0.4s ease;
-    border-bottom: 1px solid transparent;
-  }
-
-  /* Fondo sutil al hacer scroll */
-  .header.is-scrolled {
-    background: rgba(250, 250, 248, 0.82);
-    backdrop-filter: saturate(180%) blur(14px);
-    -webkit-backdrop-filter: saturate(180%) blur(14px);
-    border-bottom-color: var(--hairline);
-  }
-
-  .header__marca {
-    font-family: var(--serif);
-    font-weight: 400;
-    font-size: 1.15rem;
-    letter-spacing: 0.01em;
-  }
-
-  .header__nav {
-    display: flex;
-    gap: clamp(1.5rem, 3vw, 2.8rem);
-  }
-
-  .header__nav a {
-    font-size: 0.82rem;
-    font-weight: 400;
-    letter-spacing: 0.06em;
-    color: var(--tinta);
-    position: relative;
-    padding-bottom: 2px;
-  }
-
-  /* Subrayado fino animado */
-  .header__nav a::after {
-    content: "";
-    position: absolute;
-    left: 0; bottom: 0;
-    width: 100%; height: 1px;
-    background: var(--tinta);
-    transform: scaleX(0);
-    transform-origin: right;
-    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  .header__nav a:hover::after { transform: scaleX(1); transform-origin: left; }
-
-  /* Botón hamburguesa (oculto en escritorio) */
-  .header__burger {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 6px;
-  }
-  .header__burger span {
-    display: block;
-    width: 26px; height: 1.5px;
-    background: var(--tinta);
-    transition: transform 0.35s ease, opacity 0.35s ease;
-  }
-
-  /* ============================================================
-     HERO editorial — tipográfico sobre blanco + imagen a sangre
-     ============================================================ */
-
-  .hero {
-    padding: clamp(8rem, 22vh, 13rem) var(--margen) 0;
-  }
-
-  .hero__kicker {
-    display: block;
-    margin-bottom: clamp(1.4rem, 4vh, 2.4rem);
-  }
-
-  .hero__titulo {
-    font-family: var(--serif);
-    font-weight: 300;
-    font-size: clamp(2.8rem, 9vw, 8.5rem);
-    line-height: 0.98;
-    letter-spacing: -0.02em;
-    margin: 0;
-    max-width: 16ch;
-  }
-
-  .hero__titulo em {
-    font-style: italic;
-    font-weight: 400;
-  }
-
-  .hero__meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: clamp(1.5rem, 4vw, 3.5rem);
-    align-items: baseline;
-    justify-content: space-between;
-    margin-top: clamp(2.2rem, 6vh, 4rem);
-    padding-bottom: clamp(2rem, 5vh, 3.2rem);
-    border-bottom: 1px solid var(--hairline);
-  }
-
-  .hero__sub {
-    max-width: 46ch;
-    color: var(--gris-medio);
-    font-size: clamp(1rem, 1.3vw, 1.25rem);
-    line-height: 1.6;
-  }
-
-  .hero__ubicacion {
-    font-size: 0.82rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--gris-medio);
-    white-space: nowrap;
-  }
-
-  /* Imagen a sangre del hero */
-  .hero__media {
-    margin-top: clamp(2.5rem, 6vh, 4.5rem);
-    height: clamp(60vh, 78vh, 88vh);
-    overflow: hidden;
-  }
-  .hero__media img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    transform: scale(1.06);
-    transition: transform 1.6s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  .hero__media.is-visible img { transform: scale(1); }
-
-  /* ============================================================
-     INTRO / ESTUDIO — layout asimétrico
-     ============================================================ */
-
-  .estudio {
-    padding: var(--gap-seccion) var(--margen);
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: clamp(2.5rem, 6vw, 5rem);
-  }
-
-  @media (min-width: 900px) {
-    .estudio { grid-template-columns: 0.95fr 1.05fr; align-items: center; }
-  }
-
-  .estudio__texto .kicker { display: block; margin-bottom: 1.8rem; }
-
-  .estudio__titulo {
-    font-family: var(--serif);
-    font-weight: 300;
-    font-size: clamp(1.9rem, 3.6vw, 3.4rem);
-    line-height: 1.1;
-    letter-spacing: -0.01em;
-    margin: 0 0 1.8rem;
-    max-width: 18ch;
-  }
-
-  .estudio__parrafo {
-    color: var(--gris-medio);
-    max-width: 50ch;
-    margin: 0 0 1.2rem;
-  }
-  .estudio__parrafo strong { color: var(--tinta); font-weight: 500; }
-
-  .estudio__media {
-    overflow: hidden;
-    aspect-ratio: 4 / 5;
-  }
-  .estudio__media img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-  }
-
-  /* ============================================================
-     OBRA — galería editorial numerada
-     ============================================================ */
-
-  .obra {
-    padding: 0 var(--margen) var(--gap-seccion);
-  }
-
-  .obra__head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1rem;
-    padding-bottom: clamp(2rem, 5vh, 3.5rem);
-    margin-bottom: clamp(3rem, 8vh, 6rem);
-    border-bottom: 1px solid var(--hairline);
-  }
-
-  .obra__titulo {
-    font-family: var(--serif);
-    font-weight: 300;
-    font-size: clamp(2rem, 5vw, 4rem);
-    line-height: 1;
-    letter-spacing: -0.02em;
-    margin: 0;
-  }
-
-  /* Lista de proyectos */
-  .proyecto {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: clamp(1.5rem, 4vw, 3rem);
-    margin-bottom: clamp(5rem, 13vh, 11rem);
-  }
-
-  @media (min-width: 820px) {
-    .proyecto { grid-template-columns: 5fr 7fr; align-items: end; }
-    /* Alterna alineaciones: pares con imagen a la izquierda */
-    .proyecto--invertido { grid-template-columns: 7fr 5fr; }
-    .proyecto--invertido .proyecto__media { order: -1; }
-  }
-
-  .proyecto__info { padding-bottom: 0.5rem; }
-
-  .proyecto__num {
-    font-family: var(--serif);
-    font-weight: 300;
-    font-size: clamp(2.4rem, 5vw, 4.4rem);
-    line-height: 1;
-    color: var(--tinta);
-    display: block;
-    margin-bottom: 1rem;
-  }
-
-  .proyecto__nombre {
-    font-family: var(--serif);
-    font-weight: 400;
-    font-size: clamp(1.6rem, 3vw, 2.6rem);
-    line-height: 1.08;
-    letter-spacing: -0.01em;
-    margin: 0 0 1.2rem;
-    max-width: 16ch;
-  }
-
-  .proyecto__tipo {
-    font-size: 0.82rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--gris-medio);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem 1.2rem;
-  }
-  .proyecto__tipo span { white-space: nowrap; }
-
-  .proyecto__ver {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 1.8rem;
-    font-size: 0.85rem;
-    letter-spacing: 0.04em;
-    color: var(--tinta);
-    opacity: 0;
-    transform: translateX(-6px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
-  }
-  .proyecto:hover .proyecto__ver { opacity: 1; transform: translateX(0); }
-
-  /* Tamaños variados según la imagen */
-  .proyecto__media {
-    overflow: hidden;
-    aspect-ratio: 3 / 2;
-  }
-  .proyecto--alto .proyecto__media { aspect-ratio: 4 / 5; }
-  .proyecto--ancho .proyecto__media { aspect-ratio: 16 / 9; }
-
-  .proyecto__media img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  .proyecto:hover .proyecto__media img { transform: scale(1.04); }
-
-  /* ============================================================
-     CIFRAS — tipografía grande y fina, separadas por hairlines
-     ============================================================ */
-
-  .cifras {
-    padding: var(--gap-seccion) var(--margen);
-    border-top: 1px solid var(--hairline);
-    border-bottom: 1px solid var(--hairline);
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
-
-  @media (min-width: 760px) {
-    .cifras { grid-template-columns: repeat(3, 1fr); }
-  }
-
-  .cifra {
-    padding: clamp(2rem, 5vh, 3.5rem) 0;
-    border-bottom: 1px solid var(--hairline);
-  }
-  .cifra:last-child { border-bottom: none; }
-
-  @media (min-width: 760px) {
-    .cifra {
-      padding: 0 clamp(1.5rem, 3vw, 3rem);
-      border-bottom: none;
-      border-right: 1px solid var(--hairline);
-    }
-    .cifra:last-child { border-right: none; }
-    .cifra:first-child { padding-left: 0; }
-  }
-
-  .cifra__num {
-    font-family: var(--serif);
-    font-weight: 300;
-    font-size: clamp(3rem, 7vw, 6rem);
-    line-height: 1;
-    letter-spacing: -0.02em;
-    margin: 0 0 0.8rem;
-  }
-
-  .cifra__label {
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--gris-medio);
-  }
-
-  /* ============================================================
-     SERVICIOS — lista limpia
-     ============================================================ */
-
-  .servicios {
-    padding: var(--gap-seccion) var(--margen);
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: clamp(2.5rem, 6vw, 5rem);
-  }
-
-  @media (min-width: 900px) {
-    .servicios { grid-template-columns: 0.8fr 1.2fr; align-items: start; }
-  }
-
-  .servicios__titulo {
-    font-family: var(--serif);
-    font-weight: 300;
-    font-size: clamp(2rem, 4vw, 3.4rem);
-    line-height: 1.05;
-    letter-spacing: -0.01em;
-    margin: 1.6rem 0 0;
-    max-width: 14ch;
-  }
-
-  .servicios__lista { margin: 0; padding: 0; list-style: none; }
-
-  .servicios__item {
-    display: flex;
-    align-items: baseline;
-    gap: clamp(1rem, 3vw, 2.5rem);
-    padding: clamp(1.4rem, 3.5vh, 2.2rem) 0;
-    border-bottom: 1px solid var(--hairline);
-  }
-  .servicios__item:first-child { border-top: 1px solid var(--hairline); }
-
-  .servicios__idx {
-    font-family: var(--sans);
-    font-size: 0.78rem;
-    letter-spacing: 0.1em;
-    color: var(--gris-suave);
-    min-width: 2.5rem;
-  }
-
-  .servicios__nombre {
-    font-family: var(--serif);
-    font-weight: 400;
-    font-size: clamp(1.3rem, 2.4vw, 2rem);
-    line-height: 1.15;
-  }
-
-  /* ============================================================
-     CONTACTO
-     ============================================================ */
-
-  .contacto {
-    padding: var(--gap-seccion) var(--margen);
-    border-top: 1px solid var(--hairline);
-  }
-
-  .contacto__kicker { display: block; margin-bottom: clamp(1.6rem, 4vh, 2.6rem); }
-
-  .contacto__titulo {
-    font-family: var(--serif);
-    font-weight: 300;
-    font-size: clamp(2.4rem, 7vw, 6rem);
-    line-height: 1;
-    letter-spacing: -0.02em;
-    margin: 0 0 clamp(2.5rem, 6vh, 4.5rem);
-    max-width: 14ch;
-  }
-
-  .contacto__grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: clamp(2rem, 5vw, 4rem);
-  }
-  @media (min-width: 760px) {
-    .contacto__grid { grid-template-columns: repeat(3, 1fr); }
-  }
-
-  .contacto__bloque .kicker { display: block; margin-bottom: 0.9rem; }
-
-  .contacto__dato {
-    font-family: var(--serif);
-    font-weight: 400;
-    font-size: clamp(1.15rem, 1.8vw, 1.55rem);
-    line-height: 1.4;
-  }
-  .contacto__dato a { border-bottom: 1px solid var(--hairline); padding-bottom: 1px; transition: border-color 0.3s ease; }
-  .contacto__dato a:hover { border-bottom-color: var(--tinta); }
-
-  .contacto__acciones {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: clamp(3rem, 7vh, 5rem);
-  }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 1rem 2rem;
-    font-size: 0.82rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    border: 1px solid var(--tinta);
-    transition: background-color 0.35s ease, color 0.35s ease;
-  }
-  .btn--solido { background: var(--tinta); color: var(--blanco); }
-  .btn--solido:hover { background: transparent; color: var(--tinta); }
-  .btn--linea:hover { background: var(--tinta); color: var(--blanco); }
-
-  /* ============================================================
-     FOOTER minimal
-     ============================================================ */
-
-  .footer {
-    padding: clamp(2.5rem, 6vh, 4rem) var(--margen);
-    border-top: 1px solid var(--hairline);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem 2rem;
-    align-items: baseline;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    letter-spacing: 0.06em;
-    color: var(--gris-medio);
-  }
-  .footer__marca { font-family: var(--serif); font-size: 1rem; color: var(--tinta); }
-  .footer a { border-bottom: 1px solid transparent; transition: border-color 0.3s ease; }
-  .footer a:hover { border-bottom-color: var(--gris-medio); }
-
-  /* ============================================================
-     ANIMACIONES — fade-up suave con IntersectionObserver
-     ============================================================ */
-
-  .reveal {
-    opacity: 0;
-    transform: translateY(26px);
-    transition: opacity 1s cubic-bezier(0.22, 1, 0.36, 1),
-                transform 1s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  .reveal.is-visible { opacity: 1; transform: translateY(0); }
-
-  /* Retardos escalonados (stagger) */
-  .reveal[data-delay="1"] { transition-delay: 0.08s; }
-  .reveal[data-delay="2"] { transition-delay: 0.16s; }
-  .reveal[data-delay="3"] { transition-delay: 0.24s; }
-
-  /* Líneas que se dibujan */
-  .line-draw {
-    transform-origin: left;
-    transform: scaleX(0);
-    transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  .line-draw.is-visible { transform: scaleX(1); }
-
-  /* ============================================================
-     RESPONSIVE — menú móvil
-     ============================================================ */
-
-  @media (max-width: 760px) {
-    .header__burger { display: flex; }
-
-    .header__nav {
-      position: fixed;
-      inset: 0;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-      gap: 1.8rem;
-      padding: var(--margen);
-      background: var(--blanco);
-      transform: translateY(-100%);
-      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-      z-index: 90;
-    }
-    .header__nav.is-open { transform: translateY(0); }
-    .header__nav a { font-family: var(--serif); font-size: 2rem; letter-spacing: 0; }
-    .header__nav a::after { display: none; }
-
-    /* Hamburguesa → X */
-    .header.is-menu-open .header__burger span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-    .header.is-menu-open .header__burger span:nth-child(2) { opacity: 0; }
-    .header.is-menu-open .header__burger span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-  }
-
-  /* ============================================================
-     ACCESIBILIDAD — respeta prefers-reduced-motion
-     ============================================================ */
-
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    *, *::before, *::after {
-      animation-duration: 0.01ms !important;
-      transition-duration: 0.01ms !important;
-    }
-    .reveal, .line-draw, .hero__media img { opacity: 1 !important; transform: none !important; }
-  }
+/* ====================================================================
+   SISTEMA · Joe Jibaja Vega — Trailer cinematográfico carbón cálido
+   ==================================================================== */
+:root{
+  --carbon:#0c0a09;          /* carbón cálido con tinte marrón */
+  --carbon-2:#100d0b;
+  --carbon-3:#1a1512;
+  --ambar:#E0913F;           /* acento ámbar/cobre cálido */
+  --ambar-soft:#f0b066;
+  --blanco:#f7f3ee;
+  --humo:#a39a90;            /* gris cálido para cuerpo secundario */
+  --linea:rgba(224,145,63,.18);
+  --glow:rgba(224,145,63,.45);
+  --display:'Anton', sans-serif;
+  --body:'Manrope', sans-serif;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{ -webkit-text-size-adjust:100%; }
+body{
+  background:var(--carbon);
+  color:var(--blanco);
+  font-family:var(--body);
+  font-weight:400;
+  line-height:1.5;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+body.no-scroll{ overflow:hidden; height:100vh; }
+/* Fallback: si JS no toma el control, liberar el scroll tras el autohide del loader */
+@keyframes unlockScroll{ to{ overflow:visible; height:auto; } }
+body.no-scroll{ animation:unlockScroll 0s linear 4.5s forwards; }
+.js-ok body.no-scroll, html.js-ok body.no-scroll{ animation:none; }
+
+::selection{ background:var(--ambar); color:var(--carbon); }
+
+img{ display:block; width:100%; height:100%; object-fit:cover; }
+
+a{ color:inherit; text-decoration:none; }
+
+/* Grano sutil global */
+body::after{
+  content:"";
+  position:fixed; inset:0; z-index:9000; pointer-events:none;
+  opacity:.05; mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ============================== LOADER ============================== */
+.loader{
+  position:fixed; inset:0; z-index:9999;
+  background:var(--carbon);
+  display:flex; align-items:center; justify-content:center;
+  flex-direction:column;
+}
+.loader-mark{
+  font-family:var(--display);
+  font-size:clamp(2.2rem,7vw,5rem);
+  letter-spacing:.04em;
+  color:var(--blanco);
+  text-shadow:0 0 38px var(--glow);
+  overflow:hidden;
+}
+.loader-bar{
+  margin-top:1.4rem; width:min(220px,40vw); height:1px;
+  background:rgba(255,255,255,.15); overflow:hidden;
+}
+.loader-bar i{ display:block; height:100%; width:0%; background:var(--ambar); }
+
+/* Fallback CSS: si GSAP/JS no se ejecuta (CDN bloqueado, offline, firewall),
+   el loader se autodesvanece y el hero queda visible. Se cancela cuando JS
+   toma el control marcando <html class="js-ok">. */
+.loader{ animation:loaderAutoHide .9s ease 3.6s forwards; }
+.js-ok .loader{ animation:none; }
+@keyframes loaderAutoHide{ to{ opacity:0; visibility:hidden; transform:translateY(-100%); } }
+.loader-pct{
+  margin-top:.8rem; font-size:.7rem; letter-spacing:.4em;
+  color:var(--humo); text-transform:uppercase;
+}
+
+/* ============================== NAVBAR ============================== */
+.nav{
+  position:fixed; top:0; left:0; width:100%; z-index:1000;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:1.5rem clamp(1.2rem,4vw,3.5rem);
+  transition:background .5s ease, padding .5s ease, border-color .5s ease;
+  border-bottom:1px solid transparent;
+}
+.nav.solid{
+  background:rgba(12,10,9,.82);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  padding-top:1rem; padding-bottom:1rem;
+  border-bottom:1px solid var(--linea);
+}
+.nav-brand{
+  font-family:var(--display);
+  font-size:1.05rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--blanco);
+}
+.nav-brand b{ color:var(--ambar); font-weight:400; }
+.nav-links{ display:flex; gap:2.2rem; align-items:center; }
+.nav-links a{
+  font-size:.78rem; letter-spacing:.22em; text-transform:uppercase;
+  font-weight:600; color:var(--humo);
+  transition:color .4s ease;
+}
+.nav-links a:hover{ color:var(--blanco); }
+
+.link-underline{ position:relative; }
+.link-underline::after{
+  content:''; position:absolute; left:0; bottom:-4px; width:100%; height:1px;
+  background:var(--ambar); transform:scaleX(0); transform-origin:right;
+  transition:transform .5s cubic-bezier(.22,1,.36,1);
+}
+.link-underline:hover::after{ transform:scaleX(1); transform-origin:left; }
+
+/* Botón hamburguesa */
+.burger{
+  display:none; width:34px; height:20px; position:relative;
+  background:none; border:none; cursor:pointer; z-index:1100;
+}
+.burger span{
+  position:absolute; left:0; width:100%; height:2px; background:var(--blanco);
+  transition:transform .45s ease, opacity .3s ease;
+}
+.burger span:nth-child(1){ top:0; }
+.burger span:nth-child(2){ top:9px; }
+.burger span:nth-child(3){ top:18px; }
+.burger.open span:nth-child(1){ transform:translateY(9px) rotate(45deg); }
+.burger.open span:nth-child(2){ opacity:0; }
+.burger.open span:nth-child(3){ transform:translateY(-9px) rotate(-45deg); }
+
+/* Menú móvil */
+.mobile-menu{
+  position:fixed; inset:0; z-index:1050;
+  background:var(--carbon);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:2rem; opacity:0; pointer-events:none;
+  transition:opacity .5s ease;
+}
+.mobile-menu.open{ opacity:1; pointer-events:auto; }
+.mobile-menu a{
+  font-family:var(--display); font-size:2.4rem; letter-spacing:.05em;
+  color:var(--blanco); text-transform:uppercase;
+  text-shadow:0 0 26px var(--glow);
+}
+
+/* ============================== HERO ============================== */
+.hero{
+  position:relative; width:100vw; height:100svh; min-height:600px;
+  overflow:hidden;
+}
+.hero-bg{
+  position:absolute; inset:-8% 0; width:100%; height:116%;
+  will-change:transform;
+}
+.hero-bg img{ filter:saturate(1.05) contrast(1.05); }
+/* Overlay + viñeta */
+.hero-overlay{
+  position:absolute; inset:0;
+  background:
+    radial-gradient(120% 90% at 50% 35%, transparent 30%, rgba(12,10,9,.65) 100%),
+    linear-gradient(to top, rgba(12,10,9,.95) 0%, rgba(12,10,9,.2) 45%, rgba(12,10,9,.55) 100%);
+}
+.hero-vignette{
+  position:absolute; inset:0; pointer-events:none;
+  box-shadow:inset 0 0 240px 60px rgba(12,10,9,.9);
+}
+/* Marco punteado tipo visor de cámara */
+.viewfinder{
+  position:absolute; inset:clamp(14px,2.4vw,30px); z-index:5;
+  border:1px dashed rgba(247,243,238,.18);
+  pointer-events:none;
+}
+.viewfinder::before,.viewfinder::after{
+  content:''; position:absolute; width:18px; height:18px;
+  border:2px solid var(--ambar);
+}
+.viewfinder::before{ top:-2px; left:-2px; border-right:none; border-bottom:none; }
+.viewfinder::after{ bottom:-2px; right:-2px; border-left:none; border-top:none; }
+.vf-corner{ position:absolute; width:18px; height:18px; border:2px solid var(--ambar); }
+.vf-corner.tr{ top:-2px; right:-2px; border-left:none; border-bottom:none; }
+.vf-corner.bl{ bottom:-2px; left:-2px; border-right:none; border-top:none; }
+.vf-rec{
+  position:absolute; top:14px; left:24px; z-index:6;
+  display:flex; align-items:center; gap:.5rem;
+  font-size:.62rem; letter-spacing:.3em; color:var(--humo); text-transform:uppercase;
+}
+.vf-rec .dot{ width:8px; height:8px; border-radius:50%; background:#d8483a; box-shadow:0 0 10px #d8483a; animation:blink 1.4s infinite; }
+@keyframes blink{ 0%,100%{opacity:1} 50%{opacity:.25} }
+
+.hero-content{
+  position:absolute; inset:0; z-index:7;
+  display:flex; flex-direction:column; justify-content:flex-end;
+  padding:clamp(2rem,7vw,5.5rem) clamp(1.4rem,5vw,4rem) clamp(4rem,9vh,6rem);
+}
+.hero-kicker{
+  display:flex; align-items:center; gap:1rem; margin-bottom:1.6rem;
+  font-size:.74rem; letter-spacing:.4em; text-transform:uppercase;
+  color:var(--ambar); font-weight:600;
+}
+.hero-kicker::before{ content:''; width:46px; height:1px; background:var(--ambar); }
+
+.hero-title{
+  font-family:var(--display);
+  font-weight:400;
+  line-height:.86;
+  letter-spacing:.005em;
+  text-transform:uppercase;
+  color:var(--blanco);
+  text-shadow:0 0 60px rgba(224,145,63,.35), 0 4px 60px rgba(0,0,0,.55);
+}
+.hero-title .line-mask{ overflow:hidden; display:block; }
+.hero-title .line{ display:block; font-size:clamp(3.4rem,12.5vw,12.5rem); }
+.hero-title .ambar{ color:var(--ambar); text-shadow:0 0 70px var(--glow); }
+
+.hero-meta{
+  display:flex; flex-wrap:wrap; gap:.6rem 2.2rem; margin-top:2rem;
+  font-size:.82rem; letter-spacing:.14em; text-transform:uppercase; color:var(--humo);
+}
+.hero-meta span{ display:flex; align-items:center; gap:.5rem; }
+.hero-meta .pip{ width:5px; height:5px; background:var(--ambar); border-radius:50%; }
+
+/* Indicador scroll centrado abajo */
+.scroll-ind{
+  position:absolute; bottom:clamp(1.6rem,4vh,2.6rem); left:50%; transform:translateX(-50%);
+  z-index:8; display:flex; flex-direction:column; align-items:center; gap:.7rem;
+  font-size:.62rem; letter-spacing:.42em; text-transform:uppercase; color:var(--humo);
+}
+.scroll-ind .bar{ width:1px; height:46px; background:linear-gradient(to bottom,var(--ambar),transparent); overflow:hidden; position:relative; }
+.scroll-ind .bar i{ position:absolute; top:0; left:0; width:100%; height:40%; background:var(--ambar); animation:drop 1.8s cubic-bezier(.7,0,.3,1) infinite; }
+@keyframes drop{ 0%{transform:translateY(-100%)} 60%,100%{transform:translateY(260%)} }
+
+/* ============================== SECCIONES BASE ============================== */
+section{ position:relative; }
+.wrap{ padding:clamp(5rem,12vh,9rem) clamp(1.4rem,5vw,4rem); }
+.eyebrow{
+  display:flex; align-items:center; gap:.9rem; margin-bottom:2rem;
+  font-size:.72rem; letter-spacing:.38em; text-transform:uppercase; color:var(--ambar); font-weight:600;
+}
+.eyebrow::before{ content:''; width:34px; height:1px; background:var(--ambar); transform:scaleX(0); transform-origin:left; transition:transform .9s cubic-bezier(.22,1,.36,1); }
+.eyebrow.drawn::before{ transform:scaleX(1); }
+
+/* ===== MANIFIESTO / ESTUDIO ===== */
+.manifesto{ background:var(--carbon-2); border-top:1px solid var(--linea); }
+.manifesto-grid{
+  display:grid; grid-template-columns:1.4fr .8fr; gap:clamp(2rem,5vw,5rem); align-items:end;
+}
+.manifesto-quote{
+  font-family:var(--display); font-weight:400; text-transform:uppercase;
+  font-size:clamp(1.9rem,4.6vw,4.2rem); line-height:1.02; letter-spacing:.01em;
+  color:var(--blanco);
+}
+.manifesto-quote em{ color:var(--ambar); font-style:normal; text-shadow:0 0 40px var(--glow); }
+.manifesto-text{ margin-top:1.8rem; max-width:46ch; color:var(--humo); font-size:1.02rem; line-height:1.7; }
+
+/* Cifras */
+.stats{ display:flex; flex-direction:column; gap:2.2rem; }
+.stat{ border-left:1px solid var(--linea); padding-left:1.3rem; }
+.stat .num{
+  font-family:var(--display); font-size:clamp(2.6rem,5vw,4rem); line-height:1;
+  color:var(--blanco); text-shadow:0 0 34px var(--glow); display:flex; align-items:baseline; gap:.2rem;
+}
+.stat .num .plus{ color:var(--ambar); }
+.stat .label{ margin-top:.6rem; font-size:.74rem; letter-spacing:.22em; text-transform:uppercase; color:var(--humo); }
+
+/* ============================== PROYECTOS ============================== */
+.projects-intro{ background:var(--carbon); }
+.projects-intro h2{
+  font-family:var(--display); font-weight:400; text-transform:uppercase;
+  font-size:clamp(2.4rem,8vw,7rem); line-height:.92; color:var(--blanco);
+  text-shadow:0 0 50px rgba(224,145,63,.25);
+}
+.projects-intro p{ margin-top:1.4rem; max-width:52ch; color:var(--humo); font-size:1.02rem; }
+
+.project{
+  position:relative; width:100vw; height:92svh; min-height:560px; overflow:hidden;
+  display:flex; align-items:flex-end;
+}
+.project-img{ position:absolute; inset:-7% 0; height:114%; overflow:hidden; will-change:transform; }
+.project-img img{ transform:scale(1.18); filter:saturate(1.05) contrast(1.04); }
+.project-shade{
+  position:absolute; inset:0;
+  background:linear-gradient(to top, rgba(12,10,9,.92) 0%, rgba(12,10,9,.25) 55%, rgba(12,10,9,.5) 100%);
+}
+.project-content{
+  position:relative; z-index:3; width:100%;
+  padding:clamp(2rem,6vw,4.5rem) clamp(1.4rem,5vw,4rem);
+  display:flex; flex-direction:column;
+}
+.project-index{
+  font-size:.74rem; letter-spacing:.34em; text-transform:uppercase; color:var(--ambar);
+  font-weight:700; margin-bottom:1.2rem; display:flex; align-items:center; gap:1rem;
+}
+.project-index::after{ content:''; flex:0 0 auto; width:54px; height:1px; background:var(--linea); }
+.project-name{
+  font-family:var(--display); font-weight:400; text-transform:uppercase;
+  font-size:clamp(2.6rem,9.5vw,9rem); line-height:.9; letter-spacing:.005em;
+  color:var(--blanco); text-shadow:0 0 64px var(--glow), 0 4px 50px rgba(0,0,0,.5);
+}
+.project-meta{
+  display:flex; flex-wrap:wrap; gap:.6rem 2.4rem; margin-top:1.6rem;
+  font-size:.8rem; letter-spacing:.16em; text-transform:uppercase; color:var(--humo);
+}
+.project-meta span{ display:flex; align-items:center; gap:.55rem; }
+.project-meta .pip{ width:5px; height:5px; background:var(--ambar); border-radius:50%; }
+.project .viewfinder{ inset:clamp(14px,2vw,26px); z-index:2; }
+
+/* ============================== SERVICIOS ============================== */
+.services{ background:var(--carbon-2); border-top:1px solid var(--linea); }
+.services-head{ display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:1.5rem; margin-bottom:3rem; }
+.services-head h2{
+  font-family:var(--display); font-weight:400; text-transform:uppercase;
+  font-size:clamp(2.2rem,6vw,5rem); line-height:.94; color:var(--blanco);
+  text-shadow:0 0 40px rgba(224,145,63,.22);
+}
+.services-head p{ max-width:34ch; color:var(--humo); font-size:.96rem; }
+
+.service-row{
+  display:flex; align-items:center; justify-content:space-between; gap:1.5rem;
+  padding:clamp(1.4rem,3.4vw,2.4rem) 0;
+  border-top:1px solid var(--linea);
+  cursor:default; position:relative; overflow:hidden;
+}
+.service-row:last-child{ border-bottom:1px solid var(--linea); }
+.service-row .num{ font-size:.72rem; letter-spacing:.3em; color:var(--ambar); font-weight:700; flex:0 0 auto; width:3rem; }
+.service-row .title{
+  font-family:var(--display); font-weight:400; text-transform:uppercase;
+  font-size:clamp(1.5rem,4.4vw,3.2rem); line-height:1; color:var(--blanco);
+  transition:transform .5s cubic-bezier(.22,1,.36,1), color .5s ease;
+  flex:1;
+}
+.service-row .arrow{
+  font-size:1.4rem; color:var(--humo); flex:0 0 auto;
+  transition:transform .5s cubic-bezier(.22,1,.36,1), color .5s ease;
+}
+.service-row:hover .title{ color:var(--ambar); transform:translateX(.6rem); text-shadow:0 0 40px var(--glow); }
+.service-row:hover .arrow{ color:var(--ambar); transform:translateX(.6rem) rotate(-45deg); }
+
+/* ============================== MARQUEE ============================== */
+.marquee{
+  overflow:hidden; white-space:nowrap; padding:1.8rem 0;
+  border-top:1px solid var(--linea); border-bottom:1px solid var(--linea);
+  background:var(--carbon);
+}
+.marquee-track{ display:inline-flex; gap:3rem; will-change:transform; }
+.marquee-track span{
+  font-family:var(--display); font-size:clamp(1.6rem,4vw,3rem); text-transform:uppercase;
+  letter-spacing:.04em; color:transparent; -webkit-text-stroke:1px rgba(224,145,63,.55);
+}
+.marquee-track span.fill{ color:var(--ambar); -webkit-text-stroke:0; text-shadow:0 0 30px var(--glow); }
+
+/* ============================== CONTACTO ============================== */
+.contact{
+  position:relative; width:100vw; min-height:100svh; overflow:hidden;
+  display:flex; align-items:center;
+}
+.contact-bg{ position:absolute; inset:0; }
+.contact-bg img{ filter:saturate(1) contrast(1.03); }
+.contact-shade{
+  position:absolute; inset:0;
+  background:
+    radial-gradient(100% 100% at 30% 50%, rgba(12,10,9,.55), rgba(12,10,9,.92)),
+    linear-gradient(to top, rgba(12,10,9,.85), rgba(12,10,9,.55));
+}
+.contact-content{
+  position:relative; z-index:3; width:100%;
+  padding:clamp(5rem,12vh,8rem) clamp(1.4rem,5vw,4rem);
+}
+.contact h2{
+  font-family:var(--display); font-weight:400; text-transform:uppercase;
+  font-size:clamp(2.8rem,11vw,10rem); line-height:.88; color:var(--blanco);
+  text-shadow:0 0 70px var(--glow), 0 4px 50px rgba(0,0,0,.5);
+}
+.contact h2 em{ color:var(--ambar); font-style:normal; }
+.contact-sub{ margin-top:2rem; max-width:48ch; color:var(--humo); font-size:1.05rem; line-height:1.7; }
+
+.contact-info{ display:flex; flex-wrap:wrap; gap:2.5rem 4rem; margin-top:3rem; }
+.info-item .k{ font-size:.7rem; letter-spacing:.28em; text-transform:uppercase; color:var(--ambar); margin-bottom:.5rem; }
+.info-item .v{ font-size:1.05rem; color:var(--blanco); letter-spacing:.02em; }
+
+.contact-btns{ display:flex; flex-wrap:wrap; gap:1.2rem; margin-top:3.2rem; }
+.btn{
+  display:inline-flex; align-items:center; gap:.7rem;
+  padding:1.1rem 2.2rem; border-radius:2px;
+  font-size:.78rem; letter-spacing:.2em; text-transform:uppercase; font-weight:700;
+  transition:background .4s ease, color .4s ease, border-color .4s ease;
+  will-change:transform;
+}
+.btn-primary{ background:var(--ambar); color:var(--carbon); box-shadow:0 0 40px rgba(224,145,63,.35); }
+.btn-primary:hover{ background:var(--ambar-soft); }
+.btn-ghost{ border:1px solid var(--linea); color:var(--blanco); }
+.btn-ghost:hover{ border-color:var(--ambar); color:var(--ambar); }
+.contact .viewfinder{ z-index:2; }
+
+/* ============================== FOOTER ============================== */
+.footer{
+  background:var(--carbon); border-top:1px solid var(--linea);
+  padding:2.6rem clamp(1.4rem,5vw,4rem);
+  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;
+}
+.footer .fbrand{ font-family:var(--display); font-size:1rem; letter-spacing:.12em; text-transform:uppercase; }
+.footer .fbrand b{ color:var(--ambar); font-weight:400; }
+.footer .fmeta{ font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--humo); }
+.footer .credit{ font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--humo); }
+.footer .credit b{ color:var(--ambar); font-weight:600; }
+
+/* ============================== REVEAL HELPERS ============================== */
+.reveal{ will-change:transform,opacity; }
+
+/* Split text: máscaras por línea y por palabra (overflow oculto para el barrido) */
+.split-line{ display:block; overflow:hidden; }
+.split-word{ display:inline-block; overflow:hidden; vertical-align:top; }
+.split-word > span{ display:inline-block; will-change:transform; }
+.split-char{ display:inline-block; will-change:transform,opacity; }
+
+/* Cursor personalizado (visor) */
+.cursor{
+  position:fixed; top:0; left:0; z-index:9500; pointer-events:none;
+  width:14px; height:14px; margin:-7px 0 0 -7px; border-radius:50%;
+  border:1px solid var(--ambar); mix-blend-mode:difference;
+  transition:width .35s cubic-bezier(.22,1,.36,1), height .35s cubic-bezier(.22,1,.36,1), background .35s ease, opacity .4s ease;
+  opacity:0;
+}
+.cursor.is-active{ opacity:1; }
+.cursor.is-grow{ width:62px; height:62px; margin:-31px 0 0 -31px; background:rgba(224,145,63,.12); }
+@media (hover:none),(max-width:900px){ .cursor{ display:none; } }
+
+/* Skew por velocidad de scroll (aplicado a contenedores grandes) */
+.skewable{ will-change:transform; }
+
+/* ============================== RESPONSIVE ============================== */
+@media (max-width:900px){
+  .nav-links{ display:none; }
+  .burger{ display:block; }
+  .manifesto-grid{ grid-template-columns:1fr; }
+  .stats{ flex-direction:row; flex-wrap:wrap; gap:1.6rem 2.4rem; margin-top:2.5rem; }
+  .stat{ flex:1 1 30%; }
+  .service-row .num{ width:2.2rem; }
+}
+@media (max-width:560px){
+  .hero-title .line{ font-size:clamp(3rem,15vw,5rem); }
+  .project-name{ font-size:clamp(2.4rem,13vw,4.5rem); }
+  .hero-meta{ font-size:.72rem; }
+  .vf-rec{ font-size:.55rem; }
+  .stat{ flex:1 1 100%; }
+}
+@media (prefers-reduced-motion:reduce){
+  *{ animation:none !important; }
+}
 </style>
 </head>
+<body class="no-scroll">
 
-<body>
+<!-- Cursor personalizado tipo visor -->
+<div class="cursor" id="cursor"></div>
 
-<!-- ============================================================
-     HEADER
-     ============================================================ -->
-<header class="header" id="header">
-  <a href="#inicio" class="header__marca">Joe Jibaja Vega</a>
+<!-- ============================== LOADER ============================== -->
+<div class="loader" id="loader">
+  <div class="loader-mark">JOE JIBAJA VEGA</div>
+  <div class="loader-bar"><i id="loaderBar"></i></div>
+  <div class="loader-pct"><span id="loaderPct">00</span> · Cargando proyecto</div>
+</div>
 
-  <nav class="header__nav" id="nav" aria-label="Navegación principal">
-    <a href="#estudio">Estudio</a>
-    <a href="#obra">Obra</a>
-    <a href="#servicios">Servicios</a>
-    <a href="#contacto">Contacto</a>
-  </nav>
+<!-- ============================== NAVBAR ============================== -->
+<nav class="nav" id="nav">
+  <a href="#hero" class="nav-brand">JOE JIBAJA <b>VEGA</b></a>
+  <div class="nav-links">
+    <a href="#estudio" class="link-underline">Estudio</a>
+    <a href="#proyectos" class="link-underline">Proyectos</a>
+    <a href="#servicios" class="link-underline">Servicios</a>
+    <a href="#contacto" class="link-underline">Contacto</a>
+  </div>
+  <button class="burger" id="burger" aria-label="Menú"><span></span><span></span><span></span></button>
+</nav>
 
-  <button class="header__burger" id="burger" aria-label="Abrir menú" aria-expanded="false">
-    <span></span><span></span><span></span>
-  </button>
+<!-- Menú móvil -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#estudio">Estudio</a>
+  <a href="#proyectos">Proyectos</a>
+  <a href="#servicios">Servicios</a>
+  <a href="#contacto">Contacto</a>
+</div>
+
+<!-- ============================== HERO ============================== -->
+<header class="hero" id="hero">
+  <div class="hero-bg"><img src="../../assets/img/fachada-noche.jpg" alt="Fachada paramétrica iluminada de noche" /></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-vignette"></div>
+
+  <!-- Visor de cámara -->
+  <div class="viewfinder">
+    <span class="vf-corner tr"></span>
+    <span class="vf-corner bl"></span>
+  </div>
+  <div class="vf-rec"><span class="dot"></span> REC · 4K · ARQUITECTURA MONUMENTAL</div>
+
+  <div class="hero-content">
+    <div class="hero-kicker">Arquitecto · Tumbaco, Quito — Ecuador</div>
+    <h1 class="hero-title">
+      <span class="line-mask"><span class="line">Arquitectura</span></span>
+      <span class="line-mask"><span class="line"><span class="ambar">monumental</span></span></span>
+    </h1>
+    <div class="hero-meta">
+      <span><i class="pip"></i> Gran escala</span>
+      <span><i class="pip"></i> Diseño paramétrico</span>
+      <span><i class="pip"></i> Visualización 3D fotorrealista</span>
+    </div>
+  </div>
+
+  <div class="scroll-ind">
+    <span>Scroll to continue</span>
+    <div class="bar"><i></i></div>
+  </div>
 </header>
 
-<main id="inicio">
-
-  <!-- ============================================================
-       HERO editorial
-       ============================================================ -->
-  <section class="hero">
-    <span class="kicker hero__kicker reveal">Arquitecto · Tumbaco, Quito — Ecuador</span>
-
-    <h1 class="hero__titulo reveal" data-delay="1">
-      Arquitectura<br />de <em>gran escala</em>
-    </h1>
-
-    <div class="hero__meta">
-      <p class="hero__sub reveal" data-delay="2">
-        Equipamiento deportivo, cultural y comercial. Diseño paramétrico y
-        visualización 3D fotorrealista. Del concepto al render.
-      </p>
-      <span class="hero__ubicacion reveal" data-delay="3">Est. — Quito, EC</span>
-    </div>
-
-    <figure class="hero__media reveal">
-      <!-- Hero a sangre: fachada curva paramétrica a la hora azul -->
-      <img src="../../assets/img/exterior-atardecer.jpg"
-           alt="Fachada curva paramétrica acristalada a la hora azul" />
-    </figure>
-  </section>
-
-  <!-- ============================================================
-       ESTUDIO
-       ============================================================ -->
-  <section class="estudio" id="estudio">
-    <div class="estudio__texto">
-      <span class="kicker reveal">El estudio</span>
-      <h2 class="estudio__titulo reveal" data-delay="1">
-        Forma, estructura y escala en perfecta tensión.
-      </h2>
-      <p class="estudio__parrafo reveal" data-delay="2">
-        Proyectamos coliseos, arenas, complejos deportivos y pabellones
-        gastronómicos donde la <strong>geometría paramétrica</strong> resuelve
-        problemas de luz, flujo y estructura sin renunciar a la elegancia.
-      </p>
-      <p class="estudio__parrafo reveal" data-delay="2">
-        Cada proyecto nace de un concepto claro y se desarrolla hasta el
-        <strong>render fotorrealista</strong> y el proyecto ejecutivo, con un
-        control riguroso de cada decisión espacial.
-      </p>
-    </div>
-
-    <figure class="estudio__media reveal" data-delay="1">
-      <img src="../../assets/img/corredor-cristal.jpg" loading="lazy"
-           alt="Corredor exterior acristalado con personas caminando" />
-    </figure>
-  </section>
-
-  <!-- ============================================================
-       OBRA
-       ============================================================ -->
-  <section class="obra" id="obra">
-    <div class="obra__head">
-      <h2 class="obra__titulo reveal">Obra seleccionada</h2>
-      <span class="kicker reveal" data-delay="1">2019 — 2026</span>
-    </div>
-
-    <!-- 01 -->
-    <article class="proyecto reveal">
-      <div class="proyecto__info">
-        <span class="proyecto__num">01</span>
-        <h3 class="proyecto__nombre">Coliseo Multiuso</h3>
-        <p class="proyecto__tipo">
-          <span>Equipamiento deportivo</span><span>·</span><span>2024</span>
-        </p>
-        <span class="proyecto__ver">Ver proyecto →</span>
-      </div>
-      <figure class="proyecto__media">
-        <img src="../../assets/img/arena-interior.jpg" loading="lazy"
-             alt="Interior de coliseo de básquet con gradas llenas y pantalla central" />
-      </figure>
-    </article>
-
-    <!-- 02 (invertido) -->
-    <article class="proyecto proyecto--invertido proyecto--ancho reveal">
-      <div class="proyecto__info">
-        <span class="proyecto__num">02</span>
-        <h3 class="proyecto__nombre">Complejo Deportivo Paramétrico</h3>
-        <p class="proyecto__tipo">
-          <span>Equipamiento deportivo</span><span>·</span><span>2025</span>
-        </p>
-        <span class="proyecto__ver">Ver proyecto →</span>
-      </div>
-      <figure class="proyecto__media">
-        <img src="../../assets/img/fachada-noche.jpg" loading="lazy"
-             alt="Fachada paramétrica iluminada de verde por la noche" />
-      </figure>
-    </article>
-
-    <!-- 03 -->
-    <article class="proyecto proyecto--alto reveal">
-      <div class="proyecto__info">
-        <span class="proyecto__num">03</span>
-        <h3 class="proyecto__nombre">Centro de Alto Rendimiento</h3>
-        <p class="proyecto__tipo">
-          <span>Equipamiento deportivo</span><span>·</span><span>2023</span>
-        </p>
-        <span class="proyecto__ver">Ver proyecto →</span>
-      </div>
-      <figure class="proyecto__media">
-        <img src="../../assets/img/gimnasio.jpg" loading="lazy"
-             alt="Gimnasio interior con ring de boxeo y personas entrenando" />
-      </figure>
-    </article>
-
-    <!-- 04 (invertido) -->
-    <article class="proyecto proyecto--invertido reveal">
-      <div class="proyecto__info">
-        <span class="proyecto__num">04</span>
-        <h3 class="proyecto__nombre">Pabellón Gastronómico</h3>
-        <p class="proyecto__tipo">
-          <span>Equipamiento comercial</span><span>·</span><span>2025</span>
-        </p>
-        <span class="proyecto__ver">Ver proyecto →</span>
-      </div>
-      <figure class="proyecto__media">
-        <img src="../../assets/img/terraza-restaurante.jpg" loading="lazy"
-             alt="Terraza de restaurante nocturno con estructura roja iluminada" />
-      </figure>
-    </article>
-
-    <!-- 05 (ancho) -->
-    <article class="proyecto proyecto--ancho reveal">
-      <div class="proyecto__info">
-        <span class="proyecto__num">05</span>
-        <h3 class="proyecto__nombre">Explanada y Accesos</h3>
-        <p class="proyecto__tipo">
-          <span>Espacio público</span><span>·</span><span>2024</span>
-        </p>
-        <span class="proyecto__ver">Ver proyecto →</span>
-      </div>
-      <figure class="proyecto__media">
-        <img src="../../assets/img/exterior-rampa.jpg" loading="lazy"
-             alt="Exterior diurno con explanada, rampa roja y edificio acristalado" />
-      </figure>
-    </article>
-  </section>
-
-  <!-- ============================================================
-       CIFRAS
-       ============================================================ -->
-  <section class="cifras">
-    <div class="cifra reveal">
-      <p class="cifra__num">+15</p>
-      <span class="cifra__label">Años de trayectoria</span>
-    </div>
-    <div class="cifra reveal" data-delay="1">
-      <p class="cifra__num">+250.000</p>
-      <span class="cifra__label">Metros cuadrados proyectados</span>
-    </div>
-    <div class="cifra reveal" data-delay="2">
-      <p class="cifra__num">+30</p>
-      <span class="cifra__label">Proyectos de gran escala</span>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       SERVICIOS
-       ============================================================ -->
-  <section class="servicios" id="servicios">
+<!-- ============================== MANIFIESTO / ESTUDIO ============================== -->
+<section class="manifesto wrap" id="estudio">
+  <div class="eyebrow reveal">El estudio</div>
+  <div class="manifesto-grid">
     <div>
-      <span class="kicker reveal">Servicios</span>
-      <h2 class="servicios__titulo reveal" data-delay="1">
-        Del concepto al render.
-      </h2>
+      <p class="manifesto-quote reveal">Diseñamos lo que parecía imposible: <em>estructuras que definen una ciudad</em> y un horizonte entero.</p>
+      <p class="manifesto-text reveal">Joe Jibaja Vega proyecta arquitectura de gran escala —coliseos, arenas deportivas, complejos paramétricos y pabellones gastronómicos— con una visualización 3D fotorrealista que permite habitar cada obra antes de construirla. Cada proyecto nace de la geometría, el cálculo y una ambición monumental.</p>
     </div>
-
-    <ul class="servicios__lista">
-      <li class="servicios__item reveal">
-        <span class="servicios__idx">01</span>
-        <span class="servicios__nombre">Diseño arquitectónico</span>
-      </li>
-      <li class="servicios__item reveal" data-delay="1">
-        <span class="servicios__idx">02</span>
-        <span class="servicios__nombre">Diseño paramétrico</span>
-      </li>
-      <li class="servicios__item reveal" data-delay="1">
-        <span class="servicios__idx">03</span>
-        <span class="servicios__nombre">Visualización 3D fotorrealista</span>
-      </li>
-      <li class="servicios__item reveal" data-delay="2">
-        <span class="servicios__idx">04</span>
-        <span class="servicios__nombre">Anteproyecto y proyecto ejecutivo</span>
-      </li>
-      <li class="servicios__item reveal" data-delay="2">
-        <span class="servicios__idx">05</span>
-        <span class="servicios__nombre">Dirección de obra</span>
-      </li>
-    </ul>
-  </section>
-
-  <!-- ============================================================
-       CONTACTO
-       ============================================================ -->
-  <section class="contacto" id="contacto">
-    <span class="kicker contacto__kicker reveal">Contacto</span>
-    <h2 class="contacto__titulo reveal" data-delay="1">
-      Conversemos tu próximo proyecto.
-    </h2>
-
-    <div class="contacto__grid">
-      <div class="contacto__bloque reveal">
-        <span class="kicker">Correo</span>
-        <!-- PLACEHOLDER EDITABLE -->
-        <p class="contacto__dato">
-          <a href="mailto:contacto@joejibajavega.com">contacto@joejibajavega.com</a>
-        </p>
+    <div class="stats">
+      <div class="stat reveal">
+        <div class="num"><span class="plus">+</span><span class="stat-num" data-count="15">0</span></div>
+        <div class="label">Años de trayectoria</div>
       </div>
-
-      <div class="contacto__bloque reveal" data-delay="1">
-        <span class="kicker">Teléfono</span>
-        <!-- PLACEHOLDER EDITABLE: reemplazar por el número real -->
-        <p class="contacto__dato">[+593 9 &middot; &middot; &middot;]</p>
+      <div class="stat reveal">
+        <div class="num"><span class="plus">+</span><span class="stat-num" data-count="250000">0</span></div>
+        <div class="label">Metros cuadrados proyectados</div>
       </div>
-
-      <div class="contacto__bloque reveal" data-delay="2">
-        <span class="kicker">Ubicación</span>
-        <p class="contacto__dato">Tumbaco, Quito<br />Ecuador</p>
+      <div class="stat reveal">
+        <div class="num"><span class="plus">+</span><span class="stat-num" data-count="30">0</span></div>
+        <div class="label">Proyectos de gran escala</div>
       </div>
     </div>
+  </div>
+</section>
 
-    <div class="contacto__acciones reveal" data-delay="2">
-      <!-- PLACEHOLDER EDITABLE: correo de destino -->
-      <a class="btn btn--solido" href="mailto:contacto@joejibajavega.com">Escribir un correo</a>
-      <!-- PLACEHOLDER EDITABLE: número de WhatsApp (formato internacional sin signos) -->
-      <a class="btn btn--linea" href="https://wa.me/5939XXXXXXXX" target="_blank" rel="noopener">WhatsApp</a>
+<!-- ============================== PROYECTOS — INTRO ============================== -->
+<section class="projects-intro wrap" id="proyectos">
+  <div class="eyebrow reveal">Selección de obra</div>
+  <h2 class="reveal">Proyectos<br>monumentales</h2>
+  <p class="reveal">Una secuencia de obras donde la escala se vuelve experiencia. Cada render es una promesa construible: estructura, luz y materia llevadas al límite.</p>
+</section>
+
+<!-- ===== PROYECTO 01 ===== -->
+<section class="project">
+  <div class="project-img"><img src="../../assets/img/arena-interior.jpg" alt="Interior de coliseo multiuso con pantalla central" /></div>
+  <div class="project-shade"></div>
+  <div class="viewfinder"><span class="vf-corner tr"></span><span class="vf-corner bl"></span></div>
+  <div class="project-content">
+    <div class="project-index">Proyecto 01</div>
+    <h3 class="project-name">Coliseo<br>Multiuso</h3>
+    <div class="project-meta">
+      <span><i class="pip"></i> Arena deportiva · Espectáculos</span>
+      <span><i class="pip"></i> Capacidad masiva</span>
+      <span><i class="pip"></i> 2024</span>
     </div>
-  </section>
+  </div>
+</section>
 
-</main>
+<!-- ===== PROYECTO 02 ===== -->
+<section class="project">
+  <div class="project-img"><img src="../../assets/img/exterior-atardecer.jpg" alt="Fachada curva acristalada en la hora azul" /></div>
+  <div class="project-shade"></div>
+  <div class="viewfinder"><span class="vf-corner tr"></span><span class="vf-corner bl"></span></div>
+  <div class="project-content">
+    <div class="project-index">Proyecto 02</div>
+    <h3 class="project-name">Complejo Deportivo<br>Paramétrico</h3>
+    <div class="project-meta">
+      <span><i class="pip"></i> Diseño paramétrico</span>
+      <span><i class="pip"></i> Envolvente acristalada</span>
+      <span><i class="pip"></i> 2024</span>
+    </div>
+  </div>
+</section>
 
-<!-- ============================================================
-     FOOTER
-     ============================================================ -->
+<!-- ===== PROYECTO 03 ===== -->
+<section class="project">
+  <div class="project-img"><img src="../../assets/img/gimnasio.jpg" alt="Centro de alto rendimiento con ring de boxeo" /></div>
+  <div class="project-shade"></div>
+  <div class="viewfinder"><span class="vf-corner tr"></span><span class="vf-corner bl"></span></div>
+  <div class="project-content">
+    <div class="project-index">Proyecto 03</div>
+    <h3 class="project-name">Centro de Alto<br>Rendimiento</h3>
+    <div class="project-meta">
+      <span><i class="pip"></i> Deporte de élite</span>
+      <span><i class="pip"></i> Entrenamiento integral</span>
+      <span><i class="pip"></i> 2023</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROYECTO 04 ===== -->
+<section class="project">
+  <div class="project-img"><img src="../../assets/img/terraza-restaurante.jpg" alt="Terraza nocturna con estructura roja iluminada" /></div>
+  <div class="project-shade"></div>
+  <div class="viewfinder"><span class="vf-corner tr"></span><span class="vf-corner bl"></span></div>
+  <div class="project-content">
+    <div class="project-index">Proyecto 04</div>
+    <h3 class="project-name">Pabellón<br>Gastronómico</h3>
+    <div class="project-meta">
+      <span><i class="pip"></i> Hospitalidad</span>
+      <span><i class="pip"></i> Estructura expuesta</span>
+      <span><i class="pip"></i> 2023</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROYECTO 05 ===== -->
+<section class="project">
+  <div class="project-img"><img src="../../assets/img/exterior-rampa.jpg" alt="Exterior diurno con explanada y rampas de acceso" /></div>
+  <div class="project-shade"></div>
+  <div class="viewfinder"><span class="vf-corner tr"></span><span class="vf-corner bl"></span></div>
+  <div class="project-content">
+    <div class="project-index">Proyecto 05</div>
+    <h3 class="project-name">Explanada<br>y Accesos</h3>
+    <div class="project-meta">
+      <span><i class="pip"></i> Espacio público</span>
+      <span><i class="pip"></i> Flujo masivo</span>
+      <span><i class="pip"></i> 2022</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== MARQUEE ============================== -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span class="fill">Coliseos</span><span>·</span><span>Arenas deportivas</span><span>·</span><span class="fill">Diseño paramétrico</span><span>·</span><span>Pabellones</span><span>·</span><span class="fill">Visualización 3D</span><span>·</span>
+    <span class="fill">Coliseos</span><span>·</span><span>Arenas deportivas</span><span>·</span><span class="fill">Diseño paramétrico</span><span>·</span><span>Pabellones</span><span>·</span><span class="fill">Visualización 3D</span><span>·</span>
+  </div>
+</div>
+
+<!-- ============================== SERVICIOS ============================== -->
+<section class="services wrap" id="servicios">
+  <div class="eyebrow reveal">Qué hacemos</div>
+  <div class="services-head">
+    <h2 class="reveal">Servicios<br>de estudio</h2>
+    <p class="reveal">Del concepto a la dirección de obra: una metodología integral para proyectos monumentales, con control técnico y visual en cada etapa.</p>
+  </div>
+
+  <div class="service-list">
+    <div class="service-row reveal"><span class="num">01</span><span class="title">Diseño arquitectónico</span><span class="arrow">↗</span></div>
+    <div class="service-row reveal"><span class="num">02</span><span class="title">Diseño paramétrico</span><span class="arrow">↗</span></div>
+    <div class="service-row reveal"><span class="num">03</span><span class="title">Visualización 3D</span><span class="arrow">↗</span></div>
+    <div class="service-row reveal"><span class="num">04</span><span class="title">Anteproyecto y proyecto ejecutivo</span><span class="arrow">↗</span></div>
+    <div class="service-row reveal"><span class="num">05</span><span class="title">Dirección de obra</span><span class="arrow">↗</span></div>
+  </div>
+</section>
+
+<!-- ============================== CONTACTO / CTA ============================== -->
+<section class="contact" id="contacto">
+  <div class="contact-bg"><img src="../../assets/img/corredor-cristal.jpg" alt="Corredor acristalado diurno" /></div>
+  <div class="contact-shade"></div>
+  <div class="viewfinder"><span class="vf-corner tr"></span><span class="vf-corner bl"></span></div>
+  <div class="contact-content">
+    <div class="eyebrow reveal">Hablemos</div>
+    <h2 class="reveal">Construyamos<br>lo <em>monumental</em></h2>
+    <p class="contact-sub reveal">Cada gran obra empieza con una conversación. Cuéntanos la escala de tu visión y la haremos tangible con un render que podrás recorrer antes de la primera piedra.</p>
+
+    <div class="contact-info reveal">
+      <div class="info-item"><div class="k">Email</div><div class="v">contacto@joejibajavega.com</div></div>
+      <div class="info-item"><div class="k">Teléfono</div><div class="v">[+593 9 ...]</div></div>
+      <div class="info-item"><div class="k">Ubicación</div><div class="v">Tumbaco, Quito — Ecuador</div></div>
+    </div>
+
+    <div class="contact-btns reveal">
+      <a href="mailto:contacto@joejibajavega.com" class="btn btn-primary magnetic">Escribir un email <span>↗</span></a>
+      <a href="https://wa.me/5939" target="_blank" rel="noopener" class="btn btn-ghost magnetic">WhatsApp <span>↗</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== FOOTER ============================== -->
 <footer class="footer">
-  <span class="footer__marca">Joe Jibaja Vega</span>
-  <span>Tumbaco, Quito — Ecuador</span>
-  <span>© 2026</span>
-  <span>Sitio por <a href="#">Hanlid</a></span>
+  <div class="fbrand">JOE JIBAJA <b>VEGA</b></div>
+  <div class="fmeta">Arquitectura monumental · Tumbaco, Quito — Ecuador</div>
+  <div class="credit">Sitio por <b>Hanlid</b></div>
 </footer>
 
+<!-- ============================== SCRIPTS ============================== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lenis/1.1.13/lenis.min.js"></script>
 <script>
-  /* ============================================================
-     INTERACCIÓN — sin librerías externas
-     ============================================================ */
+/* Guard: si GSAP no cargó (CDN bloqueado / offline), no marcar js-ok →
+   el fallback CSS revela el hero y libera el scroll automáticamente. */
+if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+  document.documentElement.classList.remove('js-ok');
+  document.body.classList.remove('no-scroll');
+} else {
+document.documentElement.classList.add('js-ok');
+gsap.registerPlugin(ScrollTrigger);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // --- Header: fondo sutil al hacer scroll ---
-  const header = document.getElementById('header');
-  const onScroll = () => {
-    header.classList.toggle('is-scrolled', window.scrollY > 40);
+/* ---------- Lenis + ScrollTrigger (raf único) ---------- */
+/* Lenis es opcional: si su CDN no carga, el sitio degrada a scroll nativo
+   sin romper GSAP/ScrollTrigger ni las animaciones. */
+let lenis;
+if (!reduce && typeof Lenis !== 'undefined') {
+  lenis = new Lenis({ duration: 1.15, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true, lerp: 0.09 });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(t => lenis.raf(t * 1000));
+  gsap.ticker.lagSmoothing(0);
+}
+ScrollTrigger.config({ ignoreMobileResize: true });
+
+/* ====================================================================
+   UTILIDADES DE SPLIT TEXT (líneas / palabras / caracteres)
+   Envuelve el contenido en máscaras para barridos cinematográficos.
+   ==================================================================== */
+// Divide un elemento (que usa <br> para líneas) en líneas con máscara,
+// y cada línea en palabras animables. Conserva spans internos (.ambar, em).
+function splitToWordLines(el){
+  const lineNodes = [];
+  let current = [];
+  el.childNodes.forEach(node => {
+    if (node.nodeName === 'BR'){ lineNodes.push(current); current = []; }
+    else current.push(node);
+  });
+  lineNodes.push(current);
+  el.innerHTML = '';
+  const words = [];
+  lineNodes.forEach(nodes => {
+    const lineEl = document.createElement('span');
+    lineEl.className = 'split-line';
+    nodes.forEach(node => {
+      const isEl = node.nodeType === 1;
+      const cls = isEl ? node.getAttribute('class') : null;
+      const text = node.textContent;
+      text.split(/(\s+)/).forEach(tok => {
+        if (tok.trim() === ''){ lineEl.appendChild(document.createTextNode(tok)); return; }
+        const w = document.createElement('span');
+        w.className = 'split-word';
+        const inner = document.createElement('span');
+        inner.textContent = tok;
+        if (cls) inner.className = cls;       // preserva .ambar / estilos
+        w.appendChild(inner);
+        lineEl.appendChild(w);
+        words.push(inner);
+      });
+    });
+    el.appendChild(lineEl);
+  });
+  return words;
+}
+
+// Divide en caracteres (para el hero). Conserva spans hijos con clase.
+function splitToChars(el){
+  const chars = [];
+  const walk = (node, cls) => {
+    [...node.childNodes].forEach(child => {
+      if (child.nodeType === 3){
+        const frag = document.createDocumentFragment();
+        child.textContent.split('').forEach(ch => {
+          if (ch === ' '){ frag.appendChild(document.createTextNode(' ')); return; }
+          const s = document.createElement('span');
+          s.className = 'split-char' + (cls ? ' ' + cls : '');
+          s.textContent = ch;
+          frag.appendChild(s);
+          chars.push(s);
+        });
+        node.replaceChild(frag, child);
+      } else if (child.nodeType === 1){
+        walk(child, child.getAttribute('class'));
+      }
+    });
   };
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  walk(el, null);
+  return chars;
+}
 
-  // --- Menú móvil (hamburguesa) ---
-  const burger = document.getElementById('burger');
-  const nav = document.getElementById('nav');
+/* ---------- Navbar sólida al scroll ---------- */
+const nav = document.getElementById('nav');
+function syncNav(){ nav.classList.toggle('solid', window.scrollY > 80); }
+window.addEventListener('scroll', syncNav);
 
-  const cerrarMenu = () => {
-    nav.classList.remove('is-open');
-    header.classList.remove('is-menu-open');
-    burger.setAttribute('aria-expanded', 'false');
-    burger.setAttribute('aria-label', 'Abrir menú');
-  };
+/* ---------- Menú móvil (hamburguesa) ---------- */
+const burger = document.getElementById('burger');
+const mobileMenu = document.getElementById('mobileMenu');
+function closeMenu(){ burger.classList.remove('open'); mobileMenu.classList.remove('open'); document.body.classList.remove('no-scroll'); if(lenis) lenis.start(); }
+burger.addEventListener('click', () => {
+  const open = burger.classList.toggle('open');
+  mobileMenu.classList.toggle('open', open);
+  document.body.classList.toggle('no-scroll', open);
+  if (lenis) open ? lenis.stop() : lenis.start();
+});
+mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 
-  burger.addEventListener('click', () => {
-    const abierto = nav.classList.toggle('is-open');
-    header.classList.toggle('is-menu-open', abierto);
-    burger.setAttribute('aria-expanded', String(abierto));
-    burger.setAttribute('aria-label', abierto ? 'Cerrar menú' : 'Abrir menú');
+/* ---------- Scroll suave en anclas ---------- */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (!t) return;
+    e.preventDefault();
+    if (lenis) lenis.scrollTo(t, { offset: 0 }); else t.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+/* ---------- INTRO: cortina + reveal del título carácter por carácter ---------- */
+let heroChars = [];
+function startSite(){
+  const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+  tl.to('.loader-mark, .loader-bar, .loader-pct', { autoAlpha: 0, y: -18, duration: 0.5, ease: 'power2.in' })
+    .to('.loader', { yPercent: -100, duration: 1.15, ease: 'power4.inOut' }, '-=0.15')
+    .set('.loader', { display: 'none' })
+    // Hero: cada carácter sube desde su máscara con leve rotación
+    .from(heroChars, {
+      yPercent: 120, rotateZ: 4, autoAlpha: 0,
+      duration: 1.1, stagger: { each: 0.025, from: 'start' }, ease: 'expo.out'
+    }, '-=0.55')
+    .from('.hero-kicker', { autoAlpha: 0, x: -30, duration: 0.8 }, '-=0.85')
+    .from('.hero-meta span', { autoAlpha: 0, y: 22, duration: 0.7, stagger: 0.09 }, '-=0.6')
+    .from('.scroll-ind, .vf-rec, .viewfinder', { autoAlpha: 0, duration: 0.9, stagger: 0.08 }, '-=0.7')
+    .from('.nav', { autoAlpha: 0, y: -24, duration: 0.8 }, '-=0.9');
+}
+
+/* Salto de loader para QA / captura (?qa=1 o ?skipLoader=1) */
+const skipLoader = /[?&](qa|skipLoader)=1/.test(location.search);
+
+if (reduce || skipLoader) {
+  /* ---------- Versión sin movimiento / salto de intro: mostrar todo limpio ---------- */
+  gsap.set('.loader', { display: 'none' });
+  document.body.classList.remove('no-scroll');
+  gsap.set('.reveal, .hero-title .line', { clearProps: 'all', autoAlpha: 1 });
+}
+
+if (reduce) {
+  /* nada más: estado estático ya aplicado arriba */
+} else {
+  /* Preparar split del hero antes de la intro */
+  document.querySelectorAll('.hero-title .line').forEach(line => {
+    heroChars.push(...splitToChars(line));
   });
 
-  // Cerrar el menú al pulsar un enlace
-  nav.querySelectorAll('a').forEach((a) => a.addEventListener('click', cerrarMenu));
-
-  // --- Animaciones de aparición con IntersectionObserver ---
-  const prefiereSinMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  if (!prefiereSinMovimiento && 'IntersectionObserver' in window) {
-    const observador = new IntersectionObserver((entradas, obs) => {
-      entradas.forEach((entrada) => {
-        if (entrada.isIntersecting) {
-          entrada.target.classList.add('is-visible');
-          obs.unobserve(entrada.target); // se anima una sola vez
-        }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
-
-    document.querySelectorAll('.reveal, .line-draw, .hero__media')
-      .forEach((el) => observador.observe(el));
+  if (skipLoader) {
+    /* QA / captura: revelar hero sin animación de intro */
+    gsap.set(heroChars, { clearProps: 'all', autoAlpha: 1 });
   } else {
-    // Sin animación: mostrar todo de inmediato
-    document.querySelectorAll('.reveal, .line-draw, .hero__media')
-      .forEach((el) => el.classList.add('is-visible'));
+  /* ---------- Barra de progreso simulada del loader ---------- */
+  const bar = document.getElementById('loaderBar');
+  const pct = document.getElementById('loaderPct');
+  let started = false;
+  function launch(){
+    if (started) return; started = true;
+    document.body.classList.remove('no-scroll');
+    startSite();
   }
-</script>
+  let p = 0;
+  const tick = setInterval(() => {
+    p += Math.random() * 16 + 6;
+    if (p >= 100) { p = 100; clearInterval(tick); }
+    bar.style.width = p + '%';
+    pct.textContent = String(Math.round(p)).padStart(2, '0');
+    if (p === 100) { setTimeout(launch, 280); }
+  }, 150);
+  /* Watchdog de seguridad: si el ticker se estanca (tab en segundo plano,
+     dispositivo lento, captura headless), forzar la entrada al sitio para
+     que el hero nunca quede oculto permanentemente. */
+  setTimeout(() => { if (!started) { clearInterval(tick); bar.style.width = '100%'; pct.textContent = '100'; launch(); } }, 3200);
+  }
 
+  /* ---------- HERO: parallax del fondo + deriva del contenido ---------- */
+  gsap.to('.hero-bg', {
+    yPercent: 24, scale: 1.18, ease: 'none',
+    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+  });
+  // El contenido del hero sube más lento (capa de profundidad) y se desvanece
+  gsap.to('.hero-content', {
+    yPercent: -16, autoAlpha: 0.15, ease: 'none',
+    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+  });
+  // El visor y el grano de cámara se separan a otra velocidad
+  gsap.to('.hero .viewfinder', {
+    scale: 1.04, ease: 'none',
+    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+  });
+
+  /* ---------- TÍTULOS GIGANTES por palabra (estudio, proyectos-intro, servicios, contacto) ---------- */
+  document.querySelectorAll('.manifesto-quote, .projects-intro h2, .services-head h2, .contact h2')
+    .forEach(h => {
+      const words = splitToWordLines(h);
+      gsap.set(h, { autoAlpha: 1 });
+      gsap.from(words, {
+        yPercent: 115, rotateZ: 3, duration: 1, ease: 'expo.out',
+        stagger: { each: 0.06, from: 'start' },
+        scrollTrigger: { trigger: h, start: 'top 88%', once: true }
+      });
+    });
+
+  /* ---------- REVEAL genérico (fade-up + clip-path) ---------- */
+  // Excluir los títulos ya tratados con split por palabra
+  gsap.utils.toArray('.reveal').forEach(el => {
+    if (el.matches('.manifesto-quote, .projects-intro h2, .services-head h2, .contact h2')) return;
+    gsap.from(el, {
+      y: 54, autoAlpha: 0, clipPath: 'inset(0 0 100% 0)', duration: 0.9, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 87%', once: true }
+    });
+  });
+
+  /* ---------- Trazado de líneas decorativas (eyebrow) vía clase CSS ---------- */
+  gsap.utils.toArray('.eyebrow').forEach(eb => {
+    ScrollTrigger.create({
+      trigger: eb, start: 'top 90%', once: true,
+      onEnter: () => eb.classList.add('drawn')
+    });
+  });
+
+  /* ---------- ESTUDIO: texto y stats con parallax sutil ---------- */
+  gsap.to('.manifesto-text', {
+    yPercent: -10, ease: 'none',
+    scrollTrigger: { trigger: '.manifesto', start: 'top bottom', end: 'bottom top', scrub: true }
+  });
+  gsap.from('.stat', {
+    y: 50, autoAlpha: 0, duration: 0.9, ease: 'power3.out', stagger: 0.12,
+    scrollTrigger: { trigger: '.stats', start: 'top 85%', once: true }
+  });
+
+  /* ---------- PROYECTOS: wipe + scale scrub + nombre por palabras ---------- */
+  gsap.utils.toArray('.project').forEach(sec => {
+    const img = sec.querySelector('.project-img');
+    const inner = img.querySelector('img');
+    const name = sec.querySelector('.project-name');
+    const nameWords = splitToWordLines(name);
+    gsap.set(name, { autoAlpha: 1 });
+
+    // Wipe de entrada del render
+    gsap.from(img, {
+      clipPath: 'inset(0 0 100% 0)', duration: 1.2, ease: 'power4.inOut',
+      scrollTrigger: { trigger: sec, start: 'top 82%', once: true }
+    });
+    // Scale scrub continuo (contenido por overflow:hidden del .project-img)
+    gsap.fromTo(inner, { scale: 1.32 }, {
+      scale: 1, ease: 'none',
+      scrollTrigger: { trigger: sec, start: 'top bottom', end: 'bottom top', scrub: true }
+    });
+    // El render deriva verticalmente al pasar (capa cinematográfica)
+    gsap.fromTo(img, { yPercent: -6 }, {
+      yPercent: 6, ease: 'none',
+      scrollTrigger: { trigger: sec, start: 'top bottom', end: 'bottom top', scrub: true }
+    });
+    // Índice + meta entran escalonados
+    gsap.from(sec.querySelectorAll('.project-index, .project-meta span'), {
+      y: 28, autoAlpha: 0, duration: 0.8, ease: 'power3.out', stagger: 0.08,
+      scrollTrigger: { trigger: sec, start: 'top 62%', once: true }
+    });
+    // Nombre gigante: barrido por palabras
+    gsap.from(nameWords, {
+      yPercent: 115, rotateZ: 3, duration: 1.05, ease: 'expo.out', stagger: 0.07,
+      scrollTrigger: { trigger: sec, start: 'top 60%', once: true }
+    });
+  });
+
+  /* ---------- SERVICIOS: filas con barrido lateral escalonado ---------- */
+  gsap.from('.service-row', {
+    xPercent: -4, autoAlpha: 0, duration: 0.85, ease: 'power3.out', stagger: 0.1,
+    scrollTrigger: { trigger: '.service-list', start: 'top 82%', once: true }
+  });
+
+  /* ---------- CONTADORES de stats ---------- */
+  gsap.utils.toArray('.stat-num').forEach(el => {
+    const end = +el.dataset.count, obj = { v: 0 };
+    ScrollTrigger.create({ trigger: el, start: 'top 92%', once: true, onEnter: () => {
+      gsap.to(obj, { v: end, duration: 1.8, ease: 'power2.out',
+        onUpdate: () => el.textContent = Math.round(obj.v).toLocaleString('es-ES') });
+    }});
+  });
+
+  /* ---------- MARQUEE infinito + parpadeo del relleno ámbar ---------- */
+  gsap.to('.marquee-track', { xPercent: -50, repeat: -1, duration: 24, ease: 'none' });
+
+  /* ---------- CONTACTO: fondo con parallax propio ---------- */
+  gsap.to('.contact-bg', {
+    yPercent: 14, scale: 1.1, ease: 'none',
+    scrollTrigger: { trigger: '.contact', start: 'top bottom', end: 'bottom top', scrub: true }
+  });
+
+  /* ---------- BOTÓN magnético (retorno elástico sutil) ---------- */
+  gsap.utils.toArray('.magnetic').forEach(btn => {
+    btn.addEventListener('mousemove', e => {
+      const r = btn.getBoundingClientRect();
+      gsap.to(btn, { x: (e.clientX - r.left - r.width/2) * .3, y: (e.clientY - r.top - r.height/2) * .3, duration: .6, ease: 'power3.out' });
+      const lbl = btn.querySelector('span');
+      if (lbl) gsap.to(lbl, { x: (e.clientX - r.left - r.width/2) * .15, duration: .6, ease: 'power3.out' });
+    });
+    btn.addEventListener('mouseleave', () => {
+      gsap.to(btn, { x: 0, y: 0, duration: .7, ease: 'elastic.out(1,.4)' });
+      const lbl = btn.querySelector('span');
+      if (lbl) gsap.to(lbl, { x: 0, duration: .7, ease: 'elastic.out(1,.4)' });
+    });
+  });
+
+  /* ---------- SKEW por velocidad de scroll (capas grandes) ---------- */
+  const skewSetter = gsap.quickTo('.marquee-track', 'skewX', { duration: 0.5, ease: 'power3' });
+  ScrollTrigger.create({
+    onUpdate: self => {
+      const v = gsap.utils.clamp(-7, 7, self.getVelocity() / -260);
+      skewSetter(v);
+    }
+  });
+
+  /* ---------- CURSOR personalizado tipo visor ---------- */
+  const cursor = document.getElementById('cursor');
+  const cx = gsap.quickTo(cursor, 'x', { duration: 0.45, ease: 'power3.out' });
+  const cy = gsap.quickTo(cursor, 'y', { duration: 0.45, ease: 'power3.out' });
+  window.addEventListener('mousemove', e => {
+    cursor.classList.add('is-active');
+    cx(e.clientX); cy(e.clientY);
+  });
+  window.addEventListener('mouseleave', () => cursor.classList.remove('is-active'));
+  document.querySelectorAll('a, button, .magnetic, .service-row, .project').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('is-grow'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('is-grow'));
+  });
+
+  /* ---------- Refrescar ScrollTrigger tras cargar imágenes (evita saltos) ---------- */
+  window.addEventListener('load', () => ScrollTrigger.refresh());
+}
+
+syncNav();
+} /* fin guard GSAP disponible */
+</script>
 </body>
 </html>
