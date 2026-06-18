@@ -6,7 +6,7 @@
 <title>Joe Jibaja Vega — Arquitectura monumental</title>
 <meta name="description" content="Estudio de arquitectura monumental de gran escala. Coliseos, arenas deportivas, complejos paramétricos y pabellones gastronómicos con visualización 3D fotorrealista. Tumbaco, Quito — Ecuador." />
 
-<!-- Tipografías: serif display de alto contraste (Zodiak, self-hosted) + sans para cuerpo/UI -->
+<!-- Tipografías self-hosted: Cabinet Grotesk (display, con carácter) + Switzer (cuerpo/UI). Sin serif. -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -14,25 +14,28 @@
 <style>
 /* ============================================================
    FUENTES SELF-HOSTED
-   Zodiak  → serif display de alto contraste (titulares de lujo)
-   Switzer → grotesca con carácter (kickers / etiquetas / UI fina)
+   Cabinet Grotesk → grotesca display con carácter (titulares)
+   Switzer         → grotesca para cuerpo / etiquetas / UI fina
    ============================================================ */
 @font-face{
-  font-family:'Zodiak';font-style:normal;font-weight:300;font-display:swap;
-  src:url('../../assets/fonts/zodiak-300.woff2') format('woff2');
+  font-family:'Cabinet Grotesk';font-style:normal;font-weight:400;font-display:swap;
+  src:url('../../assets/fonts/cabinet-grotesk-400.woff2') format('woff2');
 }
 @font-face{
-  font-family:'Zodiak';font-style:normal;font-weight:400;font-display:swap;
-  src:url('../../assets/fonts/zodiak-400.woff2') format('woff2');
+  font-family:'Cabinet Grotesk';font-style:normal;font-weight:500;font-display:swap;
+  src:url('../../assets/fonts/cabinet-grotesk-500.woff2') format('woff2');
 }
 @font-face{
-  font-family:'Zodiak';font-style:normal;font-weight:700;font-display:swap;
-  src:url('../../assets/fonts/zodiak-700.woff2') format('woff2');
+  font-family:'Cabinet Grotesk';font-style:normal;font-weight:700;font-display:swap;
+  src:url('../../assets/fonts/cabinet-grotesk-700.woff2') format('woff2');
 }
-/* Cursiva real de Zodiak (variable 100–900): evita la cursiva sintética en el acento dorado */
 @font-face{
-  font-family:'Zodiak';font-style:italic;font-weight:100 900;font-display:swap;
-  src:url('../../assets/fonts/zodiak-italic-var.woff2') format('woff2');
+  font-family:'Cabinet Grotesk';font-style:normal;font-weight:800;font-display:swap;
+  src:url('../../assets/fonts/cabinet-grotesk-800.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Cabinet Grotesk';font-style:normal;font-weight:900;font-display:swap;
+  src:url('../../assets/fonts/cabinet-grotesk-900.woff2') format('woff2');
 }
 @font-face{
   font-family:'Switzer';font-style:normal;font-weight:400;font-display:swap;
@@ -52,18 +55,18 @@
 }
 /* ============================================================
    ATELIER OSCURO — Joe Jibaja Vega
-   Paleta: negro carbón, hueso, acento dorado/cobre
+   Paleta: negro carbón, hueso, acento VERDE AGUA (teal/turquesa)
    ============================================================ */
 :root{
-  --carbon:#0b0b0d;          /* negro carbón base */
-  --carbon-2:#101013;        /* segundo nivel */
-  --hueso:#ECE8E1;           /* texto hueso */
-  --hueso-soft:#b9b4aa;      /* hueso atenuado */
-  --oro:#C0905A;             /* acento dorado/cobre */
-  --oro-soft:#cda878;
-  --linea:rgba(236,232,225,0.14);
-  --serif:'Zodiak', 'Cormorant Garamond', Georgia, serif;
-  --sans:'Manrope', system-ui, sans-serif;
+  --carbon:#0a0d0d;          /* negro carbón con leve fondo verdoso */
+  --carbon-2:#0e1212;        /* segundo nivel */
+  --hueso:#ECEFEC;           /* texto hueso (frío) */
+  --hueso-soft:#a9b2af;      /* hueso atenuado */
+  --oro:#2BD9C4;             /* acento verde agua / turquesa luminoso */
+  --oro-soft:#38E0C8;        /* verde agua más claro */
+  --linea:rgba(236,239,236,0.13);
+  --display:'Cabinet Grotesk', 'Switzer', system-ui, sans-serif;
+  --sans:'Switzer', 'Manrope', system-ui, sans-serif;
   --sans-ui:'Switzer', 'Manrope', system-ui, sans-serif;
 }
 
@@ -92,7 +95,7 @@ a{color:inherit;text-decoration:none;}
   text-transform:uppercase;
   color:var(--oro);
 }
-.serif{font-family:var(--serif);}
+.serif{font-family:var(--display);}
 
 /* ============ LOADER / CORTINA INTRO ============ */
 .loader{
@@ -102,9 +105,9 @@ a{color:inherit;text-decoration:none;}
   flex-direction:column;
 }
 .loader-mark{
-  font-family:var(--serif);
+  font-family:var(--display);
   font-size:clamp(2rem,6vw,4.5rem);
-  font-weight:400;font-style:italic;
+  font-weight:400;font-style:normal;
   letter-spacing:.02em;color:var(--hueso);
   overflow:hidden;
 }
@@ -122,14 +125,14 @@ a{color:inherit;text-decoration:none;}
   border-bottom:1px solid transparent;
 }
 .nav.solid{
-  background:rgba(11,11,13,.82);
+  background:rgba(10,13,13,.82);
   backdrop-filter:blur(14px);
   -webkit-backdrop-filter:blur(14px);
   padding-top:1rem;padding-bottom:1rem;
   border-bottom:1px solid var(--linea);
 }
 .nav-brand{
-  font-family:var(--serif);
+  font-family:var(--display);
   font-size:1.25rem;font-weight:500;letter-spacing:.02em;
   white-space:nowrap;
 }
@@ -176,8 +179,8 @@ a{color:inherit;text-decoration:none;}
 }
 .mobile-menu.open{clip-path:inset(0 0 0 0);}
 .mobile-menu a{
-  font-family:var(--serif);font-size:clamp(2.4rem,11vw,4rem);
-  font-weight:400;font-style:italic;color:var(--hueso);
+  font-family:var(--display);font-size:clamp(2.4rem,11vw,4rem);
+  font-weight:400;font-style:normal;color:var(--hueso);
   line-height:1.15;
 }
 .mobile-menu a:hover{color:var(--oro);}
@@ -194,7 +197,7 @@ a{color:inherit;text-decoration:none;}
 .hero-bg::after{
   content:'';position:absolute;inset:0;
   background:
-    linear-gradient(to top, rgba(11,11,13,.92) 0%, rgba(11,11,13,.28) 42%, rgba(11,11,13,.45) 100%);
+    linear-gradient(to top, rgba(10,13,13,.92) 0%, rgba(10,13,13,.28) 42%, rgba(10,13,13,.45) 100%);
   z-index:2;
 }
 .hero-inner{
@@ -203,16 +206,16 @@ a{color:inherit;text-decoration:none;}
 }
 .hero-kicker{margin-bottom:1.4rem;}
 .hero-title{
-  font-family:var(--serif);
-  font-weight:400;
+  font-family:var(--display);
+  font-weight:800;
   font-size:clamp(3.4rem,12.5vw,13vw);
-  line-height:.9;
-  letter-spacing:-.028em;
+  line-height:.88;
+  letter-spacing:-.04em;
   margin-bottom:1.6rem;
 }
 .line-mask{display:block;overflow:hidden;}
 .line{display:block;}
-.hero-title .accent{font-style:italic;font-weight:400;letter-spacing:-.018em;color:var(--oro-soft);}
+.hero-title .accent{font-style:normal;font-weight:800;letter-spacing:-.035em;color:var(--oro-soft);}
 .hero-meta{
   display:flex;justify-content:space-between;align-items:flex-end;
   flex-wrap:wrap;gap:1.4rem;
@@ -245,7 +248,7 @@ a{color:inherit;text-decoration:none;}
   display:flex;width:max-content;white-space:nowrap;will-change:transform;
 }
 .marquee-track span{
-  font-family:var(--serif);font-style:italic;
+  font-family:var(--display);font-style:normal;
   font-size:clamp(1.4rem,3vw,2.2rem);color:var(--hueso-soft);
   padding:0 1.6rem;
 }
@@ -262,11 +265,11 @@ a{color:inherit;text-decoration:none;}
 /* ============ MANIFIESTO / ESTUDIO ============ */
 .manifesto{max-width:1300px;margin:0 auto;}
 .manifesto-quote{
-  font-family:var(--serif);font-weight:300;
-  font-size:clamp(1.8rem,5vw,4rem);line-height:1.08;
-  letter-spacing:-.02em;max-width:20ch;margin-bottom:clamp(3rem,7vw,6rem);
+  font-family:var(--display);font-weight:500;
+  font-size:clamp(1.8rem,5vw,4rem);line-height:1.05;
+  letter-spacing:-.03em;max-width:20ch;margin-bottom:clamp(3rem,7vw,6rem);
 }
-.manifesto-quote em{font-style:italic;color:var(--oro-soft);}
+.manifesto-quote em{font-style:normal;font-weight:700;color:var(--oro-soft);}
 .manifesto-grid{
   display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,5rem);
   align-items:start;
@@ -284,9 +287,9 @@ a{color:inherit;text-decoration:none;}
   padding:1.7rem 0;border-bottom:1px solid var(--linea);
 }
 .stat-num{
-  font-family:var(--serif);font-weight:400;
+  font-family:var(--display);font-weight:800;
   font-size:clamp(2.6rem,6vw,4.4rem);line-height:1;
-  letter-spacing:-.02em;color:var(--hueso);min-width:4ch;
+  letter-spacing:-.035em;color:var(--hueso);min-width:4ch;
 }
 .stat-num .pre{color:var(--oro);}
 .stat-label{
@@ -306,7 +309,7 @@ a{color:inherit;text-decoration:none;}
 .project-img img{transform-origin:center;will-change:transform;}
 .project-img::after{
   content:'';position:absolute;inset:0;z-index:2;
-  background:linear-gradient(to top, rgba(11,11,13,.9) 0%, rgba(11,11,13,.15) 45%, rgba(11,11,13,.35) 100%);
+  background:linear-gradient(to top, rgba(10,13,13,.9) 0%, rgba(10,13,13,.15) 45%, rgba(10,13,13,.35) 100%);
 }
 .project-inner{
   position:relative;z-index:3;width:100%;
@@ -318,11 +321,11 @@ a{color:inherit;text-decoration:none;}
   color:var(--oro);margin-bottom:1rem;
 }
 .project-name{
-  font-family:var(--serif);font-weight:400;
-  font-size:clamp(2.8rem,9vw,9.5rem);line-height:.94;
-  letter-spacing:-.03em;margin-bottom:1.4rem;
+  font-family:var(--display);font-weight:800;
+  font-size:clamp(2.8rem,9vw,9.5rem);line-height:.92;
+  letter-spacing:-.04em;margin-bottom:1.4rem;
 }
-.project-name em{font-style:italic;letter-spacing:-.02em;color:var(--oro-soft);}
+.project-name em{font-style:normal;font-weight:800;letter-spacing:-.035em;color:var(--oro-soft);}
 .project-meta{
   display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;
   gap:1rem;border-top:1px solid var(--linea);padding-top:1.3rem;
@@ -331,7 +334,84 @@ a{color:inherit;text-decoration:none;}
   font-size:.82rem;letter-spacing:.16em;text-transform:uppercase;color:var(--hueso-soft);
 }
 .project-year{
-  font-family:var(--serif);font-size:1.4rem;font-style:italic;color:var(--hueso);
+  font-family:var(--display);font-size:1.4rem;font-style:normal;color:var(--hueso);
+}
+
+/* ============ SECCIÓN VIDEO — OBRA EN MOVIMIENTO ============ */
+.reel{padding:clamp(5rem,11vw,11rem) clamp(1.2rem,4vw,3.5rem);}
+.reel-wrap{max-width:1300px;margin:0 auto;}
+.reel-head{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  flex-wrap:wrap;gap:1.2rem;margin-bottom:clamp(2rem,4vw,3rem);
+}
+.reel-title{
+  font-family:var(--display);font-weight:800;
+  font-size:clamp(2.2rem,6vw,5rem);line-height:.94;letter-spacing:-.04em;
+  max-width:16ch;
+}
+.reel-title em{font-style:normal;font-weight:800;color:var(--oro-soft);}
+.reel-note{
+  font-size:.84rem;letter-spacing:.04em;color:var(--hueso-soft);
+  max-width:32ch;line-height:1.6;
+}
+.reel-frame{
+  position:relative;width:100%;border-radius:22px;overflow:hidden;
+  border:1px solid var(--linea);background:var(--carbon-2);
+  aspect-ratio:16/9;
+  box-shadow:0 40px 120px -40px rgba(43,217,196,.22);
+  will-change:transform;
+}
+.reel-frame video{
+  display:block;width:100%;height:100%;object-fit:cover;
+}
+.reel-frame::after{
+  content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(to top, rgba(10,13,13,.45) 0%, transparent 40%);
+}
+.reel-tag{
+  position:absolute;left:clamp(1rem,2.5vw,1.8rem);top:clamp(1rem,2.5vw,1.8rem);
+  z-index:3;display:inline-flex;align-items:center;gap:.6rem;
+  padding:.55rem .95rem;border-radius:999px;
+  background:rgba(10,13,13,.55);backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);border:1px solid var(--linea);
+  font-family:var(--sans-ui);font-size:.66rem;font-weight:600;
+  letter-spacing:.26em;text-transform:uppercase;color:var(--hueso);
+}
+.reel-tag .dot{width:7px;height:7px;border-radius:50%;background:var(--oro);
+  box-shadow:0 0 12px var(--oro);}
+
+/* ============ RENDERS DEL CLIENTE — TARJETAS MEDIANAS ============ */
+.renders{padding:clamp(4rem,9vw,9rem) clamp(1.2rem,4vw,3.5rem);background:var(--carbon-2);}
+.renders-wrap{max-width:1300px;margin:0 auto;}
+.renders-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(1rem,2.5vw,1.8rem);
+}
+.render-card{
+  position:relative;border-radius:16px;overflow:hidden;
+  border:1px solid var(--linea);background:var(--carbon);
+  aspect-ratio:4/5;
+}
+.render-card img{
+  display:block;width:100%;height:100%;object-fit:cover;
+  transition:transform .9s cubic-bezier(.22,1,.36,1),filter .9s ease;
+  will-change:transform;
+}
+.render-card:hover img{transform:scale(1.05);filter:saturate(1.1);}
+.render-card::after{
+  content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(to top, rgba(10,13,13,.82) 0%, transparent 50%);
+}
+.render-cap{
+  position:absolute;left:0;bottom:0;z-index:3;width:100%;
+  padding:clamp(1rem,2vw,1.6rem);
+}
+.render-cap .ttl{
+  font-family:var(--display);font-weight:700;
+  font-size:clamp(1.05rem,1.8vw,1.5rem);letter-spacing:-.02em;
+  color:var(--hueso);display:block;margin-bottom:.3rem;
+}
+.render-cap .sub{
+  font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--oro);
 }
 
 /* ============ SERVICIOS ============ */
@@ -348,7 +428,7 @@ a{color:inherit;text-decoration:none;}
 /* El barrido se controla ahora por GSAP (.service-fill); CSS solo el padding */
 .service:hover{padding-left:1.4rem;}
 .service-name{
-  font-family:var(--serif);font-weight:400;
+  font-family:var(--display);font-weight:400;
   font-size:clamp(1.8rem,4.5vw,3.4rem);line-height:1.04;
   letter-spacing:-.02em;
   position:relative;z-index:1;transition:color .4s ease;
@@ -371,7 +451,7 @@ a{color:inherit;text-decoration:none;}
 .contact-bg{position:absolute;inset:-8% 0;width:100%;height:116%;will-change:transform;z-index:1;}
 .contact-bg::after{
   content:'';position:absolute;inset:0;z-index:2;
-  background:linear-gradient(to right, rgba(11,11,13,.94) 0%, rgba(11,11,13,.7) 55%, rgba(11,11,13,.55) 100%);
+  background:linear-gradient(to right, rgba(10,13,13,.94) 0%, rgba(10,13,13,.7) 55%, rgba(10,13,13,.55) 100%);
 }
 .contact-inner{
   position:relative;z-index:3;width:100%;
@@ -379,11 +459,11 @@ a{color:inherit;text-decoration:none;}
   max-width:1300px;margin:0 auto;
 }
 .contact-title{
-  font-family:var(--serif);font-weight:400;
-  font-size:clamp(3rem,9vw,8.5rem);line-height:.94;
-  letter-spacing:-.03em;margin:1.5rem 0 2.5rem;
+  font-family:var(--display);font-weight:800;
+  font-size:clamp(3rem,9vw,8.5rem);line-height:.92;
+  letter-spacing:-.04em;margin:1.5rem 0 2.5rem;
 }
-.contact-title em{font-style:italic;letter-spacing:-.02em;color:var(--oro-soft);}
+.contact-title em{font-style:normal;font-weight:800;letter-spacing:-.035em;color:var(--oro-soft);}
 .contact-grid{
   display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(2rem,5vw,5rem);
   align-items:end;border-top:1px solid var(--linea);padding-top:2.4rem;
@@ -394,7 +474,7 @@ a{color:inherit;text-decoration:none;}
   color:var(--oro);display:block;margin-bottom:.5rem;
 }
 .contact-detail .val{
-  font-family:var(--serif);font-size:clamp(1.2rem,2.4vw,1.8rem);
+  font-family:var(--display);font-size:clamp(1.2rem,2.4vw,1.8rem);
   color:var(--hueso);
 }
 .contact-actions{display:flex;flex-direction:column;gap:1rem;}
@@ -419,7 +499,7 @@ a{color:inherit;text-decoration:none;}
   flex-wrap:wrap;gap:1.4rem;border-top:1px solid var(--linea);
   background:var(--carbon);
 }
-.footer-brand{font-family:var(--serif);font-size:1.4rem;font-style:italic;}
+.footer-brand{font-family:var(--display);font-size:1.4rem;font-style:normal;}
 .footer-meta{
   font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--hueso-soft);
 }
@@ -436,11 +516,13 @@ a{color:inherit;text-decoration:none;}
   .service-desc{display:none;}
   .hero-meta{flex-direction:column;align-items:flex-start;}
   .scroll-cue{display:none;}
+  .renders-grid{grid-template-columns:1fr 1fr;}
 }
 @media(max-width:520px){
   .hero-title{font-size:clamp(3rem,16vw,5rem);}
   .project-name{font-size:clamp(2.4rem,13vw,4rem);}
   .service-no{display:none;}
+  .renders-grid{grid-template-columns:1fr;}
 }
 
 /* Estado sin JS: ocultar loader para no bloquear contenido */
@@ -453,7 +535,7 @@ a{color:inherit;text-decoration:none;}
 .loader-mark .lw > span{display:inline-block;}
 .loader-count{
   position:absolute;right:clamp(1.2rem,4vw,3.5rem);bottom:clamp(1.2rem,4vw,3rem);
-  font-family:var(--serif);font-style:italic;
+  font-family:var(--display);font-style:normal;
   font-size:clamp(2.4rem,9vw,6rem);color:var(--oro-soft);
   line-height:1;opacity:.9;
 }
@@ -476,7 +558,7 @@ a{color:inherit;text-decoration:none;}
 }
 .cursor-dot{width:6px;height:6px;background:var(--hueso);}
 .cursor-ring{
-  width:38px;height:38px;border:1px solid rgba(236,232,225,.7);
+  width:38px;height:38px;border:1px solid rgba(236,239,236,.7);
   transition:width .4s cubic-bezier(.22,1,.36,1),height .4s cubic-bezier(.22,1,.36,1),border-color .4s;
 }
 .cursor-ring.is-hover{width:64px;height:64px;border-color:var(--oro);}
@@ -497,13 +579,13 @@ body.has-cursor a,body.has-cursor button,body.has-cursor .magnetic{cursor:none;}
 /* Servicios: línea de barrido controlada por GSAP */
 .service-fill{
   position:absolute;left:0;top:0;height:100%;width:0;z-index:0;pointer-events:none;
-  background:linear-gradient(to right, rgba(192,144,90,.10), transparent 80%);
+  background:linear-gradient(to right, rgba(43,217,196,.10), transparent 80%);
 }
 
 /* Pequeño glow del acento en hover de proyectos */
 .project::after{
   content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
-  background:radial-gradient(120% 90% at 0% 100%, rgba(192,144,90,.10), transparent 55%);
+  background:radial-gradient(120% 90% at 0% 100%, rgba(43,217,196,.10), transparent 55%);
   opacity:0;transition:opacity .8s ease;
 }
 .project:hover::after{opacity:1;}
@@ -553,7 +635,7 @@ body.has-cursor a,body.has-cursor button,body.has-cursor .magnetic{cursor:none;}
 <!-- ===================== HERO ===================== -->
 <header class="hero" id="hero">
   <div class="hero-bg">
-    <img src="../../assets/img/exterior-atardecer.jpg" alt="Fachada curva acristalada en la hora azul" />
+    <img src="../../assets/fotos/agua-4.jpg" alt="Rascacielos de vidrio turquesa reflejante" style="object-position:center;" />
   </div>
   <div class="hero-inner">
     <div class="hero-kicker kicker reveal-fade">( 00 — Estudio de arquitectura )</div>
@@ -620,7 +702,7 @@ body.has-cursor a,body.has-cursor button,body.has-cursor .magnetic{cursor:none;}
 
   <!-- Proyecto 01 -->
   <article class="project">
-    <div class="project-img"><img src="../../assets/img/arena-interior.jpg" alt="Interior de coliseo multiuso con pantalla central" /></div>
+    <div class="project-img"><img src="../../assets/fotos/agua-1.jpg" alt="Torre de vidrio turquesa geométrica" /></div>
     <div class="project-inner">
       <div class="project-index">( 01 — Proyectos )</div>
       <h3 class="project-name">Coliseo <em>Multiuso</em></h3>
@@ -633,7 +715,7 @@ body.has-cursor a,body.has-cursor button,body.has-cursor .magnetic{cursor:none;}
 
   <!-- Proyecto 02 -->
   <article class="project">
-    <div class="project-img"><img src="../../assets/img/fachada-noche.jpg" alt="Fachada paramétrica iluminada en la noche" /></div>
+    <div class="project-img"><img src="../../assets/fotos/agua-3.jpg" alt="Fachada de vidrio facetada con textura" /></div>
     <div class="project-inner">
       <div class="project-index">( 02 — Proyectos )</div>
       <h3 class="project-name">Complejo Deportivo <em>Paramétrico</em></h3>
@@ -646,7 +728,7 @@ body.has-cursor a,body.has-cursor button,body.has-cursor .magnetic{cursor:none;}
 
   <!-- Proyecto 03 -->
   <article class="project">
-    <div class="project-img"><img src="../../assets/img/gimnasio.jpg" alt="Interior de centro de alto rendimiento con ring de boxeo" /></div>
+    <div class="project-img"><img src="../../assets/fotos/azul-1.jpg" alt="Volumen arquitectónico de vidrio en tonos azul turquesa" /></div>
     <div class="project-inner">
       <div class="project-index">( 03 — Proyectos )</div>
       <h3 class="project-name">Centro de Alto <em>Rendimiento</em></h3>
@@ -657,32 +739,54 @@ body.has-cursor a,body.has-cursor button,body.has-cursor .magnetic{cursor:none;}
     </div>
   </article>
 
-  <!-- Proyecto 04 -->
-  <article class="project">
-    <div class="project-img"><img src="../../assets/img/terraza-restaurante.jpg" alt="Terraza nocturna con estructura roja iluminada" /></div>
-    <div class="project-inner">
-      <div class="project-index">( 04 — Proyectos )</div>
-      <h3 class="project-name">Pabellón <em>Gastronómico</em></h3>
-      <div class="project-meta">
-        <span class="project-tip">Terraza · Estructura singular</span>
-        <span class="project-year">2023</span>
-      </div>
-    </div>
-  </article>
+</section>
 
-  <!-- Proyecto 05 -->
-  <article class="project">
-    <div class="project-img"><img src="../../assets/img/exterior-rampa.jpg" alt="Explanada exterior diurna con accesos y rampa" /></div>
-    <div class="project-inner">
-      <div class="project-index">( 05 — Proyectos )</div>
-      <h3 class="project-name">Explanada <em>y Accesos</em></h3>
-      <div class="project-meta">
-        <span class="project-tip">Espacio público · Urbanismo</span>
-        <span class="project-year">2022</span>
-      </div>
+<!-- ===================== VIDEO — OBRA EN MOVIMIENTO ===================== -->
+<section class="reel" id="reel">
+  <div class="reel-wrap">
+    <div class="reel-head">
+      <h2 class="reel-title reveal">La obra <em>en movimiento</em></h2>
+      <p class="reel-note reveal">Recorridos y visualización dinámica que anticipan la experiencia espacial mucho antes de la construcción.</p>
     </div>
-  </article>
+    <div class="reel-frame">
+      <span class="reel-tag"><span class="dot"></span> Obra en movimiento</span>
+      <video autoplay muted loop playsinline poster="../../assets/video/poster.jpg">
+        <source src="../../assets/video/showreel.mp4" type="video/mp4" />
+      </video>
+    </div>
+  </div>
+</section>
 
+<!-- ===================== RENDERS DEL CLIENTE — TARJETAS ===================== -->
+<section class="renders">
+  <div class="renders-wrap">
+    <div class="section-head">
+      <div class="section-num reveal">( Selección — Visualización 3D )</div>
+    </div>
+    <div class="renders-grid">
+      <article class="render-card">
+        <img src="../../assets/img/arena-interior.jpg" alt="Interior de coliseo multiuso con pantalla central" />
+        <div class="render-cap">
+          <span class="ttl">Arena interior</span>
+          <span class="sub">Coliseo multiuso</span>
+        </div>
+      </article>
+      <article class="render-card">
+        <img src="../../assets/img/exterior-atardecer.jpg" alt="Exterior de complejo deportivo al atardecer" />
+        <div class="render-cap">
+          <span class="ttl">Exterior al atardecer</span>
+          <span class="sub">Envolvente paramétrica</span>
+        </div>
+      </article>
+      <article class="render-card">
+        <img src="../../assets/img/cafeteria.jpg" alt="Pabellón gastronómico interior" />
+        <div class="render-cap">
+          <span class="ttl">Pabellón gastronómico</span>
+          <span class="sub">Espacio de encuentro</span>
+        </div>
+      </article>
+    </div>
+  </div>
 </section>
 
 <!-- ===================== SERVICIOS ===================== -->
@@ -724,7 +828,7 @@ body.has-cursor a,body.has-cursor button,body.has-cursor .magnetic{cursor:none;}
 <!-- ===================== CONTACTO / CTA ===================== -->
 <section class="contact" id="contacto">
   <div class="contact-bg">
-    <img src="../../assets/img/corredor-cristal.jpg" alt="Corredor acristalado diurno" />
+    <img src="../../assets/fotos/agua-2.jpg" alt="Fachada de vidrio azul turquesa" style="object-position:center;" />
   </div>
   <div class="contact-inner">
     <div class="section-num reveal">( 03 — Contacto )</div>
@@ -1013,6 +1117,23 @@ if(reduce){
     });
   });
   // El barrido CSS original se vuelve redundante; lo neutralizamos vía JS-fill superior.
+
+  /* ---------- VIDEO: el marco entra con clip + escala al hacer scroll ---------- */
+  const reelFrame = document.querySelector('.reel-frame');
+  if(reelFrame){
+    gsap.from(reelFrame, {
+      yPercent:14, scale:.94, autoAlpha:0, clipPath:'inset(8% 8% 8% 8% round 22px)',
+      duration:1.2, ease:'power4.out',
+      scrollTrigger:{ trigger:reelFrame, start:'top 85%', once:true }
+    });
+  }
+  /* Tarjetas de renders: entrada escalonada por columna */
+  gsap.utils.toArray('.render-card').forEach((card,i)=>{
+    gsap.from(card, {
+      y:50, autoAlpha:0, clipPath:'inset(0 0 100% 0)', duration:1, ease:'power3.out',
+      scrollTrigger:{ trigger:card, start:'top 88%', once:true }, delay:i*0.06
+    });
+  });
 
   /* ---------- 6. CONTADORES de stats ---------- */
   gsap.utils.toArray('.stat-count').forEach(el=>{

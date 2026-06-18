@@ -36,15 +36,15 @@
    VARIABLES Y RESET
    ============================================================ */
 :root{
-  --azul:#2E6BFF;          /* acento azul eléctrico */
-  --azul-soft:#5b8cff;
-  --negro:#0a0c10;         /* fondo oscuro cinematográfico */
-  --negro-2:#0e1118;
-  --hueso:#f4f2ee;         /* claro aireado */
-  --hueso-2:#e9e6df;
-  --gris:#9aa0ab;
-  --vidrio:rgba(255,255,255,.06);
-  --borde-vidrio:rgba(255,255,255,.14);
+  --azul:#2f6bff;          /* acento azul eléctrico / cobalto luminoso */
+  --azul-soft:#6fa0ff;     /* azul claro luminoso para detalles */
+  --negro:#040912;         /* azul noche muy oscuro (fondo principal) */
+  --negro-2:#070e1c;       /* azul marino profundo (fondo secundario) */
+  --hueso:#eaf0fb;         /* claro azulado frío (secciones aireadas) */
+  --hueso-2:#dce5f5;
+  --gris:#8e9bb6;
+  --vidrio:rgba(120,160,255,.07);
+  --borde-vidrio:rgba(140,175,255,.18);
   --display:'Clash Display', sans-serif;
   --cuerpo:'Switzer', sans-serif;
 }
@@ -210,7 +210,13 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 }
 .hero-bg::after{
   content:''; position:absolute; inset:0;
-  background:linear-gradient(180deg, rgba(8,10,15,.35) 0%, rgba(8,10,15,.08) 32%, rgba(8,10,15,.55) 100%);
+  background:linear-gradient(180deg, rgba(4,9,18,.42) 0%, rgba(4,9,18,.06) 30%, rgba(4,9,18,.7) 100%);
+}
+/* Tinte azul noche que unifica la fotografía con la atmósfera midnight */
+.hero-bg::before{
+  content:''; position:absolute; inset:0; z-index:1;
+  background:radial-gradient(120% 80% at 70% 30%, rgba(47,107,255,.18), transparent 60%);
+  mix-blend-mode:screen; pointer-events:none;
 }
 .hero-inner{
   position:absolute; inset:0; z-index:3;
@@ -261,7 +267,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 }
 .estudio__lead em{ font-style:normal; color:var(--azul); }
 .estudio__cols{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:clamp(30px,4vw,56px); align-items:start; }
-.estudio__cols p{ color:#3a3f49; font-size:clamp(.98rem,1.4vw,1.1rem); max-width:42ch; }
+.estudio__cols p{ color:#2c3650; font-size:clamp(.98rem,1.4vw,1.1rem); max-width:42ch; }
 .estudio__tag{ font-family:var(--display); font-weight:700; color:var(--azul); font-size:.8rem; letter-spacing:.2em; text-transform:uppercase; margin-bottom:14px; display:block; }
 
 /* ============================================================
@@ -271,8 +277,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 .stats::before{
   content:''; position:absolute; inset:0;
   background:
-    radial-gradient(circle at 18% 25%, rgba(46,107,255,.22), transparent 42%),
-    radial-gradient(circle at 85% 80%, rgba(46,107,255,.14), transparent 46%);
+    radial-gradient(circle at 18% 25%, rgba(47,107,255,.3), transparent 44%),
+    radial-gradient(circle at 85% 80%, rgba(111,160,255,.2), transparent 48%);
 }
 .stats__head{ position:relative; max-width:1380px; margin:0 auto clamp(46px,7vh,74px); color:#fff; }
 .stats__head .kicker{ color:var(--azul-soft); display:block; margin-bottom:18px; }
@@ -307,7 +313,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 .project-img img{ width:100%; height:100%; transform:scale(1.3); will-change:transform; }
 .project-img::after{
   content:''; position:absolute; inset:0;
-  background:linear-gradient(180deg, rgba(8,10,15,.45) 0%, rgba(8,10,15,.05) 40%, rgba(8,10,15,.7) 100%);
+  background:linear-gradient(180deg, rgba(4,9,18,.5) 0%, rgba(4,9,18,.06) 40%, rgba(4,9,18,.78) 100%);
 }
 .project-inner{
   position:absolute; inset:0; z-index:3; color:#fff;
@@ -358,7 +364,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
    ============================================================ */
 .contacto{ position:relative; width:100vw; min-height:100svh; overflow:hidden; background:var(--negro); display:flex; align-items:center; }
 .contacto-bg{ position:absolute; inset:-6% 0; height:112%; will-change:transform; }
-.contacto-bg::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(8,10,15,.78), rgba(8,10,15,.6) 40%, rgba(8,10,15,.9)); }
+.contacto-bg::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(4,9,18,.82), rgba(4,9,18,.62) 40%, rgba(4,9,18,.94)); }
 .contacto-inner{
   position:relative; z-index:3; width:100%; max-width:1380px; margin:0 auto;
   padding:clamp(110px,14vh,150px) clamp(20px,5vw,60px); color:#fff;
@@ -410,6 +416,61 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   .contacto-title{ font-size:clamp(2.4rem,16vw,5rem); }
 }
 
+/* ============================================================
+   VIDEO — obra en movimiento (sección destacada)
+   ============================================================ */
+.video-sec{ background:var(--negro); padding:clamp(80px,14vh,160px) clamp(20px,5vw,60px); position:relative; overflow:hidden; }
+.video-sec::before{
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(circle at 50% 0%, rgba(47,107,255,.16), transparent 55%);
+  pointer-events:none;
+}
+.video-wrap{ position:relative; max-width:1380px; margin:0 auto; }
+.video-head{ display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:18px; margin-bottom:clamp(28px,4vh,46px); color:#fff; }
+.video-head .kicker{ color:var(--azul-soft); display:flex; align-items:center; gap:14px; }
+.video-head h2{ font-family:var(--display); font-weight:600; font-size:clamp(1.8rem,4.6vw,3.4rem); line-height:1; letter-spacing:-.025em; max-width:16ch; }
+.video-head p{ color:rgba(220,229,245,.6); font-size:clamp(.9rem,1.3vw,1.02rem); max-width:30ch; }
+/* Marco elegante con borde de vidrio y brillo superior azul */
+.video-frame{
+  position:relative; border-radius:24px; overflow:hidden; will-change:transform;
+  border:1px solid var(--borde-vidrio);
+  box-shadow:0 40px 120px -40px rgba(0,0,0,.85), 0 0 0 1px rgba(140,175,255,.06) inset;
+}
+.video-frame::after{ content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,rgba(140,175,255,.6),transparent); z-index:2; }
+.video-frame video{ display:block; width:100%; height:auto; aspect-ratio:16/9; object-fit:cover; background:var(--negro-2); }
+.video-badge{
+  position:absolute; left:clamp(16px,2vw,28px); bottom:clamp(16px,2vw,28px); z-index:3;
+  display:flex; align-items:center; gap:10px;
+  background:rgba(4,9,18,.55); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  border:1px solid var(--borde-vidrio); border-radius:100px; padding:9px 18px;
+  font-family:var(--cuerpo); font-weight:600; font-size:.72rem; letter-spacing:.2em; text-transform:uppercase; color:#fff;
+}
+.video-badge .live{ width:8px; height:8px; border-radius:50%; background:var(--azul-soft); box-shadow:0 0 14px var(--azul-soft); animation:pulse 1.8s ease-in-out infinite; }
+@keyframes pulse{ 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.45;transform:scale(.7);} }
+
+/* ============================================================
+   RENDERS — galería de tarjetas medianas
+   ============================================================ */
+.renders{ background:var(--negro-2); color:#fff; padding:clamp(80px,14vh,160px) clamp(20px,5vw,60px); }
+.renders__head{ max-width:1380px; margin:0 auto clamp(36px,5vh,60px); }
+.renders__head .kicker{ color:var(--azul-soft); display:block; margin-bottom:18px; }
+.renders__head h2{ font-family:var(--display); font-weight:600; font-size:clamp(1.8rem,4.6vw,3.4rem); line-height:1; letter-spacing:-.025em; max-width:18ch; }
+.renders__grid{
+  max-width:1380px; margin:0 auto;
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:clamp(18px,2.2vw,28px);
+}
+.render-card{
+  position:relative; border-radius:20px; overflow:hidden; background:var(--negro);
+  border:1px solid var(--borde-vidrio); aspect-ratio:4/3;
+}
+.render-card img{ width:100%; height:100%; object-fit:cover; transition:transform .9s cubic-bezier(.22,1,.36,1); }
+.render-card::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, transparent 45%, rgba(4,9,18,.85)); }
+.render-card__meta{ position:absolute; left:0; bottom:0; z-index:2; padding:clamp(18px,2.4vw,26px); width:100%; }
+.render-card__meta .num{ font-family:var(--display); font-weight:600; color:var(--azul-soft); font-size:.82rem; letter-spacing:.04em; }
+.render-card__meta h3{ font-family:var(--display); font-weight:700; font-size:clamp(1.3rem,2.4vw,1.8rem); line-height:1; letter-spacing:-.02em; margin-top:8px; }
+.render-card__meta p{ color:rgba(220,229,245,.66); font-size:clamp(.84rem,1.1vw,.95rem); margin-top:8px; max-width:34ch; }
+@media (hover:hover){ .render-card:hover img{ transform:scale(1.06); } }
+
 /* Estado inicial oculto para reveals (evita flash antes de GSAP) */
 .js-ready .reveal,
 .js-ready .reveal-words,
@@ -457,7 +518,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 
 <!-- ============ HERO ============ -->
 <section class="hero" id="hero">
-  <div class="hero-bg"><img src="../../assets/img/exterior-atardecer.jpg" alt="Fachada curva acristalada en la hora azul"></div>
+  <div class="hero-bg"><img src="../../assets/fotos/azul-3.jpg" alt="Estadio nocturno iluminado bajo cielo azul noche"></div>
   <div class="hero-inner">
     <div class="hero-kicker">
       <span class="dot"></span>
@@ -532,93 +593,92 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   <h2 class="reveal-words">Proyectos que ocupan el territorio.</h2>
 </section>
 
-<!-- Proyecto 01 -->
+<!-- Proyecto 01 — full-bleed (foto real nocturna) -->
 <section class="project">
-  <div class="project-img"><img src="../../assets/img/arena-interior.jpg" alt="Arena deportiva interior con pantalla central"></div>
+  <div class="project-img"><img src="../../assets/fotos/azul-1.jpg" alt="Arena nocturna con gradas iluminadas"></div>
   <div class="project-inner">
     <div class="project-top">
-      <span class="project-num">01 / 05</span>
+      <span class="project-num">01 / 02</span>
       <span class="project-type">Arena deportiva · Estructura de gran luz</span>
     </div>
     <div>
       <h3 class="project-name">Coliseo<br>Multiuso</h3>
       <div class="project-foot">
-        <p>Arena de uso múltiple con cubierta de gran luz y pantalla central, optimizada para espectáculos y alto aforo.</p>
+        <p>Arena de uso múltiple con cubierta de gran luz y gradas iluminadas, optimizada para espectáculos y alto aforo nocturno.</p>
         <span class="project-year">2024</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Proyecto 02 -->
+<!-- Proyecto 02 — full-bleed (foto real nocturna) -->
 <section class="project">
-  <div class="project-img"><img src="../../assets/img/fachada-noche.jpg" alt="Fachada paramétrica iluminada en la noche"></div>
+  <div class="project-img"><img src="../../assets/fotos/azul-4.jpg" alt="Torre azulada iluminada en la noche"></div>
   <div class="project-inner">
     <div class="project-top">
-      <span class="project-num">02 / 05</span>
-      <span class="project-type">Complejo paramétrico · Envolvente</span>
+      <span class="project-num">02 / 02</span>
+      <span class="project-type">Complejo paramétrico · Hito vertical</span>
     </div>
     <div>
       <h3 class="project-name">Complejo<br>Paramétrico</h3>
       <div class="project-foot">
-        <p>Envolvente paramétrica de geometría variable e iluminación dinámica que convierte la fachada en hito urbano nocturno.</p>
+        <p>Envolvente de geometría variable e iluminación dinámica que convierte la torre en hito urbano nocturno.</p>
         <span class="project-year">2024</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Proyecto 03 -->
-<section class="project">
-  <div class="project-img"><img src="../../assets/img/gimnasio.jpg" alt="Centro de alto rendimiento con ring de boxeo"></div>
-  <div class="project-inner">
-    <div class="project-top">
-      <span class="project-num">03 / 05</span>
-      <span class="project-type">Centro de alto rendimiento · Deportivo</span>
-    </div>
-    <div>
-      <h3 class="project-name">Alto<br>Rendimiento</h3>
-      <div class="project-foot">
-        <p>Centro de entrenamiento integral con áreas especializadas, luz natural controlada y programa deportivo de élite.</p>
-        <span class="project-year">2023</span>
+<!-- ============ VIDEO — obra en movimiento ============ -->
+<section class="video-sec" id="video">
+  <div class="video-wrap">
+    <div class="video-head reveal">
+      <div>
+        <span class="kicker">Obra en movimiento <span class="draw-line"></span></span>
+        <h2 style="margin-top:18px;">El proyecto, narrado en imágenes.</h2>
       </div>
+      <p>Un recorrido cinematográfico por la escala, la luz y la geometría de la obra.</p>
+    </div>
+    <div class="video-frame">
+      <video autoplay muted loop playsinline poster="../../assets/video/poster.jpg">
+        <source src="../../assets/video/showreel.mp4" type="video/mp4">
+      </video>
+      <div class="video-badge"><span class="live"></span>Obra en movimiento</div>
     </div>
   </div>
 </section>
 
-<!-- Proyecto 04 -->
-<section class="project">
-  <div class="project-img"><img src="../../assets/img/terraza-restaurante.jpg" alt="Pabellón gastronómico con estructura roja iluminada"></div>
-  <div class="project-inner">
-    <div class="project-top">
-      <span class="project-num">04 / 05</span>
-      <span class="project-type">Pabellón gastronómico · Terraza</span>
-    </div>
-    <div>
-      <h3 class="project-name">Pabellón<br>Gastronómico</h3>
-      <div class="project-foot">
-        <p>Estructura ligera de acento cromático y terraza nocturna concebida como experiencia social y punto de encuentro.</p>
-        <span class="project-year">2023</span>
-      </div>
-    </div>
+<!-- ============ RENDERS — galería de tarjetas medianas ============ -->
+<section class="renders">
+  <div class="renders__head reveal">
+    <span class="kicker">Detalle de obra <span class="draw-line"></span></span>
+    <h2 class="reveal-words">Renders fotorrealistas que anticipan lo construido.</h2>
   </div>
-</section>
-
-<!-- Proyecto 05 -->
-<section class="project">
-  <div class="project-img"><img src="../../assets/img/exterior-rampa.jpg" alt="Explanada exterior diurna con accesos"></div>
-  <div class="project-inner">
-    <div class="project-top">
-      <span class="project-num">05 / 05</span>
-      <span class="project-type">Explanada y accesos · Urbanismo</span>
-    </div>
-    <div>
-      <h3 class="project-name">Explanada<br>y Accesos</h3>
-      <div class="project-foot">
-        <p>Espacio público y circulaciones a gran escala que articulan el ingreso, ordenan flujos y conectan con la ciudad.</p>
-        <span class="project-year">2022</span>
+  <div class="renders__grid">
+    <article class="render-card reveal-stagger-card">
+      <img src="../../assets/img/arena-interior.jpg" alt="Arena deportiva interior con pantalla central">
+      <div class="render-card__meta">
+        <span class="num">R-01</span>
+        <h3>Arena interior</h3>
+        <p>Cubierta de gran luz y pantalla central para alto aforo.</p>
       </div>
-    </div>
+    </article>
+    <article class="render-card reveal-stagger-card">
+      <img src="../../assets/img/gimnasio.jpg" alt="Centro de alto rendimiento con ring de boxeo">
+      <div class="render-card__meta">
+        <span class="num">R-02</span>
+        <h3>Alto rendimiento</h3>
+        <p>Centro de entrenamiento integral con áreas especializadas.</p>
+      </div>
+    </article>
+    <article class="render-card reveal-stagger-card">
+      <img src="../../assets/img/exterior-cancha.jpg" alt="Exterior con cancha deportiva">
+      <div class="render-card__meta">
+        <span class="num">R-03</span>
+        <h3>Explanada y accesos</h3>
+        <p>Espacio público y circulaciones que articulan el ingreso.</p>
+      </div>
+    </article>
   </div>
 </section>
 
@@ -659,7 +719,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 
 <!-- ============ CONTACTO ============ -->
 <section class="contacto" id="contacto">
-  <div class="contacto-bg"><img src="../../assets/img/exterior-cancha.jpg" alt="Exterior diurno con cancha de fútbol"></div>
+  <div class="contacto-bg"><img src="../../assets/fotos/azul-2.jpg" alt="Estadio de fútbol nocturno iluminado"></div>
   <div class="contacto-inner">
     <span class="kicker">Hablemos de tu proyecto</span>
     <h2 class="contacto-title">
@@ -945,6 +1005,21 @@ if (!reduce){
     yPercent:120, duration:1.2, stagger:.12, ease:'expo.out',
     scrollTrigger:{ trigger:'.contacto', start:'top 70%', once:true }
   });
+
+  /* ---- 10b. Video: marco que entra con clip + leve parallax interno ---- */
+  (() => {
+    const frame = document.querySelector('.video-frame');
+    if (frame){
+      gsap.from(frame, {
+        clipPath:'inset(0 0 100% 0)', y:60, autoAlpha:0, duration:1.2, ease:'power4.inOut',
+        scrollTrigger:{ trigger:'.video-sec', start:'top 78%', once:true }
+      });
+      gsap.to(frame, {
+        yPercent:-6, ease:'none',
+        scrollTrigger:{ trigger:'.video-sec', start:'top bottom', end:'bottom top', scrub:true }
+      });
+    }
+  })();
 
   /* ---- 11. Footer: aparición ---- */
   gsap.from('.footer__row > *', {

@@ -16,15 +16,15 @@
    SISTEMA · Joe Jibaja Vega — Trailer cinematográfico carbón cálido
    ==================================================================== */
 :root{
-  --carbon:#0c0a09;          /* carbón cálido con tinte marrón */
-  --carbon-2:#100d0b;
-  --carbon-3:#1a1512;
-  --ambar:#E0913F;           /* acento ámbar/cobre cálido */
-  --ambar-soft:#f0b066;
-  --blanco:#f7f3ee;
-  --humo:#a39a90;            /* gris cálido para cuerpo secundario */
-  --linea:rgba(224,145,63,.18);
-  --glow:rgba(224,145,63,.45);
+  --carbon:#070b08;          /* carbón con tinte verde profundo */
+  --carbon-2:#0a110c;
+  --carbon-3:#101a13;
+  --ambar:#3DF07A;           /* acento verde neón / esmeralda luminoso */
+  --ambar-soft:#7bf6a6;
+  --blanco:#f1f7f2;
+  --humo:#8fa597;            /* gris verdoso para cuerpo secundario */
+  --linea:rgba(61,240,122,.18);
+  --glow:rgba(61,240,122,.45);
   --display:'Anton', sans-serif;
   --body:'Manrope', sans-serif;
 }
@@ -101,7 +101,7 @@ body::after{
   border-bottom:1px solid transparent;
 }
 .nav.solid{
-  background:rgba(12,10,9,.82);
+  background:rgba(7,11,8,.82);
   backdrop-filter:blur(14px);
   -webkit-backdrop-filter:blur(14px);
   padding-top:1rem; padding-bottom:1rem;
@@ -169,17 +169,17 @@ body::after{
   position:absolute; inset:-8% 0; width:100%; height:116%;
   will-change:transform;
 }
-.hero-bg img{ filter:saturate(1.05) contrast(1.05); }
+.hero-bg img{ filter:saturate(1.08) contrast(1.05); object-position:center 38%; }
 /* Overlay + viñeta */
 .hero-overlay{
   position:absolute; inset:0;
   background:
-    radial-gradient(120% 90% at 50% 35%, transparent 30%, rgba(12,10,9,.65) 100%),
-    linear-gradient(to top, rgba(12,10,9,.95) 0%, rgba(12,10,9,.2) 45%, rgba(12,10,9,.55) 100%);
+    radial-gradient(120% 90% at 50% 35%, transparent 30%, rgba(7,11,8,.65) 100%),
+    linear-gradient(to top, rgba(7,11,8,.95) 0%, rgba(7,11,8,.2) 45%, rgba(7,11,8,.55) 100%);
 }
 .hero-vignette{
   position:absolute; inset:0; pointer-events:none;
-  box-shadow:inset 0 0 240px 60px rgba(12,10,9,.9);
+  box-shadow:inset 0 0 240px 60px rgba(7,11,8,.9);
 }
 /* Marco punteado tipo visor de cámara */
 .viewfinder{
@@ -223,7 +223,7 @@ body::after{
   letter-spacing:.005em;
   text-transform:uppercase;
   color:var(--blanco);
-  text-shadow:0 0 60px rgba(224,145,63,.35), 0 4px 60px rgba(0,0,0,.55);
+  text-shadow:0 0 60px rgba(61,240,122,.35), 0 4px 60px rgba(0,0,0,.55);
 }
 .hero-title .line-mask{ overflow:hidden; display:block; }
 .hero-title .line{ display:block; font-size:clamp(3.4rem,12.5vw,12.5rem); }
@@ -284,7 +284,7 @@ section{ position:relative; }
 .projects-intro h2{
   font-family:var(--display); font-weight:400; text-transform:uppercase;
   font-size:clamp(2.4rem,8vw,7rem); line-height:.92; color:var(--blanco);
-  text-shadow:0 0 50px rgba(224,145,63,.25);
+  text-shadow:0 0 50px rgba(61,240,122,.25);
 }
 .projects-intro p{ margin-top:1.4rem; max-width:52ch; color:var(--humo); font-size:1.02rem; }
 
@@ -296,7 +296,7 @@ section{ position:relative; }
 .project-img img{ transform:scale(1.18); filter:saturate(1.05) contrast(1.04); }
 .project-shade{
   position:absolute; inset:0;
-  background:linear-gradient(to top, rgba(12,10,9,.92) 0%, rgba(12,10,9,.25) 55%, rgba(12,10,9,.5) 100%);
+  background:linear-gradient(to top, rgba(7,11,8,.92) 0%, rgba(7,11,8,.25) 55%, rgba(7,11,8,.5) 100%);
 }
 .project-content{
   position:relative; z-index:3; width:100%;
@@ -321,13 +321,83 @@ section{ position:relative; }
 .project-meta .pip{ width:5px; height:5px; background:var(--ambar); border-radius:50%; }
 .project .viewfinder{ inset:clamp(14px,2vw,26px); z-index:2; }
 
+/* ============================== VIDEO — OBRA EN MOVIMIENTO ============================== */
+.videoblock{ background:var(--carbon); border-top:1px solid var(--linea); }
+.videoblock-head{ margin-bottom:2.6rem; }
+.videoblock-head h2{
+  font-family:var(--display); font-weight:400; text-transform:uppercase;
+  font-size:clamp(2.2rem,6vw,5.4rem); line-height:.94; color:var(--blanco);
+  text-shadow:0 0 46px rgba(61,240,122,.24);
+}
+.videoblock-head p{ margin-top:1.3rem; max-width:50ch; color:var(--humo); font-size:1.02rem; line-height:1.7; }
+.video-frame{
+  position:relative; width:100%; border-radius:18px; overflow:hidden;
+  border:1px solid var(--linea);
+  box-shadow:0 40px 120px -30px rgba(0,0,0,.85), 0 0 90px -20px var(--glow);
+  background:var(--carbon-2);
+  will-change:transform;
+}
+.video-frame video{
+  display:block; width:100%; height:auto; max-height:80svh; object-fit:cover;
+  filter:saturate(1.06) contrast(1.03);
+}
+.video-frame .video-shine{
+  position:absolute; inset:0; pointer-events:none; border-radius:18px;
+  box-shadow:inset 0 0 120px 10px rgba(7,11,8,.55);
+}
+.video-tag{
+  position:absolute; top:1.1rem; left:1.1rem; z-index:4;
+  display:flex; align-items:center; gap:.6rem;
+  padding:.55rem 1rem; border-radius:999px;
+  background:rgba(7,11,8,.62); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  border:1px solid var(--linea);
+  font-size:.62rem; letter-spacing:.28em; text-transform:uppercase; color:var(--blanco); font-weight:600;
+}
+.video-tag .dot{ width:8px; height:8px; border-radius:50%; background:var(--ambar); box-shadow:0 0 12px var(--glow); animation:blink 1.4s infinite; }
+
+/* ============================== RENDERS DEL CLIENTE (tarjetas medianas) ============================== */
+.renders{ background:var(--carbon-2); border-top:1px solid var(--linea); }
+.renders-head{ margin-bottom:2.8rem; }
+.renders-head h2{
+  font-family:var(--display); font-weight:400; text-transform:uppercase;
+  font-size:clamp(2rem,5.6vw,4.6rem); line-height:.94; color:var(--blanco);
+  text-shadow:0 0 40px rgba(61,240,122,.2);
+}
+.renders-head p{ margin-top:1.2rem; max-width:48ch; color:var(--humo); font-size:.98rem; line-height:1.7; }
+.renders-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(1rem,2.4vw,1.8rem); }
+.render-card{
+  position:relative; border-radius:14px; overflow:hidden;
+  border:1px solid var(--linea); background:var(--carbon-3);
+  box-shadow:0 24px 70px -28px rgba(0,0,0,.8);
+  will-change:transform;
+}
+.render-card .render-media{ position:relative; aspect-ratio:4/3; overflow:hidden; }
+.render-card .render-media img{
+  transition:transform .9s cubic-bezier(.22,1,.36,1); filter:saturate(1.04) contrast(1.03);
+}
+.render-card:hover .render-media img{ transform:scale(1.06); }
+.render-card .render-shade{
+  position:absolute; inset:0;
+  background:linear-gradient(to top, rgba(7,11,8,.85) 0%, rgba(7,11,8,.1) 55%, transparent 100%);
+}
+.render-card .render-cap{
+  position:absolute; left:1.1rem; right:1.1rem; bottom:1rem; z-index:2;
+}
+.render-card .render-cap .rk{
+  font-size:.64rem; letter-spacing:.28em; text-transform:uppercase; color:var(--ambar); font-weight:700; margin-bottom:.4rem;
+}
+.render-card .render-cap .rt{
+  font-family:var(--display); font-weight:400; text-transform:uppercase;
+  font-size:clamp(1.1rem,2.2vw,1.6rem); line-height:1; color:var(--blanco);
+}
+
 /* ============================== SERVICIOS ============================== */
 .services{ background:var(--carbon-2); border-top:1px solid var(--linea); }
 .services-head{ display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:1.5rem; margin-bottom:3rem; }
 .services-head h2{
   font-family:var(--display); font-weight:400; text-transform:uppercase;
   font-size:clamp(2.2rem,6vw,5rem); line-height:.94; color:var(--blanco);
-  text-shadow:0 0 40px rgba(224,145,63,.22);
+  text-shadow:0 0 40px rgba(61,240,122,.22);
 }
 .services-head p{ max-width:34ch; color:var(--humo); font-size:.96rem; }
 
@@ -361,7 +431,7 @@ section{ position:relative; }
 .marquee-track{ display:inline-flex; gap:3rem; will-change:transform; }
 .marquee-track span{
   font-family:var(--display); font-size:clamp(1.6rem,4vw,3rem); text-transform:uppercase;
-  letter-spacing:.04em; color:transparent; -webkit-text-stroke:1px rgba(224,145,63,.55);
+  letter-spacing:.04em; color:transparent; -webkit-text-stroke:1px rgba(61,240,122,.55);
 }
 .marquee-track span.fill{ color:var(--ambar); -webkit-text-stroke:0; text-shadow:0 0 30px var(--glow); }
 
@@ -371,12 +441,12 @@ section{ position:relative; }
   display:flex; align-items:center;
 }
 .contact-bg{ position:absolute; inset:0; }
-.contact-bg img{ filter:saturate(1) contrast(1.03); }
+.contact-bg img{ filter:saturate(1.05) contrast(1.03); object-position:center 30%; }
 .contact-shade{
   position:absolute; inset:0;
   background:
-    radial-gradient(100% 100% at 30% 50%, rgba(12,10,9,.55), rgba(12,10,9,.92)),
-    linear-gradient(to top, rgba(12,10,9,.85), rgba(12,10,9,.55));
+    radial-gradient(100% 100% at 30% 50%, rgba(7,11,8,.55), rgba(7,11,8,.92)),
+    linear-gradient(to top, rgba(7,11,8,.85), rgba(7,11,8,.55));
 }
 .contact-content{
   position:relative; z-index:3; width:100%;
@@ -402,7 +472,7 @@ section{ position:relative; }
   transition:background .4s ease, color .4s ease, border-color .4s ease;
   will-change:transform;
 }
-.btn-primary{ background:var(--ambar); color:var(--carbon); box-shadow:0 0 40px rgba(224,145,63,.35); }
+.btn-primary{ background:var(--ambar); color:var(--carbon); box-shadow:0 0 40px rgba(61,240,122,.35); }
 .btn-primary:hover{ background:var(--ambar-soft); }
 .btn-ghost{ border:1px solid var(--linea); color:var(--blanco); }
 .btn-ghost:hover{ border-color:var(--ambar); color:var(--ambar); }
@@ -438,7 +508,7 @@ section{ position:relative; }
   opacity:0;
 }
 .cursor.is-active{ opacity:1; }
-.cursor.is-grow{ width:62px; height:62px; margin:-31px 0 0 -31px; background:rgba(224,145,63,.12); }
+.cursor.is-grow{ width:62px; height:62px; margin:-31px 0 0 -31px; background:rgba(61,240,122,.12); }
 @media (hover:none),(max-width:900px){ .cursor{ display:none; } }
 
 /* Skew por velocidad de scroll (aplicado a contenedores grandes) */
@@ -452,6 +522,7 @@ section{ position:relative; }
   .stats{ flex-direction:row; flex-wrap:wrap; gap:1.6rem 2.4rem; margin-top:2.5rem; }
   .stat{ flex:1 1 30%; }
   .service-row .num{ width:2.2rem; }
+  .renders-grid{ grid-template-columns:1fr 1fr; }
 }
 @media (max-width:560px){
   .hero-title .line{ font-size:clamp(3rem,15vw,5rem); }
@@ -459,6 +530,7 @@ section{ position:relative; }
   .hero-meta{ font-size:.72rem; }
   .vf-rec{ font-size:.55rem; }
   .stat{ flex:1 1 100%; }
+  .renders-grid{ grid-template-columns:1fr; }
 }
 @media (prefers-reduced-motion:reduce){
   *{ animation:none !important; }
@@ -499,7 +571,7 @@ section{ position:relative; }
 
 <!-- ============================== HERO ============================== -->
 <header class="hero" id="hero">
-  <div class="hero-bg"><img src="../../assets/img/fachada-noche.jpg" alt="Fachada paramétrica iluminada de noche" /></div>
+  <div class="hero-bg"><img src="../../assets/fotos/verde-4.jpg" alt="Fachada ondulante paramétrica con vegetación verde" /></div>
   <div class="hero-overlay"></div>
   <div class="hero-vignette"></div>
 
@@ -561,9 +633,9 @@ section{ position:relative; }
   <p class="reveal">Una secuencia de obras donde la escala se vuelve experiencia. Cada render es una promesa construible: estructura, luz y materia llevadas al límite.</p>
 </section>
 
-<!-- ===== PROYECTO 01 ===== -->
+<!-- ===== PROYECTO 01 — foto verde a sangre ===== -->
 <section class="project">
-  <div class="project-img"><img src="../../assets/img/arena-interior.jpg" alt="Interior de coliseo multiuso con pantalla central" /></div>
+  <div class="project-img"><img src="../../assets/fotos/verde-2.jpg" alt="Edificio con terrazas y jardines verdes escalonados" /></div>
   <div class="project-shade"></div>
   <div class="viewfinder"><span class="vf-corner tr"></span><span class="vf-corner bl"></span></div>
   <div class="project-content">
@@ -577,9 +649,9 @@ section{ position:relative; }
   </div>
 </section>
 
-<!-- ===== PROYECTO 02 ===== -->
+<!-- ===== PROYECTO 02 — foto verde a sangre ===== -->
 <section class="project">
-  <div class="project-img"><img src="../../assets/img/exterior-atardecer.jpg" alt="Fachada curva acristalada en la hora azul" /></div>
+  <div class="project-img"><img src="../../assets/fotos/verde-3.jpg" alt="Torre con vegetación vertical tipo bosque vertical" /></div>
   <div class="project-shade"></div>
   <div class="viewfinder"><span class="vf-corner tr"></span><span class="vf-corner bl"></span></div>
   <div class="project-content">
@@ -587,57 +659,57 @@ section{ position:relative; }
     <h3 class="project-name">Complejo Deportivo<br>Paramétrico</h3>
     <div class="project-meta">
       <span><i class="pip"></i> Diseño paramétrico</span>
-      <span><i class="pip"></i> Envolvente acristalada</span>
+      <span><i class="pip"></i> Envolvente viva</span>
       <span><i class="pip"></i> 2024</span>
     </div>
   </div>
 </section>
 
-<!-- ===== PROYECTO 03 ===== -->
-<section class="project">
-  <div class="project-img"><img src="../../assets/img/gimnasio.jpg" alt="Centro de alto rendimiento con ring de boxeo" /></div>
-  <div class="project-shade"></div>
-  <div class="viewfinder"><span class="vf-corner tr"></span><span class="vf-corner bl"></span></div>
-  <div class="project-content">
-    <div class="project-index">Proyecto 03</div>
-    <h3 class="project-name">Centro de Alto<br>Rendimiento</h3>
-    <div class="project-meta">
-      <span><i class="pip"></i> Deporte de élite</span>
-      <span><i class="pip"></i> Entrenamiento integral</span>
-      <span><i class="pip"></i> 2023</span>
-    </div>
+<!-- ============================== VIDEO — OBRA EN MOVIMIENTO ============================== -->
+<section class="videoblock wrap" id="video">
+  <div class="eyebrow reveal">Render en movimiento</div>
+  <div class="videoblock-head">
+    <h2 class="reveal">La obra,<br>en movimiento</h2>
+    <p class="reveal">Visualización 3D real del complejo deportivo: recorre la estructura, la luz y la escala antes de la primera piedra.</p>
+  </div>
+  <div class="video-frame reveal">
+    <div class="video-tag"><span class="dot"></span> Obra en movimiento · Complejo deportivo</div>
+    <video autoplay muted loop playsinline poster="../../assets/video/poster.jpg">
+      <source src="../../assets/video/showreel.mp4" type="video/mp4" />
+    </video>
+    <div class="video-shine"></div>
   </div>
 </section>
 
-<!-- ===== PROYECTO 04 ===== -->
-<section class="project">
-  <div class="project-img"><img src="../../assets/img/terraza-restaurante.jpg" alt="Terraza nocturna con estructura roja iluminada" /></div>
-  <div class="project-shade"></div>
-  <div class="viewfinder"><span class="vf-corner tr"></span><span class="vf-corner bl"></span></div>
-  <div class="project-content">
-    <div class="project-index">Proyecto 04</div>
-    <h3 class="project-name">Pabellón<br>Gastronómico</h3>
-    <div class="project-meta">
-      <span><i class="pip"></i> Hospitalidad</span>
-      <span><i class="pip"></i> Estructura expuesta</span>
-      <span><i class="pip"></i> 2023</span>
-    </div>
+<!-- ============================== RENDERS DEL CLIENTE — tarjetas medianas ============================== -->
+<section class="renders wrap">
+  <div class="eyebrow reveal">Galería de renders</div>
+  <div class="renders-head">
+    <h2 class="reveal">Detalle<br>de obra</h2>
+    <p class="reveal">Fragmentos fotorrealistas de los proyectos: interiores, fachadas y espacios de hospitalidad llevados al detalle.</p>
   </div>
-</section>
-
-<!-- ===== PROYECTO 05 ===== -->
-<section class="project">
-  <div class="project-img"><img src="../../assets/img/exterior-rampa.jpg" alt="Exterior diurno con explanada y rampas de acceso" /></div>
-  <div class="project-shade"></div>
-  <div class="viewfinder"><span class="vf-corner tr"></span><span class="vf-corner bl"></span></div>
-  <div class="project-content">
-    <div class="project-index">Proyecto 05</div>
-    <h3 class="project-name">Explanada<br>y Accesos</h3>
-    <div class="project-meta">
-      <span><i class="pip"></i> Espacio público</span>
-      <span><i class="pip"></i> Flujo masivo</span>
-      <span><i class="pip"></i> 2022</span>
-    </div>
+  <div class="renders-grid">
+    <article class="render-card reveal">
+      <div class="render-media">
+        <img src="../../assets/img/arena-interior.jpg" alt="Interior de coliseo multiuso con pantalla central" />
+        <div class="render-shade"></div>
+      </div>
+      <div class="render-cap"><div class="rk">Proyecto 01</div><div class="rt">Coliseo Multiuso</div></div>
+    </article>
+    <article class="render-card reveal">
+      <div class="render-media">
+        <img src="../../assets/img/fachada-noche.jpg" alt="Fachada paramétrica iluminada de noche" />
+        <div class="render-shade"></div>
+      </div>
+      <div class="render-cap"><div class="rk">Proyecto 02</div><div class="rt">Fachada Paramétrica</div></div>
+    </article>
+    <article class="render-card reveal">
+      <div class="render-media">
+        <img src="../../assets/img/terraza-restaurante.jpg" alt="Terraza nocturna con estructura iluminada" />
+        <div class="render-shade"></div>
+      </div>
+      <div class="render-cap"><div class="rk">Proyecto 03</div><div class="rt">Pabellón Gastronómico</div></div>
+    </article>
   </div>
 </section>
 
@@ -668,7 +740,7 @@ section{ position:relative; }
 
 <!-- ============================== CONTACTO / CTA ============================== -->
 <section class="contact" id="contacto">
-  <div class="contact-bg"><img src="../../assets/img/corredor-cristal.jpg" alt="Corredor acristalado diurno" /></div>
+  <div class="contact-bg"><img src="../../assets/fotos/verde-1.jpg" alt="Torre con jardines verticales y vegetación verde" /></div>
   <div class="contact-shade"></div>
   <div class="viewfinder"><span class="vf-corner tr"></span><span class="vf-corner bl"></span></div>
   <div class="contact-content">
@@ -909,11 +981,29 @@ if (reduce) {
   /* ---------- REVEAL genérico (fade-up + clip-path) ---------- */
   // Excluir los títulos ya tratados con split por palabra
   gsap.utils.toArray('.reveal').forEach(el => {
-    if (el.matches('.manifesto-quote, .projects-intro h2, .services-head h2, .contact h2')) return;
+    if (el.matches('.manifesto-quote, .projects-intro h2, .services-head h2, .contact h2, .video-frame, .render-card')) return;
     gsap.from(el, {
       y: 54, autoAlpha: 0, clipPath: 'inset(0 0 100% 0)', duration: 0.9, ease: 'power3.out',
       scrollTrigger: { trigger: el, start: 'top 87%', once: true }
     });
+  });
+
+  /* ---------- VIDEO: entrada cinematográfica (escala + clip + fade) ---------- */
+  gsap.from('.video-frame', {
+    yPercent: 8, scale: 0.94, autoAlpha: 0, clipPath: 'inset(8% 8% 8% 8%)',
+    duration: 1.2, ease: 'power4.out',
+    scrollTrigger: { trigger: '.video-frame', start: 'top 86%', once: true }
+  });
+  // Parallax sutil del bloque de video al recorrerlo
+  gsap.fromTo('.video-frame', { yPercent: 4 }, {
+    yPercent: -4, ease: 'none',
+    scrollTrigger: { trigger: '.videoblock', start: 'top bottom', end: 'bottom top', scrub: true }
+  });
+
+  /* ---------- RENDERS: tarjetas medianas con barrido escalonado ---------- */
+  gsap.from('.render-card', {
+    y: 60, autoAlpha: 0, clipPath: 'inset(0 0 100% 0)', duration: 1, ease: 'power3.out', stagger: 0.12,
+    scrollTrigger: { trigger: '.renders-grid', start: 'top 84%', once: true }
   });
 
   /* ---------- Trazado de líneas decorativas (eyebrow) vía clase CSS ---------- */
@@ -1026,7 +1116,7 @@ if (reduce) {
     cx(e.clientX); cy(e.clientY);
   });
   window.addEventListener('mouseleave', () => cursor.classList.remove('is-active'));
-  document.querySelectorAll('a, button, .magnetic, .service-row, .project').forEach(el => {
+  document.querySelectorAll('a, button, .magnetic, .service-row, .project, .video-frame, .render-card').forEach(el => {
     el.addEventListener('mouseenter', () => cursor.classList.add('is-grow'));
     el.addEventListener('mouseleave', () => cursor.classList.remove('is-grow'));
   });
