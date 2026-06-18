@@ -666,7 +666,7 @@ section{ position:relative; }
 
 <!-- ============================== HERO ============================== -->
 <header class="hero" id="hero">
-  <div class="hero-bg"><img src="../../assets/fotos/verde-4.jpg" alt="Fachada ondulante paramétrica con vegetación verde" /></div>
+  <div class="hero-bg"><img src="../../assets/fotos/verde-6.jpg" alt="Fachada curva de vidrio verde paramétrica en contrapicado" /></div>
   <div class="hero-overlay"></div>
   <div class="hero-vignette"></div>
 
@@ -695,6 +695,57 @@ section{ position:relative; }
     <div class="bar"><i></i></div>
   </div>
 </header>
+
+<!-- ============================== SHOWCASE FIJADO — PROYECTO DESTACADO ============================== -->
+<!-- Visual central fijada (pin + scrub): el proyecto se "recorre" cambiando de
+     vista (exterior → interior → detalle de fachada → vista aérea) mientras los
+     datos aparecen sincronizados. Datos de muestra: EDITABLES.
+     Va inmediatamente después del hero, como primera sección de contenido. -->
+<section class="showcase" id="destacado">
+  <div class="showcase-head">
+    <div class="eyebrow reveal">Proyecto destacado</div>
+    <h2 class="reveal">Coliseo<br><em>Metropolitano</em></h2>
+    <p class="reveal">Recorre la obra como si la habitaras: desplázate para atravesar el exterior, el interior, el detalle de fachada y la vista aérea. Cada dato aparece sincronizado con la vista.</p>
+  </div>
+
+  <div class="showcase-stage">
+    <!-- Pila de vistas/estados (cross-fade + zoom + parallax con scrub) -->
+    <div class="sc-views">
+      <div class="sc-view" data-view="0"><img src="../../assets/fotos/verde-5.jpg" alt="Vista exterior: torre nocturna bañada en luz verde con niebla" /><div class="sc-view-shade"></div></div>
+      <div class="sc-view" data-view="1"><img src="../../assets/img/arena-interior.jpg" alt="Vista interior: coliseo multiuso con graderío y pantalla central" /><div class="sc-view-shade"></div></div>
+      <div class="sc-view" data-view="2"><img src="../../assets/fotos/verde-7.jpg" alt="Detalle de fachada: muro de bloques de vidrio verde" /><div class="sc-view-shade"></div></div>
+      <div class="sc-view" data-view="3"><img src="../../assets/fotos/verde-9.jpg" alt="Vista aérea: arena oval con cubierta blanca nervada y césped" /><div class="sc-view-shade"></div></div>
+    </div>
+
+    <!-- Visor de cámara coherente con el resto del sitio -->
+    <div class="viewfinder"><span class="vf-corner tr"></span><span class="vf-corner bl"></span></div>
+
+    <!-- Datos sincronizados por estado -->
+    <div class="sc-data">
+      <div class="sc-data-top">
+        <div>
+          <div class="sc-counter"><em class="sc-cur">01</em><span class="sep">/</span>04</div>
+          <div class="sc-progress"><i class="sc-progress-bar"></i></div>
+        </div>
+        <div class="sc-title-now">
+          <span class="line sc-vista" data-vistas='["Vista exterior","Vista interior","Detalle de fachada","Vista aérea"]'>Vista exterior</span>
+          <span class="line ambar">Coliseo Metropolitano</span>
+        </div>
+      </div>
+
+      <!-- Specs del proyecto (datos de muestra, EDITABLES). Aparecen progresivamente. -->
+      <div class="sc-specs">
+        <div class="sc-spec" data-spec="0"><span class="k">Tipología</span><span class="v">Coliseo multiuso</span></div>
+        <div class="sc-spec" data-spec="1"><span class="k">Área construida</span><span class="v">18.500 m²</span></div>
+        <div class="sc-spec" data-spec="2"><span class="k">Aforo</span><span class="v">8.000 espectadores</span></div>
+        <div class="sc-spec" data-spec="3"><span class="k">Sistema</span><span class="v">Estructura paramétrica</span></div>
+        <div class="sc-spec" data-spec="3"><span class="k">Año</span><span class="v">2025</span></div>
+      </div>
+    </div>
+
+    <div class="sc-editable-note">Datos de muestra · editables</div>
+  </div>
+</section>
 
 <!-- ============================== MANIFIESTO / ESTUDIO ============================== -->
 <section class="manifesto wrap" id="estudio">
@@ -726,56 +777,6 @@ section{ position:relative; }
   <div class="eyebrow reveal">Selección de obra</div>
   <h2 class="reveal">Proyectos<br>monumentales</h2>
   <p class="reveal">Una secuencia de obras donde la escala se vuelve experiencia. Cada render es una promesa construible: estructura, luz y materia llevadas al límite.</p>
-</section>
-
-<!-- ============================== SHOWCASE FIJADO — PROYECTO DESTACADO ============================== -->
-<!-- Visual central fijada (pin + scrub): el proyecto se "recorre" cambiando de
-     vista (exterior → interior → detalle de fachada → vista aérea) mientras los
-     datos aparecen sincronizados. Datos de muestra: EDITABLES. -->
-<section class="showcase" id="destacado">
-  <div class="showcase-head">
-    <div class="eyebrow reveal">Proyecto destacado</div>
-    <h2 class="reveal">Coliseo<br><em>Metropolitano</em></h2>
-    <p class="reveal">Recorre la obra como si la habitaras: desplázate para atravesar el exterior, el interior, el detalle de fachada y la vista aérea. Cada dato aparece sincronizado con la vista.</p>
-  </div>
-
-  <div class="showcase-stage">
-    <!-- Pila de vistas/estados (cross-fade + zoom + parallax con scrub) -->
-    <div class="sc-views">
-      <div class="sc-view" data-view="0"><img src="../../assets/fotos/verde-4.jpg" alt="Vista exterior: fachada ondulante paramétrica con vegetación" /><div class="sc-view-shade"></div></div>
-      <div class="sc-view" data-view="1"><img src="../../assets/img/arena-interior.jpg" alt="Vista interior: coliseo multiuso con graderío y pantalla central" /><div class="sc-view-shade"></div></div>
-      <div class="sc-view" data-view="2"><img src="../../assets/fotos/verde-1.jpg" alt="Detalle de fachada: envolvente vegetal y estructura vertical" /><div class="sc-view-shade"></div></div>
-      <div class="sc-view" data-view="3"><img src="../../assets/fotos/verde-2.jpg" alt="Vista aérea: terrazas y jardines escalonados del conjunto" /><div class="sc-view-shade"></div></div>
-    </div>
-
-    <!-- Visor de cámara coherente con el resto del sitio -->
-    <div class="viewfinder"><span class="vf-corner tr"></span><span class="vf-corner bl"></span></div>
-
-    <!-- Datos sincronizados por estado -->
-    <div class="sc-data">
-      <div class="sc-data-top">
-        <div>
-          <div class="sc-counter"><em class="sc-cur">01</em><span class="sep">/</span>04</div>
-          <div class="sc-progress"><i class="sc-progress-bar"></i></div>
-        </div>
-        <div class="sc-title-now">
-          <span class="line sc-vista" data-vistas='["Vista exterior","Vista interior","Detalle de fachada","Vista aérea"]'>Vista exterior</span>
-          <span class="line ambar">Coliseo Metropolitano</span>
-        </div>
-      </div>
-
-      <!-- Specs del proyecto (datos de muestra, EDITABLES). Aparecen progresivamente. -->
-      <div class="sc-specs">
-        <div class="sc-spec" data-spec="0"><span class="k">Tipología</span><span class="v">Coliseo multiuso</span></div>
-        <div class="sc-spec" data-spec="1"><span class="k">Área construida</span><span class="v">18.500 m²</span></div>
-        <div class="sc-spec" data-spec="2"><span class="k">Aforo</span><span class="v">8.000 espectadores</span></div>
-        <div class="sc-spec" data-spec="3"><span class="k">Sistema</span><span class="v">Estructura paramétrica</span></div>
-        <div class="sc-spec" data-spec="3"><span class="k">Año</span><span class="v">2025</span></div>
-      </div>
-    </div>
-
-    <div class="sc-editable-note">Datos de muestra · editables</div>
-  </div>
 </section>
 
 <!-- ===== PROYECTO 01 — foto verde a sangre ===== -->
@@ -836,7 +837,7 @@ section{ position:relative; }
   <div class="renders-grid">
     <article class="render-card reveal">
       <div class="render-media">
-        <img src="../../assets/img/arena-interior.jpg" alt="Interior de coliseo multiuso con pantalla central" />
+        <img src="../../assets/img/exterior-atardecer.jpg" alt="Exterior del complejo deportivo al atardecer" />
         <div class="render-shade"></div>
       </div>
       <div class="render-cap"><div class="rk">Proyecto 01</div><div class="rt">Coliseo Multiuso</div></div>
