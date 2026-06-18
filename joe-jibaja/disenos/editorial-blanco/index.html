@@ -509,19 +509,18 @@ section{ position:relative; }
   position:relative; width:100vw; height:100svh; min-height:600px; overflow:hidden;
   display:flex; align-items:center; justify-content:center;
 }
-/* Pila de vistas: cada estado es una capa apilada que se mezcla por opacidad+escala */
-.sc-views{ position:absolute; inset:0; z-index:1; }
-.sc-view{
-  position:absolute; inset:-6% 0; height:112%; width:100%;
-  opacity:0; will-change:transform,opacity,clip-path;
-  clip-path:inset(6% 6% 6% 6%);
+/* Lienzo de la secuencia orbital (el edificio se "recorre" frame a frame) */
+.sc-canvas{
+  position:absolute; inset:0; z-index:1; width:100%; height:100%; display:block;
 }
-.sc-view img{ filter:saturate(1.07) contrast(1.05); }
-.sc-view-shade{
-  position:absolute; inset:0;
+/* Tinte verde sutil + viñeta para integrar la secuencia a la paleta sin tapar el edificio */
+.sc-tint{
+  position:absolute; inset:0; z-index:2; pointer-events:none;
   background:
-    radial-gradient(120% 90% at 50% 40%, transparent 32%, rgba(7,11,8,.6) 100%),
-    linear-gradient(to top, rgba(7,11,8,.9) 0%, rgba(7,11,8,.15) 50%, rgba(7,11,8,.45) 100%);
+    radial-gradient(120% 90% at 50% 42%, transparent 36%, rgba(7,11,8,.62) 100%),
+    linear-gradient(to top, rgba(7,11,8,.78) 0%, rgba(7,11,8,.08) 48%, rgba(7,11,8,.42) 100%),
+    linear-gradient(rgba(61,240,122,.10), rgba(61,240,122,.04));
+  mix-blend-mode:normal;
 }
 /* Visor de cámara sobre el escenario, coherente con el resto */
 .showcase-stage .viewfinder{ inset:clamp(14px,2.2vw,28px); z-index:4; }
@@ -566,13 +565,9 @@ section{ position:relative; }
   opacity:.7; text-align:center; pointer-events:none;
 }
 
-/* Fallback / reduced-motion / móvil sin pin: vistas apiladas en secuencia vertical */
+/* Fallback / reduced-motion / móvil sin pin: canvas estático + datos en columna */
 .showcase.no-pin .showcase-stage{ height:auto; min-height:0; display:block; }
-.showcase.no-pin .sc-views{ position:relative; inset:auto; }
-.showcase.no-pin .sc-view{
-  position:relative; inset:auto; height:auto; opacity:1; clip-path:none;
-  aspect-ratio:16/10; margin-bottom:1px;
-}
+.showcase.no-pin .sc-canvas{ position:relative; inset:auto; aspect-ratio:16/10; height:auto; }
 .showcase.no-pin .sc-data{
   position:relative; inset:auto; padding:1.8rem clamp(1.4rem,5vw,4rem) 3rem;
 }
@@ -696,50 +691,48 @@ section{ position:relative; }
   </div>
 </header>
 
-<!-- ============================== SHOWCASE FIJADO — PROYECTO DESTACADO ============================== -->
-<!-- Visual central fijada (pin + scrub): el proyecto se "recorre" cambiando de
-     vista (exterior → interior → detalle de fachada → vista aérea) mientras los
-     datos aparecen sincronizados. Datos de muestra: EDITABLES.
+<!-- ============================== SHOWCASE FIJADO — IMAGE-SEQUENCE SCRUB ============================== -->
+<!-- Técnica tipo Apple: UNA sola escena (toma orbital real, 73 frames) que se
+     transforma de forma continua con el scroll sobre un <canvas> fijado.
+     El edificio gira/se recorre frame a frame mientras los datos aparecen por
+     rangos de progreso. Datos de muestra: EDITABLES.
      Va inmediatamente después del hero, como primera sección de contenido. -->
 <section class="showcase" id="destacado">
   <div class="showcase-head">
     <div class="eyebrow reveal">Proyecto destacado</div>
     <h2 class="reveal">Coliseo<br><em>Metropolitano</em></h2>
-    <p class="reveal">Recorre la obra como si la habitaras: desplázate para atravesar el exterior, el interior, el detalle de fachada y la vista aérea. Cada dato aparece sincronizado con la vista.</p>
+    <p class="reveal">Una sola toma orbital que recorre el edificio al atardecer: desplázate y la cámara gira alrededor de la fachada mientras cada dato aparece sincronizado.</p>
   </div>
 
   <div class="showcase-stage">
-    <!-- Pila de vistas/estados (cross-fade + zoom + parallax con scrub) -->
-    <div class="sc-views">
-      <div class="sc-view" data-view="0"><img src="../../assets/fotos/verde-5.jpg" alt="Vista exterior: torre nocturna bañada en luz verde con niebla" /><div class="sc-view-shade"></div></div>
-      <div class="sc-view" data-view="1"><img src="../../assets/img/arena-interior.jpg" alt="Vista interior: coliseo multiuso con graderío y pantalla central" /><div class="sc-view-shade"></div></div>
-      <div class="sc-view" data-view="2"><img src="../../assets/fotos/verde-7.jpg" alt="Detalle de fachada: muro de bloques de vidrio verde" /><div class="sc-view-shade"></div></div>
-      <div class="sc-view" data-view="3"><img src="../../assets/fotos/verde-9.jpg" alt="Vista aérea: arena oval con cubierta blanca nervada y césped" /><div class="sc-view-shade"></div></div>
-    </div>
+    <!-- Lienzo de la secuencia (cámara orbital controlada por scroll) -->
+    <canvas class="sc-canvas" id="scCanvas" aria-label="Recorrido orbital del Coliseo Metropolitano"></canvas>
+    <!-- Tinte verde sutil para integrar la secuencia a la paleta sin tapar el edificio -->
+    <div class="sc-tint"></div>
 
     <!-- Visor de cámara coherente con el resto del sitio -->
     <div class="viewfinder"><span class="vf-corner tr"></span><span class="vf-corner bl"></span></div>
 
-    <!-- Datos sincronizados por estado -->
+    <!-- Datos sincronizados por rango de progreso -->
     <div class="sc-data">
       <div class="sc-data-top">
         <div>
-          <div class="sc-counter"><em class="sc-cur">01</em><span class="sep">/</span>04</div>
+          <div class="sc-counter"><em class="sc-cur">01</em><span class="sep">/</span>05</div>
           <div class="sc-progress"><i class="sc-progress-bar"></i></div>
         </div>
         <div class="sc-title-now">
-          <span class="line sc-vista" data-vistas='["Vista exterior","Vista interior","Detalle de fachada","Vista aérea"]'>Vista exterior</span>
           <span class="line ambar">Coliseo Metropolitano</span>
+          <span class="line sc-vista">Recorrido orbital · atardecer</span>
         </div>
       </div>
 
-      <!-- Specs del proyecto (datos de muestra, EDITABLES). Aparecen progresivamente. -->
+      <!-- Specs del proyecto (datos de muestra, EDITABLES). Aparecen por rango: ~0 / .25 / .5 / .75 / .95 -->
       <div class="sc-specs">
-        <div class="sc-spec" data-spec="0"><span class="k">Tipología</span><span class="v">Coliseo multiuso</span></div>
-        <div class="sc-spec" data-spec="1"><span class="k">Área construida</span><span class="v">18.500 m²</span></div>
-        <div class="sc-spec" data-spec="2"><span class="k">Aforo</span><span class="v">8.000 espectadores</span></div>
-        <div class="sc-spec" data-spec="3"><span class="k">Sistema</span><span class="v">Estructura paramétrica</span></div>
-        <div class="sc-spec" data-spec="3"><span class="k">Año</span><span class="v">2025</span></div>
+        <div class="sc-spec" data-at="0.00"><span class="k">Tipología</span><span class="v">Coliseo multiuso</span></div>
+        <div class="sc-spec" data-at="0.25"><span class="k">Área construida</span><span class="v">18.500 m²</span></div>
+        <div class="sc-spec" data-at="0.50"><span class="k">Aforo</span><span class="v">8.000 espectadores</span></div>
+        <div class="sc-spec" data-at="0.75"><span class="k">Sistema</span><span class="v">Estructura paramétrica</span></div>
+        <div class="sc-spec" data-at="0.95"><span class="k">Año</span><span class="v">2025</span></div>
       </div>
     </div>
 
@@ -1062,9 +1055,32 @@ if (reduce || skipLoader) {
 }
 
 if (reduce) {
-  /* Showcase sin movimiento: vistas apiladas en secuencia vertical, todo visible */
+  /* Showcase sin movimiento: un frame estático de la secuencia + datos visibles */
   const sc = document.getElementById('destacado');
-  if (sc) sc.classList.add('no-pin');
+  if (sc) {
+    sc.classList.add('no-pin');
+    const cv = sc.querySelector('#scCanvas');
+    if (cv) {
+      const cx = cv.getContext('2d');
+      const img = new Image();
+      img.onload = () => {
+        const r = cv.getBoundingClientRect();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const cw = Math.round(r.width), ch = Math.round(r.height);
+        cv.width = Math.max(1, Math.round(cw * dpr)); cv.height = Math.max(1, Math.round(ch * dpr));
+        cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const ir = img.naturalWidth / img.naturalHeight, cr = cw / ch;
+        let dw, dh, dx, dy;
+        if (ir > cr){ dh = ch; dw = ch * ir; dx = (cw - dw) / 2; dy = 0; }
+        else        { dw = cw; dh = cw / ir; dx = 0; dy = (ch - dh) / 2; }
+        cx.drawImage(img, dx, dy, dw, dh);
+      };
+      img.src = '../../assets/seq/seq-001.jpg';
+    }
+    sc.querySelectorAll('.sc-spec').forEach(s => { s.style.opacity = '1'; s.style.transform = 'none'; });
+    const cur = sc.querySelector('.sc-cur'); if (cur) cur.textContent = '05';
+    const bar = sc.querySelector('.sc-progress-bar'); if (bar) bar.style.width = '100%';
+  }
 } else {
   /* Preparar split del hero antes de la intro */
   document.querySelectorAll('.hero-title .line').forEach(line => {
@@ -1270,84 +1286,124 @@ if (reduce) {
   });
 
   /* ====================================================================
-     SHOWCASE FIJADO — pin + scrub (recorrido del proyecto destacado)
-     La visual central se queda fija y, al hacer scroll, transiciona entre
-     4 estados (exterior → interior → detalle → aérea) con cross-fade +
-     zoom/scale + leve parallax. Los datos aparecen sincronizados.
-     En móvil/táctil: se desactiva el pin y las vistas quedan en secuencia.
+     SHOWCASE — IMAGE-SEQUENCE SCRUB (técnica tipo Apple sobre <canvas>)
+     UNA sola escena (toma orbital real, 73 frames) que se transforma de
+     forma continua con el scroll: la cámara gira alrededor del edificio.
+     El canvas se fija (pin) y en cada update se dibuja el frame que toca
+     según el progreso. Los datos/specs aparecen por rangos de progreso.
+     En móvil/táctil/reduce: frame estático, sin pin, datos en columna.
      ==================================================================== */
   (function initShowcase(){
     const showcase = document.getElementById('destacado');
     if (!showcase) return;
-    const stage   = showcase.querySelector('.showcase-stage');
-    const views   = gsap.utils.toArray('.sc-view', showcase);
-    const specs   = gsap.utils.toArray('.sc-spec', showcase);
-    const curEl   = showcase.querySelector('.sc-cur');
-    const barEl   = showcase.querySelector('.sc-progress-bar');
-    const vistaEl = showcase.querySelector('.sc-vista');
-    const vistas  = JSON.parse(vistaEl.dataset.vistas || '[]');
-    const N = views.length;
+    const stage  = showcase.querySelector('.showcase-stage');
+    const canvas = showcase.querySelector('#scCanvas');
+    const ctx    = canvas.getContext('2d');
+    const specs  = gsap.utils.toArray('.sc-spec', showcase);
+    const curEl  = showcase.querySelector('.sc-cur');
+    const barEl  = showcase.querySelector('.sc-progress-bar');
 
-    // ¿Pin disponible? Solo en escritorio con puntero fino y sin reduce-motion.
+    // ---- Precarga de la secuencia (73 frames) ----
+    const FRAME_COUNT = 73;
+    const pad = n => String(n).padStart(3, '0');
+    const frameURL = i => `../../assets/seq/seq-${pad(i)}.jpg`;
+    const frames = [];
+    let loaded = 0, firstReady = false;
+    for (let i = 1; i <= FRAME_COUNT; i++){
+      const img = new Image();
+      img.onload = () => {
+        loaded++;
+        if (!firstReady && i === 1){ firstReady = true; draw(0); } // pinta el primero apenas llegue
+        if (loaded === FRAME_COUNT) ScrollTrigger.refresh(); // recalcular cuando estén todos
+      };
+      img.src = frameURL(i);
+      frames.push(img);
+    }
+
+    // Tamaño del lienzo en píxeles reales (con devicePixelRatio para nitidez)
+    let cw = 0, ch = 0;
+    function resizeCanvas(){
+      const r = canvas.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cw = Math.round(r.width); ch = Math.round(r.height);
+      canvas.width  = Math.max(1, Math.round(cw * dpr));
+      canvas.height = Math.max(1, Math.round(ch * dpr));
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    // Dibuja el frame `idx` cubriendo el canvas (object-fit: cover, centrado)
+    let lastIdx = -1;
+    function draw(idx){
+      const img = frames[idx];
+      if (!img || !img.complete || !img.naturalWidth) return;
+      lastIdx = idx;
+      ctx.clearRect(0, 0, cw, ch);
+      const ir = img.naturalWidth / img.naturalHeight;
+      const cr = cw / ch;
+      let dw, dh, dx, dy;
+      if (ir > cr){ dh = ch; dw = ch * ir; dx = (cw - dw) / 2; dy = 0; }   // imagen más ancha → recorta lados
+      else        { dw = cw; dh = cw / ir; dx = 0; dy = (ch - dh) / 2; }   // imagen más alta → recorta arriba/abajo
+      ctx.drawImage(img, dx, dy, dw, dh);
+    }
+    function redraw(){ if (lastIdx >= 0) draw(lastIdx); }
+
+    // Specs/datos por rango de progreso (data-at). Estado actual para el contador.
+    const specMeta = specs.map(s => ({ el: s, at: parseFloat(s.dataset.at) || 0 }));
+    function syncData(progress){
+      // Contador 01–05 según cuántos specs ya se "abrieron"
+      let active = 1;
+      specMeta.forEach(m => {
+        const on = progress >= m.at;
+        gsap.set(m.el, { opacity: on ? 1 : 0, y: on ? 0 : 18 });
+        if (on) active = Math.min(specMeta.length, specMeta.indexOf(m) + 1);
+      });
+      curEl.textContent = String(active).padStart(2, '0');
+      barEl.style.width = (progress * 100).toFixed(1) + '%';
+    }
+
+    // ¿Pin disponible? Solo escritorio con puntero fino y sin reduce-motion.
     const canPin = !reduce && window.matchMedia('(min-width:901px) and (pointer:fine)').matches;
 
+    resizeCanvas();
+
     if (!canPin) {
-      // Secuencia vertical apilada: todo visible, sin animación de scrub.
+      // Sin pin: canvas estático (primer frame) + datos visibles en columna.
       showcase.classList.add('no-pin');
-      views.forEach(v => gsap.set(v, { clearProps: 'all', autoAlpha: 1 }));
-      specs.forEach(s => gsap.set(s, { clearProps: 'all', opacity: 1, y: 0 }));
+      resizeCanvas();
+      const paint = () => draw(0);
+      if (frames[0].complete) paint(); else frames[0].onload = () => { resizeCanvas(); paint(); };
+      specMeta.forEach(m => gsap.set(m.el, { opacity: 1, y: 0 }));
+      curEl.textContent = String(specMeta.length).padStart(2, '0');
+      barEl.style.width = '100%';
+      window.addEventListener('resize', () => { resizeCanvas(); paint(); });
       return;
     }
 
-    // Estado inicial: solo la primera vista visible y a escala viva.
-    gsap.set(views, { autoAlpha: 0, scale: 1.18, yPercent: 0 });
-    gsap.set(views[0], { autoAlpha: 1, scale: 1.04 });
+    // Estado inicial
+    draw(0);
+    syncData(0);
 
-    // Timeline maestra ligada al scrub. Distancia: N pantallas de recorrido.
-    const tl = gsap.timeline({
-      defaults: { ease: 'none' },
-      scrollTrigger: {
-        trigger: stage,
-        start: 'top top',
-        end: () => '+=' + (window.innerHeight * (N + 0.4)),
-        pin: true,
-        scrub: 0.6,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-        onUpdate: self => {
-          // Estado activo según el progreso (0..N-1).
-          const idx = Math.min(N - 1, Math.floor(self.progress * N));
-          curEl.textContent = String(idx + 1).padStart(2, '0');
-          if (vistas[idx]) vistaEl.textContent = vistas[idx];
-          barEl.style.width = (self.progress * 100).toFixed(1) + '%';
-        }
+    // ScrollTrigger: canvas fijado, scrub continuo. end ~ +300% del viewport.
+    ScrollTrigger.create({
+      trigger: stage,
+      start: 'top top',
+      end: '+=300%',
+      pin: true,
+      scrub: 1,
+      anticipatePin: 1,
+      invalidateOnRefresh: true,
+      onRefresh: resizeCanvas,
+      onUpdate: self => {
+        const p = self.progress;
+        // Frame continuo según el progreso → el edificio gira sin cortes.
+        const idx = Math.min(FRAME_COUNT - 1, Math.round(p * (FRAME_COUNT - 1)));
+        if (idx !== lastIdx) draw(idx);
+        syncData(p);
       }
     });
 
-    // Transiciones entre vistas: cross-fade + zoom + leve deriva (parallax).
-    for (let i = 0; i < N; i++) {
-      // Cada vista "respira" mientras está activa (zoom continuo sutil).
-      tl.to(views[i], { scale: 1.12, yPercent: -3, duration: 1 }, i);
-      // Cross-fade hacia la siguiente vista (clip-path + opacidad + escala).
-      if (i < N - 1) {
-        tl.to(views[i],   { autoAlpha: 0, scale: 1.22, clipPath: 'inset(14% 14% 14% 14%)', duration: 0.55 }, i + 0.55);
-        tl.fromTo(views[i+1],
-          { autoAlpha: 0, scale: 1.18, yPercent: 4, clipPath: 'inset(12% 12% 12% 12%)' },
-          { autoAlpha: 1, scale: 1.04, yPercent: 0, clipPath: 'inset(6% 6% 6% 6%)', duration: 0.55 },
-          i + 0.55);
-      }
-    }
-
-    // Specs sincronizados: cada uno entra cuando su estado se vuelve activo.
-    specs.forEach(spec => {
-      const at = +spec.dataset.spec; // estado al que pertenece
-      tl.fromTo(spec,
-        { opacity: 0, y: 18 },
-        { opacity: 1, y: 0, duration: 0.4 },
-        Math.max(0, at + 0.15));
-      // Se atenúa ligeramente al cambiar de estado (pero permanece legible).
-      if (at < N - 1) tl.to(spec, { opacity: .35, duration: 0.4 }, at + 0.85);
-    });
+    // Redibujar en resize (responsive): recalcula tamaño y repinta el frame actual.
+    window.addEventListener('resize', () => { resizeCanvas(); redraw(); });
   })();
 
   /* ---------- Refrescar ScrollTrigger tras cargar imágenes (evita saltos) ---------- */
