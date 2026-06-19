@@ -4,1302 +4,794 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Joe Jibaja Vega · Arquitectura monumental</title>
-<meta name="description" content="Joe Jibaja Vega — Arquitectura monumental de gran escala con visualización 3D fotorrealista. Tumbaco, Quito · Ecuador." />
+<meta name="description" content="Joe Jibaja Vega — Arquitecto. Arquitectura monumental de gran escala: coliseos, arenas deportivas y complejos paramétricos. Tumbaco, Quito, Ecuador." />
 
-<!-- Tipografías: grotesca de presencia (Anton) + cuerpo (Manrope) -->
+<!-- ===== Fuentes: Anton (titulares) + Space Mono (datos) por Google Fonts; Switzer (cuerpo) self-hosted ===== -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
 
 <style>
 /* ====================================================================
-   SISTEMA · Joe Jibaja Vega — Trailer cinematográfico carbón cálido
+   FUENTE DE CUERPO — Switzer self-hosted
+   ==================================================================== */
+@font-face{font-family:'Switzer';src:url('../../assets/fonts/switzer-400.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'Switzer';src:url('../../assets/fonts/switzer-500.woff2') format('woff2');font-weight:500;font-display:swap;}
+@font-face{font-family:'Switzer';src:url('../../assets/fonts/switzer-600.woff2') format('woff2');font-weight:600;font-display:swap;}
+@font-face{font-family:'Switzer';src:url('../../assets/fonts/switzer-700.woff2') format('woff2');font-weight:700;font-display:swap;}
+
+/* ====================================================================
+   VARIABLES Y RESET
    ==================================================================== */
 :root{
-  --carbon:#070b08;          /* carbón con tinte verde profundo */
-  --carbon-2:#0a110c;
-  --carbon-3:#101a13;
-  --ambar:#3DF07A;           /* acento verde neón / esmeralda luminoso */
-  --ambar-soft:#7bf6a6;
-  --blanco:#f1f7f2;
-  --humo:#8fa597;            /* gris verdoso para cuerpo secundario */
-  --linea:rgba(61,240,122,.18);
-  --glow:rgba(61,240,122,.45);
-  --display:'Anton', sans-serif;
-  --body:'Manrope', sans-serif;
+  --bg:#07090A;            /* negro técnico */
+  --bg-2:#0B0E0F;
+  --ink:#EAF0EC;           /* texto principal */
+  --ink-dim:#7E8B82;       /* texto secundario */
+  --line:rgba(198,242,78,.16);   /* líneas de retícula */
+  --line-soft:rgba(234,240,236,.08);
+  --lime:#C6F24E;          /* acento verde lima */
+  --lime-bright:#B4FF39;
+  --mono:'Space Mono', ui-monospace, monospace;
+  --sans:'Anton', system-ui, sans-serif;
+  --body:'Switzer', system-ui, sans-serif;
+  --gutter:clamp(16px,4vw,56px);
 }
-
-*{margin:0;padding:0;box-sizing:border-box}
-html{ -webkit-text-size-adjust:100%; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-text-size-adjust:100%;}
 body{
-  background:var(--carbon);
-  color:var(--blanco);
+  background:var(--bg);
+  color:var(--ink);
   font-family:var(--body);
   font-weight:400;
   line-height:1.5;
-  overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
 }
-body.no-scroll{ overflow:hidden; height:100vh; }
-/* Fallback: si JS no toma el control, liberar el scroll tras el autohide del loader */
-@keyframes unlockScroll{ to{ overflow:visible; height:auto; } }
-body.no-scroll{ animation:unlockScroll 0s linear 4.5s forwards; }
-.js-ok body.no-scroll, html.js-ok body.no-scroll{ animation:none; }
+img,video{display:block;max-width:100%;}
+a{color:inherit;text-decoration:none;}
+::selection{background:var(--lime);color:#07090A;}
 
-::selection{ background:var(--ambar); color:var(--carbon); }
+/* Scroll suave no nativo (Lenis lo controla) */
+html.lenis,html.lenis body{height:auto;}
+.lenis.lenis-smooth{scroll-behavior:auto !important;}
 
-img{ display:block; width:100%; height:100%; object-fit:cover; }
-
-a{ color:inherit; text-decoration:none; }
-
-/* Grano sutil global */
-body::after{
-  content:"";
-  position:fixed; inset:0; z-index:9000; pointer-events:none;
-  opacity:.05; mix-blend-mode:overlay;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+/* ====================================================================
+   UTILIDADES TÉCNICAS (mono, ticks, marcas +)
+   ==================================================================== */
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);}
+.mono-lime{color:var(--lime);}
+.tag{
+  font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--lime);border:1px solid var(--line);padding:5px 10px;display:inline-flex;gap:8px;align-items:center;
+  background:rgba(7,9,10,.6);
 }
+.tag::before{content:"";width:5px;height:5px;background:var(--lime);display:inline-block;}
+.secnum{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--lime);}
 
-/* ============================== LOADER ============================== */
-.loader{
-  position:fixed; inset:0; z-index:9999;
-  background:var(--carbon);
-  display:flex; align-items:center; justify-content:center;
-  flex-direction:column;
-}
-.loader-mark{
-  font-family:var(--display);
-  font-size:clamp(2.2rem,7vw,5rem);
-  letter-spacing:.04em;
-  color:var(--blanco);
-  text-shadow:0 0 38px var(--glow);
-  overflow:hidden;
-}
-.loader-bar{
-  margin-top:1.4rem; width:min(220px,40vw); height:1px;
-  background:rgba(255,255,255,.15); overflow:hidden;
-}
-.loader-bar i{ display:block; height:100%; width:0%; background:var(--ambar); }
+/* Marca "+" reutilizable */
+.plus{position:absolute;width:14px;height:14px;pointer-events:none;opacity:.5;}
+.plus::before,.plus::after{content:"";position:absolute;background:var(--lime);}
+.plus::before{left:50%;top:0;width:1px;height:100%;transform:translateX(-.5px);}
+.plus::after{top:50%;left:0;height:1px;width:100%;transform:translateY(-.5px);}
 
-/* Fallback CSS: si GSAP/JS no se ejecuta (CDN bloqueado, offline, firewall),
-   el loader se autodesvanece y el hero queda visible. Se cancela cuando JS
-   toma el control marcando <html class="js-ok">. */
-.loader{ animation:loaderAutoHide .9s ease 3.6s forwards; }
-.js-ok .loader{ animation:none; }
-@keyframes loaderAutoHide{ to{ opacity:0; visibility:hidden; transform:translateY(-100%); } }
-.loader-pct{
-  margin-top:.8rem; font-size:.7rem; letter-spacing:.4em;
-  color:var(--humo); text-transform:uppercase;
+/* Retícula de fondo para secciones */
+.grid-bg{position:absolute;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(var(--line-soft) 1px,transparent 1px),
+    linear-gradient(90deg,var(--line-soft) 1px,transparent 1px);
+  background-size:clamp(48px,8vw,96px) clamp(48px,8vw,96px);
+  -webkit-mask-image:radial-gradient(120% 80% at 50% 40%,#000 55%,transparent 100%);
+          mask-image:radial-gradient(120% 80% at 50% 40%,#000 55%,transparent 100%);
 }
 
-/* ============================== NAVBAR ============================== */
-.nav{
-  position:fixed; top:0; left:0; width:100%; z-index:1000;
-  display:flex; align-items:center; justify-content:space-between;
-  padding:1.5rem clamp(1.2rem,4vw,3.5rem);
-  transition:background .5s ease, padding .5s ease, border-color .5s ease;
-  border-bottom:1px solid transparent;
-}
-.nav.solid{
-  background:rgba(7,11,8,.82);
-  backdrop-filter:blur(14px);
-  -webkit-backdrop-filter:blur(14px);
-  padding-top:1rem; padding-bottom:1rem;
-  border-bottom:1px solid var(--linea);
-}
-.nav-brand{
-  font-family:var(--display);
-  font-size:1.05rem; letter-spacing:.12em; text-transform:uppercase;
-  color:var(--blanco);
-}
-.nav-brand b{ color:var(--ambar); font-weight:400; }
-.nav-links{ display:flex; gap:2.2rem; align-items:center; }
-.nav-links a{
-  font-size:.78rem; letter-spacing:.22em; text-transform:uppercase;
-  font-weight:600; color:var(--humo);
-  transition:color .4s ease;
-}
-.nav-links a:hover{ color:var(--blanco); }
+/* ====================================================================
+   LOADER
+   ==================================================================== */
+#loader{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;
+  align-items:center;justify-content:center;flex-direction:column;gap:22px;
+  transition:opacity .7s ease,visibility .7s ease;}
+#loader.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+#loader .ld-mark{font-family:var(--sans);font-size:clamp(40px,9vw,96px);line-height:.9;letter-spacing:.01em;color:var(--ink);}
+#loader .ld-mark b{color:var(--lime);}
+#loader .ld-bar{width:min(280px,60vw);height:2px;background:var(--line-soft);overflow:hidden;}
+#loader .ld-bar i{display:block;height:100%;width:0;background:var(--lime);transition:width .3s ease;}
+#loader .ld-meta{display:flex;justify-content:space-between;width:min(280px,60vw);}
 
-.link-underline{ position:relative; }
-.link-underline::after{
-  content:''; position:absolute; left:0; bottom:-4px; width:100%; height:1px;
-  background:var(--ambar); transform:scaleX(0); transform-origin:right;
-  transition:transform .5s cubic-bezier(.22,1,.36,1);
-}
-.link-underline:hover::after{ transform:scaleX(1); transform-origin:left; }
+/* ====================================================================
+   NAVBAR (overlay)
+   ==================================================================== */
+.nav{position:fixed;top:0;left:0;width:100%;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px var(--gutter);mix-blend-mode:difference;}
+.nav .brand{font-family:var(--sans);font-size:clamp(15px,1.5vw,19px);letter-spacing:.02em;color:#fff;}
+.nav .brand small{font-family:var(--mono);font-size:9px;letter-spacing:.2em;display:block;color:#fff;opacity:.7;}
+.nav .links{display:flex;gap:26px;}
+.nav .links a{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#fff;transition:opacity .25s;}
+.nav .links a:hover{opacity:.55;}
+@media(max-width:720px){.nav .links{display:none;}}
 
-/* Botón hamburguesa */
-.burger{
-  display:none; width:34px; height:20px; position:relative;
-  background:none; border:none; cursor:pointer; z-index:1100;
-}
-.burger span{
-  position:absolute; left:0; width:100%; height:2px; background:var(--blanco);
-  transition:transform .45s ease, opacity .3s ease;
-}
-.burger span:nth-child(1){ top:0; }
-.burger span:nth-child(2){ top:9px; }
-.burger span:nth-child(3){ top:18px; }
-.burger.open span:nth-child(1){ transform:translateY(9px) rotate(45deg); }
-.burger.open span:nth-child(2){ opacity:0; }
-.burger.open span:nth-child(3){ transform:translateY(-9px) rotate(-45deg); }
+/* ====================================================================
+   HERO — canvas Three.js full screen + overlay
+   ==================================================================== */
+#hero{position:relative;height:100vh;width:100%;overflow:hidden;background:var(--bg);}
+#three-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1;}
+/* Fallback SVG estático si Three no carga */
+#hero-fallback{position:absolute;inset:0;z-index:1;display:none;align-items:center;justify-content:center;background:var(--bg);}
+#hero-fallback.on{display:flex;}
 
-/* Menú móvil */
-.mobile-menu{
-  position:fixed; inset:0; z-index:1050;
-  background:var(--carbon);
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  gap:2rem; opacity:0; pointer-events:none;
-  transition:opacity .5s ease;
-}
-.mobile-menu.open{ opacity:1; pointer-events:auto; }
-.mobile-menu a{
-  font-family:var(--display); font-size:2.4rem; letter-spacing:.05em;
-  color:var(--blanco); text-transform:uppercase;
-  text-shadow:0 0 26px var(--glow);
-}
+.hero-overlay{position:absolute;inset:0;z-index:5;pointer-events:none;}
+.hero-overlay .corner{position:absolute;font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--ink-dim);text-transform:uppercase;line-height:1.7;}
+.hero-overlay .tl{top:84px;left:var(--gutter);}
+.hero-overlay .tr{top:84px;right:var(--gutter);text-align:right;}
+.hero-overlay .bl{bottom:34px;left:var(--gutter);}
 
-/* ============================== HERO ============================== */
-.hero{
-  position:relative; width:100vw; height:100svh; min-height:600px;
-  overflow:hidden;
-}
-.hero-bg{
-  position:absolute; inset:-8% 0; width:100%; height:116%;
-  will-change:transform;
-}
-.hero-bg img{ filter:saturate(1.08) contrast(1.05); object-position:center 38%; }
+/* Palabra grande que cambia con el progreso */
+.hero-word{position:absolute;left:var(--gutter);bottom:clamp(70px,16vh,150px);z-index:6;
+  font-family:var(--sans);font-size:clamp(56px,15vw,190px);line-height:.86;letter-spacing:.01em;
+  color:var(--ink);pointer-events:none;}
+.hero-word .swap{display:inline-block;position:relative;}
+.hero-word .sub{display:block;font-family:var(--mono);font-size:clamp(10px,1.2vw,13px);
+  letter-spacing:.22em;color:var(--ink-dim);margin-top:14px;text-transform:uppercase;font-weight:400;}
 
-/* ----- HERO como image-sequence scrub (canvas full-screen) ----- */
-.hero-canvas{
-  position:absolute; inset:0; z-index:0; width:100%; height:100%; display:block;
-}
-/* Tinte verde sutil + gradientes para legibilidad del texto, sin tapar el edificio */
-.hero-tint{
-  position:absolute; inset:0; z-index:1; pointer-events:none;
-  background:
-    radial-gradient(120% 95% at 50% 40%, transparent 34%, rgba(7,11,8,.6) 100%),
-    linear-gradient(to top, rgba(7,11,8,.92) 0%, rgba(7,11,8,.12) 46%, rgba(7,11,8,.5) 100%),
-    linear-gradient(rgba(61,240,122,.10), rgba(61,240,122,.04));
-}
-/* Barra de progreso fina arriba (recorre el ancho según el scroll) */
-.seq-progress{
-  position:absolute; top:0; left:0; width:100%; height:3px; z-index:8;
-  background:rgba(61,240,122,.14);
-}
-.seq-progress-bar{
-  display:block; height:100%; width:0%;
-  background:var(--ambar); box-shadow:0 0 16px var(--glow);
-}
-.seq-pct{
-  position:absolute; top:1.4rem; right:clamp(1.2rem,4vw,3.5rem); z-index:8;
-  font-family:var(--display); font-size:1.1rem; letter-spacing:.06em;
-  color:var(--ambar); text-shadow:0 0 18px var(--glow);
-}
-/* Palabra central que cambia con el progreso (semitransparente, sobre el edificio) */
-.seq-word-wrap{
-  position:absolute; inset:0; z-index:6; pointer-events:none;
-  display:flex; align-items:center; justify-content:center;
-}
-.seq-word{
-  font-family:var(--display); font-weight:400; text-transform:uppercase;
-  font-size:clamp(3rem,15vw,15rem); line-height:.9; letter-spacing:.02em;
-  color:rgba(241,247,242,.16);
-  text-shadow:0 0 60px rgba(61,240,122,.18);
-  -webkit-text-stroke:1px rgba(61,240,122,.22);
-  text-align:center; user-select:none; white-space:nowrap;
-  will-change:opacity,transform;
-}
-.hero-seq .hero-content{ z-index:7; }
-.hero-seq .viewfinder{ z-index:5; }
-/* Overlay + viñeta */
-.hero-overlay{
-  position:absolute; inset:0;
-  background:
-    radial-gradient(120% 90% at 50% 35%, transparent 30%, rgba(7,11,8,.65) 100%),
-    linear-gradient(to top, rgba(7,11,8,.95) 0%, rgba(7,11,8,.2) 45%, rgba(7,11,8,.55) 100%);
-}
-.hero-vignette{
-  position:absolute; inset:0; pointer-events:none;
-  box-shadow:inset 0 0 240px 60px rgba(7,11,8,.9);
-}
-/* Marco punteado tipo visor de cámara */
-.viewfinder{
-  position:absolute; inset:clamp(14px,2.4vw,30px); z-index:5;
-  border:1px dashed rgba(247,243,238,.18);
-  pointer-events:none;
-}
-.viewfinder::before,.viewfinder::after{
-  content:''; position:absolute; width:18px; height:18px;
-  border:2px solid var(--ambar);
-}
-.viewfinder::before{ top:-2px; left:-2px; border-right:none; border-bottom:none; }
-.viewfinder::after{ bottom:-2px; right:-2px; border-left:none; border-top:none; }
-.vf-corner{ position:absolute; width:18px; height:18px; border:2px solid var(--ambar); }
-.vf-corner.tr{ top:-2px; right:-2px; border-left:none; border-bottom:none; }
-.vf-corner.bl{ bottom:-2px; left:-2px; border-right:none; border-top:none; }
-.vf-rec{
-  position:absolute; top:14px; left:24px; z-index:6;
-  display:flex; align-items:center; gap:.5rem;
-  font-size:.62rem; letter-spacing:.3em; color:var(--humo); text-transform:uppercase;
-}
-.vf-rec .dot{ width:8px; height:8px; border-radius:50%; background:#d8483a; box-shadow:0 0 10px #d8483a; animation:blink 1.4s infinite; }
-@keyframes blink{ 0%,100%{opacity:1} 50%{opacity:.25} }
+/* Barra de progreso del hero */
+.hero-progress{position:absolute;right:var(--gutter);bottom:34px;z-index:6;width:min(240px,40vw);}
+.hero-progress .track{height:2px;background:var(--line-soft);position:relative;}
+.hero-progress .track i{position:absolute;left:0;top:0;height:100%;width:0;background:var(--lime);}
+.hero-progress .lbl{display:flex;justify-content:space-between;margin-top:8px;}
+.hero-progress .pct{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--lime);}
 
-.hero-content{
-  position:absolute; inset:0; z-index:7;
-  display:flex; flex-direction:column; justify-content:flex-end;
-  padding:clamp(2rem,7vw,5.5rem) clamp(1.4rem,5vw,4rem) clamp(4rem,9vh,6rem);
-}
-.hero-kicker{
-  display:flex; align-items:center; gap:1rem; margin-bottom:1.6rem;
-  font-size:.74rem; letter-spacing:.4em; text-transform:uppercase;
-  color:var(--ambar); font-weight:600;
-}
-.hero-kicker::before{ content:''; width:46px; height:1px; background:var(--ambar); }
+/* Scroll to explore */
+.scroll-cue{position:absolute;left:50%;bottom:30px;transform:translateX(-50%);z-index:6;
+  display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;}
+.scroll-cue span{font-family:var(--mono);font-size:10px;letter-spacing:.28em;color:var(--ink-dim);text-transform:uppercase;}
+.scroll-cue .ln{width:1px;height:34px;background:linear-gradient(var(--lime),transparent);animation:cue 1.8s ease-in-out infinite;}
+@keyframes cue{0%,100%{opacity:.3;transform:scaleY(.6);}50%{opacity:1;transform:scaleY(1);}}
 
-.hero-title{
-  font-family:var(--display);
-  font-weight:400;
-  line-height:.86;
-  letter-spacing:.005em;
-  text-transform:uppercase;
-  color:var(--blanco);
-  text-shadow:0 0 60px rgba(61,240,122,.35), 0 4px 60px rgba(0,0,0,.55);
-}
-.hero-title .line-mask{ overflow:hidden; display:block; }
-.hero-title .line{ display:block; font-size:clamp(3.4rem,12.5vw,12.5rem); }
-.hero-title .ambar{ color:var(--ambar); text-shadow:0 0 70px var(--glow); }
+/* ====================================================================
+   SECCIÓN GENÉRICA
+   ==================================================================== */
+.section{position:relative;padding:clamp(80px,12vh,150px) var(--gutter);z-index:1;border-top:1px solid var(--line-soft);}
+.sec-head{position:relative;z-index:2;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:clamp(40px,6vw,72px);}
+.sec-head h2{font-family:var(--sans);font-size:clamp(34px,7vw,92px);line-height:.92;letter-spacing:.005em;color:var(--ink);max-width:14ch;}
+.sec-head h2 b{color:var(--lime);}
+.sec-head .right{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--ink-dim);text-transform:uppercase;text-align:right;max-width:30ch;line-height:1.7;}
 
-.hero-meta{
-  display:flex; flex-wrap:wrap; gap:.6rem 2.2rem; margin-top:2rem;
-  font-size:.82rem; letter-spacing:.14em; text-transform:uppercase; color:var(--humo);
-}
-.hero-meta span{ display:flex; align-items:center; gap:.5rem; }
-.hero-meta .pip{ width:5px; height:5px; background:var(--ambar); border-radius:50%; }
+/* ====================================================================
+   MANIFIESTO / INTRO
+   ==================================================================== */
+.intro{position:relative;z-index:2;max-width:1100px;}
+.intro p{font-family:var(--body);font-weight:500;font-size:clamp(22px,3.4vw,46px);line-height:1.25;letter-spacing:-.01em;color:var(--ink);}
+.intro p .dim{color:var(--ink-dim);}
+.intro p b{color:var(--lime);font-weight:700;}
 
-/* Indicador scroll centrado abajo */
-.scroll-ind{
-  position:absolute; bottom:clamp(1.6rem,4vh,2.6rem); left:50%; transform:translateX(-50%);
-  z-index:8; display:flex; flex-direction:column; align-items:center; gap:.7rem;
-  font-size:.62rem; letter-spacing:.42em; text-transform:uppercase; color:var(--humo);
-}
-.scroll-ind .bar{ width:1px; height:46px; background:linear-gradient(to bottom,var(--ambar),transparent); overflow:hidden; position:relative; }
-.scroll-ind .bar i{ position:absolute; top:0; left:0; width:100%; height:40%; background:var(--ambar); animation:drop 1.8s cubic-bezier(.7,0,.3,1) infinite; }
-@keyframes drop{ 0%{transform:translateY(-100%)} 60%,100%{transform:translateY(260%)} }
-
-/* ============================== SECCIONES BASE ============================== */
-section{ position:relative; }
-.wrap{ padding:clamp(5rem,12vh,9rem) clamp(1.4rem,5vw,4rem); }
-.eyebrow{
-  display:flex; align-items:center; gap:.9rem; margin-bottom:2rem;
-  font-size:.72rem; letter-spacing:.38em; text-transform:uppercase; color:var(--ambar); font-weight:600;
-}
-.eyebrow::before{ content:''; width:34px; height:1px; background:var(--ambar); transform:scaleX(0); transform-origin:left; transition:transform .9s cubic-bezier(.22,1,.36,1); }
-.eyebrow.drawn::before{ transform:scaleX(1); }
-
-/* ===== MANIFIESTO / ESTUDIO ===== */
-.manifesto{ background:var(--carbon-2); border-top:1px solid var(--linea); }
-.manifesto-grid{
-  display:grid; grid-template-columns:1.4fr .8fr; gap:clamp(2rem,5vw,5rem); align-items:end;
-}
-.manifesto-quote{
-  font-family:var(--display); font-weight:400; text-transform:uppercase;
-  font-size:clamp(1.9rem,4.6vw,4.2rem); line-height:1.02; letter-spacing:.01em;
-  color:var(--blanco);
-}
-.manifesto-quote em{ color:var(--ambar); font-style:normal; text-shadow:0 0 40px var(--glow); }
-.manifesto-text{ margin-top:1.8rem; max-width:46ch; color:var(--humo); font-size:1.02rem; line-height:1.7; }
-
-/* Cifras */
-.stats{ display:flex; flex-direction:column; gap:2.2rem; }
-.stat{ border-left:1px solid var(--linea); padding-left:1.3rem; }
-.stat .num{
-  font-family:var(--display); font-size:clamp(2.6rem,5vw,4rem); line-height:1;
-  color:var(--blanco); text-shadow:0 0 34px var(--glow); display:flex; align-items:baseline; gap:.2rem;
-}
-.stat .num .plus{ color:var(--ambar); }
-.stat .label{ margin-top:.6rem; font-size:.74rem; letter-spacing:.22em; text-transform:uppercase; color:var(--humo); }
-
-/* ============================== PROYECTOS ============================== */
-.projects-intro{ background:var(--carbon); }
-.projects-intro h2{
-  font-family:var(--display); font-weight:400; text-transform:uppercase;
-  font-size:clamp(2.4rem,8vw,7rem); line-height:.92; color:var(--blanco);
-  text-shadow:0 0 50px rgba(61,240,122,.25);
-}
-.projects-intro p{ margin-top:1.4rem; max-width:52ch; color:var(--humo); font-size:1.02rem; }
-
-.project{
-  position:relative; width:100vw; height:92svh; min-height:560px; overflow:hidden;
-  display:flex; align-items:flex-end;
-}
-.project-img{ position:absolute; inset:-7% 0; height:114%; overflow:hidden; will-change:transform; }
-.project-img img{ transform:scale(1.18); filter:saturate(1.05) contrast(1.04); }
-.project-shade{
-  position:absolute; inset:0;
-  background:linear-gradient(to top, rgba(7,11,8,.92) 0%, rgba(7,11,8,.25) 55%, rgba(7,11,8,.5) 100%);
-}
-.project-content{
-  position:relative; z-index:3; width:100%;
-  padding:clamp(2rem,6vw,4.5rem) clamp(1.4rem,5vw,4rem);
-  display:flex; flex-direction:column;
-}
-.project-index{
-  font-size:.74rem; letter-spacing:.34em; text-transform:uppercase; color:var(--ambar);
-  font-weight:700; margin-bottom:1.2rem; display:flex; align-items:center; gap:1rem;
-}
-.project-index::after{ content:''; flex:0 0 auto; width:54px; height:1px; background:var(--linea); }
-.project-name{
-  font-family:var(--display); font-weight:400; text-transform:uppercase;
-  font-size:clamp(2.6rem,9.5vw,9rem); line-height:.9; letter-spacing:.005em;
-  color:var(--blanco); text-shadow:0 0 64px var(--glow), 0 4px 50px rgba(0,0,0,.5);
-}
-.project-meta{
-  display:flex; flex-wrap:wrap; gap:.6rem 2.4rem; margin-top:1.6rem;
-  font-size:.8rem; letter-spacing:.16em; text-transform:uppercase; color:var(--humo);
-}
-.project-meta span{ display:flex; align-items:center; gap:.55rem; }
-.project-meta .pip{ width:5px; height:5px; background:var(--ambar); border-radius:50%; }
-.project .viewfinder{ inset:clamp(14px,2vw,26px); z-index:2; }
-
-/* ============================== VIDEO — OBRA EN MOVIMIENTO ============================== */
-.videoblock{ background:var(--carbon); border-top:1px solid var(--linea); }
-.videoblock-head{ margin-bottom:2.6rem; }
-.videoblock-head h2{
-  font-family:var(--display); font-weight:400; text-transform:uppercase;
-  font-size:clamp(2.2rem,6vw,5.4rem); line-height:.94; color:var(--blanco);
-  text-shadow:0 0 46px rgba(61,240,122,.24);
-}
-.videoblock-head p{ margin-top:1.3rem; max-width:50ch; color:var(--humo); font-size:1.02rem; line-height:1.7; }
-.video-frame{
-  position:relative; width:100%; border-radius:18px; overflow:hidden;
-  border:1px solid var(--linea);
-  box-shadow:0 40px 120px -30px rgba(0,0,0,.85), 0 0 90px -20px var(--glow);
-  background:var(--carbon-2);
-  will-change:transform;
-}
-.video-frame video{
-  display:block; width:100%; height:auto; max-height:80svh; object-fit:cover;
-  filter:saturate(1.06) contrast(1.03);
-}
-.video-frame .video-shine{
-  position:absolute; inset:0; pointer-events:none; border-radius:18px;
-  box-shadow:inset 0 0 120px 10px rgba(7,11,8,.55);
-}
-.video-tag{
-  position:absolute; top:1.1rem; left:1.1rem; z-index:4;
-  display:flex; align-items:center; gap:.6rem;
-  padding:.55rem 1rem; border-radius:999px;
-  background:rgba(7,11,8,.62); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
-  border:1px solid var(--linea);
-  font-size:.62rem; letter-spacing:.28em; text-transform:uppercase; color:var(--blanco); font-weight:600;
-}
-.video-tag .dot{ width:8px; height:8px; border-radius:50%; background:var(--ambar); box-shadow:0 0 12px var(--glow); animation:blink 1.4s infinite; }
-
-/* ============================== RENDERS DEL CLIENTE (tarjetas medianas) ============================== */
-.renders{ background:var(--carbon-2); border-top:1px solid var(--linea); }
-.renders-head{ margin-bottom:2.8rem; }
-.renders-head h2{
-  font-family:var(--display); font-weight:400; text-transform:uppercase;
-  font-size:clamp(2rem,5.6vw,4.6rem); line-height:.94; color:var(--blanco);
-  text-shadow:0 0 40px rgba(61,240,122,.2);
-}
-.renders-head p{ margin-top:1.2rem; max-width:48ch; color:var(--humo); font-size:.98rem; line-height:1.7; }
-.renders-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(1rem,2.4vw,1.8rem); }
-.render-card{
-  position:relative; border-radius:14px; overflow:hidden;
-  border:1px solid var(--linea); background:var(--carbon-3);
-  box-shadow:0 24px 70px -28px rgba(0,0,0,.8);
-  will-change:transform;
-}
-.render-card .render-media{ position:relative; aspect-ratio:4/3; overflow:hidden; }
-.render-card .render-media img{
-  transition:transform .9s cubic-bezier(.22,1,.36,1); filter:saturate(1.04) contrast(1.03);
-}
-.render-card:hover .render-media img{ transform:scale(1.06); }
-.render-card .render-shade{
-  position:absolute; inset:0;
-  background:linear-gradient(to top, rgba(7,11,8,.85) 0%, rgba(7,11,8,.1) 55%, transparent 100%);
-}
-.render-card .render-cap{
-  position:absolute; left:1.1rem; right:1.1rem; bottom:1rem; z-index:2;
-}
-.render-card .render-cap .rk{
-  font-size:.64rem; letter-spacing:.28em; text-transform:uppercase; color:var(--ambar); font-weight:700; margin-bottom:.4rem;
-}
-.render-card .render-cap .rt{
-  font-family:var(--display); font-weight:400; text-transform:uppercase;
-  font-size:clamp(1.1rem,2.2vw,1.6rem); line-height:1; color:var(--blanco);
+/* ====================================================================
+   OBRA — fichas técnicas de proyectos
+   ==================================================================== */
+.obra-list{position:relative;z-index:2;border-top:1px solid var(--line);}
+.obra-row{display:grid;grid-template-columns:64px 1.4fr 1fr 1fr;gap:24px;align-items:center;
+  padding:clamp(22px,3vw,34px) 0;border-bottom:1px solid var(--line);position:relative;
+  transition:background .35s;}
+.obra-row:hover{background:rgba(198,242,78,.03);}
+.obra-row .idx{font-family:var(--mono);font-size:12px;color:var(--lime);letter-spacing:.1em;}
+.obra-row .name{font-family:var(--sans);font-size:clamp(20px,2.6vw,38px);line-height:1;color:var(--ink);}
+.obra-row .name small{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--ink-dim);margin-top:8px;}
+.obra-row .specs{display:flex;flex-direction:column;gap:5px;}
+.obra-row .specs .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim);}
+.obra-row .specs .v{font-family:var(--mono);font-size:14px;letter-spacing:.04em;color:var(--ink);}
+.obra-row .coord{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--lime);text-align:right;line-height:1.7;}
+@media(max-width:880px){
+  .obra-row{grid-template-columns:40px 1fr;gap:10px 16px;}
+  .obra-row .specs{grid-column:2;flex-direction:row;flex-wrap:wrap;gap:14px;}
+  .obra-row .coord{grid-column:2;text-align:left;}
 }
 
-/* ============================== SERVICIOS ============================== */
-.services{ background:var(--carbon-2); border-top:1px solid var(--linea); }
-.services-head{ display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:1.5rem; margin-bottom:3rem; }
-.services-head h2{
-  font-family:var(--display); font-weight:400; text-transform:uppercase;
-  font-size:clamp(2.2rem,6vw,5rem); line-height:.94; color:var(--blanco);
-  text-shadow:0 0 40px rgba(61,240,122,.22);
-}
-.services-head p{ max-width:34ch; color:var(--humo); font-size:.96rem; }
+/* ====================================================================
+   VIDEO — obra construida
+   ==================================================================== */
+.video-frame{position:relative;z-index:2;border:1px solid var(--line);}
+.video-frame video{width:100%;aspect-ratio:16/9;object-fit:cover;background:#000;}
+.video-frame .vlabel{position:absolute;top:14px;left:14px;z-index:3;}
+.video-frame .vmeta{position:absolute;bottom:14px;right:14px;z-index:3;text-align:right;}
+.video-cota{position:absolute;z-index:3;font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--lime);}
+.video-cota.tr{top:14px;right:14px;}
+.video-cota.bl{bottom:14px;left:14px;}
 
-.service-row{
-  display:flex; align-items:center; justify-content:space-between; gap:1.5rem;
-  padding:clamp(1.4rem,3.4vw,2.4rem) 0;
-  border-top:1px solid var(--linea);
-  cursor:default; position:relative; overflow:hidden;
-}
-.service-row:last-child{ border-bottom:1px solid var(--linea); }
-.service-row .num{ font-size:.72rem; letter-spacing:.3em; color:var(--ambar); font-weight:700; flex:0 0 auto; width:3rem; }
-.service-row .title{
-  font-family:var(--display); font-weight:400; text-transform:uppercase;
-  font-size:clamp(1.5rem,4.4vw,3.2rem); line-height:1; color:var(--blanco);
-  transition:transform .5s cubic-bezier(.22,1,.36,1), color .5s ease;
-  flex:1;
-}
-.service-row .arrow{
-  font-size:1.4rem; color:var(--humo); flex:0 0 auto;
-  transition:transform .5s cubic-bezier(.22,1,.36,1), color .5s ease;
-}
-.service-row:hover .title{ color:var(--ambar); transform:translateX(.6rem); text-shadow:0 0 40px var(--glow); }
-.service-row:hover .arrow{ color:var(--ambar); transform:translateX(.6rem) rotate(-45deg); }
+/* ====================================================================
+   SERVICIOS — lista técnica
+   ==================================================================== */
+.serv-list{position:relative;z-index:2;}
+.serv-item{display:grid;grid-template-columns:64px 1fr auto;gap:24px;align-items:baseline;
+  padding:clamp(20px,2.6vw,30px) 0;border-top:1px solid var(--line);}
+.serv-item:last-child{border-bottom:1px solid var(--line);}
+.serv-item .si{font-family:var(--mono);font-size:12px;color:var(--lime);}
+.serv-item h3{font-family:var(--sans);font-size:clamp(22px,3.4vw,46px);line-height:1;color:var(--ink);}
+.serv-item p{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--ink-dim);max-width:34ch;text-align:right;line-height:1.7;}
+@media(max-width:720px){.serv-item{grid-template-columns:44px 1fr;}.serv-item p{grid-column:2;text-align:left;}}
 
-/* ============================== MARQUEE ============================== */
-.marquee{
-  overflow:hidden; white-space:nowrap; padding:1.8rem 0;
-  border-top:1px solid var(--linea); border-bottom:1px solid var(--linea);
-  background:var(--carbon);
-}
-.marquee-track{ display:inline-flex; gap:3rem; will-change:transform; }
-.marquee-track span{
-  font-family:var(--display); font-size:clamp(1.6rem,4vw,3rem); text-transform:uppercase;
-  letter-spacing:.04em; color:transparent; -webkit-text-stroke:1px rgba(61,240,122,.55);
-}
-.marquee-track span.fill{ color:var(--ambar); -webkit-text-stroke:0; text-shadow:0 0 30px var(--glow); }
+/* ====================================================================
+   CIFRAS — contadores
+   ==================================================================== */
+.stats{position:relative;z-index:2;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
+.stat{background:var(--bg);padding:clamp(30px,5vw,60px) clamp(20px,3vw,40px);position:relative;}
+.stat .num{font-family:var(--sans);font-size:clamp(48px,9vw,128px);line-height:.85;color:var(--lime);letter-spacing:.005em;}
+.stat .num .pre{font-size:.4em;vertical-align:super;color:var(--ink);}
+.stat .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);margin-top:16px;}
+@media(max-width:720px){.stats{grid-template-columns:1fr;}}
 
-/* ============================== CONTACTO ============================== */
-.contact{
-  position:relative; width:100vw; min-height:100svh; overflow:hidden;
-  display:flex; align-items:center;
-}
-.contact-bg{ position:absolute; inset:0; }
-.contact-bg img{ filter:saturate(1.05) contrast(1.03); object-position:center 30%; }
-.contact-shade{
-  position:absolute; inset:0;
-  background:
-    radial-gradient(100% 100% at 30% 50%, rgba(7,11,8,.55), rgba(7,11,8,.92)),
-    linear-gradient(to top, rgba(7,11,8,.85), rgba(7,11,8,.55));
-}
-.contact-content{
-  position:relative; z-index:3; width:100%;
-  padding:clamp(5rem,12vh,8rem) clamp(1.4rem,5vw,4rem);
-}
-.contact h2{
-  font-family:var(--display); font-weight:400; text-transform:uppercase;
-  font-size:clamp(2.8rem,11vw,10rem); line-height:.88; color:var(--blanco);
-  text-shadow:0 0 70px var(--glow), 0 4px 50px rgba(0,0,0,.5);
-}
-.contact h2 em{ color:var(--ambar); font-style:normal; }
-.contact-sub{ margin-top:2rem; max-width:48ch; color:var(--humo); font-size:1.05rem; line-height:1.7; }
+/* ====================================================================
+   CONTACTO / CTA
+   ==================================================================== */
+.contact{position:relative;z-index:2;}
+.contact h2{font-family:var(--sans);font-size:clamp(44px,11vw,150px);line-height:.86;color:var(--ink);letter-spacing:.005em;}
+.contact h2 b{color:var(--lime);}
+.contact-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:48px;margin-top:clamp(40px,6vw,72px);align-items:start;}
+.contact-data{display:flex;flex-direction:column;gap:22px;}
+.contact-data .row{border-top:1px solid var(--line);padding-top:14px;}
+.contact-data .row .k{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-dim);}
+.contact-data .row .v{font-family:var(--mono);font-size:clamp(14px,1.7vw,18px);letter-spacing:.04em;color:var(--ink);margin-top:6px;}
+.contact-data .row .v.lime{color:var(--lime);}
+.cta-btns{display:flex;flex-direction:column;gap:14px;}
+.btn{display:flex;align-items:center;justify-content:space-between;gap:18px;
+  font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+  padding:20px 24px;border:1px solid var(--line);color:var(--ink);transition:all .3s;pointer-events:auto;}
+.btn:hover{background:var(--lime);color:#07090A;border-color:var(--lime);}
+.btn.primary{background:var(--lime);color:#07090A;border-color:var(--lime);}
+.btn.primary:hover{background:transparent;color:var(--lime);}
+.btn .arr{font-family:var(--mono);}
+@media(max-width:880px){.contact-grid{grid-template-columns:1fr;gap:34px;}}
 
-.contact-info{ display:flex; flex-wrap:wrap; gap:2.5rem 4rem; margin-top:3rem; }
-.info-item .k{ font-size:.7rem; letter-spacing:.28em; text-transform:uppercase; color:var(--ambar); margin-bottom:.5rem; }
-.info-item .v{ font-size:1.05rem; color:var(--blanco); letter-spacing:.02em; }
+/* ====================================================================
+   FOOTER técnico
+   ==================================================================== */
+.foot{position:relative;z-index:2;border-top:1px solid var(--line);padding:34px var(--gutter);
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;}
+.foot .mono{font-size:10px;}
+.foot a{color:var(--lime);}
 
-.contact-btns{ display:flex; flex-wrap:wrap; gap:1.2rem; margin-top:3.2rem; }
-.btn{
-  display:inline-flex; align-items:center; gap:.7rem;
-  padding:1.1rem 2.2rem; border-radius:2px;
-  font-size:.78rem; letter-spacing:.2em; text-transform:uppercase; font-weight:700;
-  transition:background .4s ease, color .4s ease, border-color .4s ease;
-  will-change:transform;
-}
-.btn-primary{ background:var(--ambar); color:var(--carbon); box-shadow:0 0 40px rgba(61,240,122,.35); }
-.btn-primary:hover{ background:var(--ambar-soft); }
-.btn-ghost{ border:1px solid var(--linea); color:var(--blanco); }
-.btn-ghost:hover{ border-color:var(--ambar); color:var(--ambar); }
-.contact .viewfinder{ z-index:2; }
+/* ====================================================================
+   ANIMACIÓN DE ENTRADA (reveal)
+   ==================================================================== */
+.reveal{opacity:0;transform:translateY(28px);}
+.reveal.in{opacity:1;transform:none;transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);}
 
-/* ============================== FOOTER ============================== */
-.footer{
-  background:var(--carbon); border-top:1px solid var(--linea);
-  padding:2.6rem clamp(1.4rem,5vw,4rem);
-  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;
-}
-.footer .fbrand{ font-family:var(--display); font-size:1rem; letter-spacing:.12em; text-transform:uppercase; }
-.footer .fbrand b{ color:var(--ambar); font-weight:400; }
-.footer .fmeta{ font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--humo); }
-.footer .credit{ font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--humo); }
-.footer .credit b{ color:var(--ambar); font-weight:600; }
-
-/* ============================== REVEAL HELPERS ============================== */
-.reveal{ will-change:transform,opacity; }
-
-/* Split text: máscaras por línea y por palabra (overflow oculto para el barrido) */
-.split-line{ display:block; overflow:hidden; }
-.split-word{ display:inline-block; overflow:hidden; vertical-align:top; }
-.split-word > span{ display:inline-block; will-change:transform; }
-.split-char{ display:inline-block; will-change:transform,opacity; }
-
-/* Cursor personalizado (visor) */
-.cursor{
-  position:fixed; top:0; left:0; z-index:9500; pointer-events:none;
-  width:14px; height:14px; margin:-7px 0 0 -7px; border-radius:50%;
-  border:1px solid var(--ambar); mix-blend-mode:difference;
-  transition:width .35s cubic-bezier(.22,1,.36,1), height .35s cubic-bezier(.22,1,.36,1), background .35s ease, opacity .4s ease;
-  opacity:0;
-}
-.cursor.is-active{ opacity:1; }
-.cursor.is-grow{ width:62px; height:62px; margin:-31px 0 0 -31px; background:rgba(61,240,122,.12); }
-@media (hover:none),(max-width:900px){ .cursor{ display:none; } }
-
-/* Skew por velocidad de scroll (aplicado a contenedores grandes) */
-.skewable{ will-change:transform; }
-
-/* ============================== RESPONSIVE ============================== */
-@media (max-width:900px){
-  .nav-links{ display:none; }
-  .burger{ display:block; }
-  .manifesto-grid{ grid-template-columns:1fr; }
-  .stats{ flex-direction:row; flex-wrap:wrap; gap:1.6rem 2.4rem; margin-top:2.5rem; }
-  .stat{ flex:1 1 30%; }
-  .service-row .num{ width:2.2rem; }
-  .renders-grid{ grid-template-columns:1fr 1fr; }
-  /* Hero-seq: la palabra central se reduce en móvil */
-  .seq-word{ font-size:clamp(2.6rem,17vw,6rem); }
-  .seq-pct{ font-size:.95rem; }
-}
-@media (max-width:560px){
-  .hero-title .line{ font-size:clamp(3rem,15vw,5rem); }
-  .project-name{ font-size:clamp(2.4rem,13vw,4.5rem); }
-  .hero-meta{ font-size:.72rem; }
-  .vf-rec{ font-size:.55rem; }
-  .stat{ flex:1 1 100%; }
-  .renders-grid{ grid-template-columns:1fr; }
-}
-@media (prefers-reduced-motion:reduce){
-  *{ animation:none !important; }
+@media(prefers-reduced-motion:reduce){
+  .reveal{opacity:1 !important;transform:none !important;}
+  .scroll-cue .ln{animation:none;}
 }
 </style>
 </head>
-<body class="no-scroll">
+<body>
 
-<!-- Cursor personalizado tipo visor -->
-<div class="cursor" id="cursor"></div>
-
-<!-- ============================== LOADER ============================== -->
-<div class="loader" id="loader">
-  <div class="loader-mark">JOE JIBAJA VEGA</div>
-  <div class="loader-bar"><i id="loaderBar"></i></div>
-  <div class="loader-pct"><span id="loaderPct">00</span> · Cargando proyecto</div>
+<!-- ====================== LOADER ====================== -->
+<div id="loader">
+  <div class="ld-mark">JJ<b>V</b></div>
+  <div class="ld-bar"><i id="ld-fill"></i></div>
+  <div class="ld-meta">
+    <span class="mono">CARGANDO ESTRUCTURA</span>
+    <span class="mono mono-lime" id="ld-pct">000</span>
+  </div>
 </div>
 
-<!-- ============================== NAVBAR ============================== -->
-<nav class="nav" id="nav">
-  <a href="#hero" class="nav-brand">JOE JIBAJA <b>VEGA</b></a>
-  <div class="nav-links">
-    <a href="#estudio" class="link-underline">Estudio</a>
-    <a href="#proyectos" class="link-underline">Proyectos</a>
-    <a href="#servicios" class="link-underline">Servicios</a>
-    <a href="#contacto" class="link-underline">Contacto</a>
+<!-- ====================== NAVBAR ====================== -->
+<nav class="nav">
+  <div class="brand">JOE JIBAJA VEGA<small>ARQUITECTO · TUMBACO EC</small></div>
+  <div class="links">
+    <a href="#obra">N°01 OBRA</a>
+    <a href="#proceso">N°02 PROCESO</a>
+    <a href="#servicios">N°03 SERVICIOS</a>
+    <a href="#contacto">N°04 CONTACTO</a>
   </div>
-  <button class="burger" id="burger" aria-label="Menú"><span></span><span></span><span></span></button>
 </nav>
 
-<!-- Menú móvil -->
-<div class="mobile-menu" id="mobileMenu">
-  <a href="#estudio">Estudio</a>
-  <a href="#proyectos">Proyectos</a>
-  <a href="#servicios">Servicios</a>
-  <a href="#contacto">Contacto</a>
-</div>
+<!-- ====================== HERO 3D ====================== -->
+<section id="hero">
+  <canvas id="three-canvas"></canvas>
 
-<!-- ============================== HERO — IMAGE-SEQUENCE SCRUB (pantalla completa) ============================== -->
-<!-- El hero ES la secuencia: un <canvas> full-screen que dibuja los 73 frames
-     de la toma orbital del edificio. Fijado con ScrollTrigger (pin + scrub):
-     al hacer scroll la cámara gira y, al 100%, continúa el resto de la página.
-     Sobre el canvas: barra de progreso (arriba), palabra central que cambia,
-     título identitario abajo e indicador de scroll. -->
-<header class="hero hero-seq" id="hero">
-  <!-- Lienzo de la secuencia orbital (cubre todo el viewport) -->
-  <canvas class="hero-canvas" id="heroCanvas" aria-label="Recorrido orbital del Coliseo Metropolitano"></canvas>
-  <!-- Tinte verde + viñeta para integrar la secuencia a la paleta sin tapar el edificio -->
-  <div class="hero-tint"></div>
-  <div class="hero-vignette"></div>
-
-  <!-- Barra de progreso fina arriba + porcentaje en verde -->
-  <div class="seq-progress"><i class="seq-progress-bar"></i></div>
-  <div class="seq-pct"><span class="seq-pct-num">0</span>%</div>
-
-  <!-- Visor de cámara -->
-  <div class="viewfinder">
-    <span class="vf-corner tr"></span>
-    <span class="vf-corner bl"></span>
-  </div>
-  <div class="vf-rec"><span class="dot"></span> REC · 4K · ARQUITECTURA MONUMENTAL</div>
-
-  <!-- Palabra/frase central grande que cambia según el progreso -->
-  <div class="seq-word-wrap">
-    <h2 class="seq-word" id="seqWord">CONCIBE</h2>
+  <!-- Fallback estático (blueprint SVG) si Three no carga -->
+  <div id="hero-fallback">
+    <svg width="80%" height="70%" viewBox="0 0 800 400" fill="none" stroke="#C6F24E" stroke-width="1" opacity="0.8">
+      <ellipse cx="400" cy="240" rx="320" ry="90"/>
+      <ellipse cx="400" cy="200" rx="260" ry="70"/>
+      <path d="M80 240 Q400 60 720 240"/>
+      <path d="M120 230 Q400 100 680 230"/>
+      <line x1="100" y1="240" x2="100" y2="320"/><line x1="400" y1="330" x2="400" y2="380"/>
+      <line x1="700" y1="240" x2="700" y2="320"/>
+    </svg>
   </div>
 
-  <!-- Título identitario fijo abajo -->
-  <div class="hero-content">
-    <div class="hero-kicker">Arquitecto · Tumbaco, Quito — Ecuador</div>
-    <h1 class="hero-title">
-      <span class="line-mask"><span class="line">Arquitectura</span></span>
-      <span class="line-mask"><span class="line"><span class="ambar">monumental</span></span></span>
-    </h1>
-    <div class="hero-meta">
-      <span><i class="pip"></i> Gran escala</span>
-      <span><i class="pip"></i> Diseño paramétrico</span>
-      <span><i class="pip"></i> Visualización 3D fotorrealista</span>
+  <!-- Overlay técnico -->
+  <div class="hero-overlay">
+    <div class="corner tl">LAT 0°12′10″S · LON 78°24′00″O<br>TUMBACO · QUITO · EC</div>
+    <div class="corner tr">PROYECTO N°00 / PORTADA<br>ESC 1:1000 · WIREFRAME</div>
+    <div class="corner bl">REV. 2026 · ARQUITECTURA MONUMENTAL</div>
+  </div>
+
+  <!-- Palabra grande que cambia -->
+  <div class="hero-word">
+    <span class="swap" id="hero-swap">CONCIBE</span>
+    <span class="sub">GRAN ESCALA · ESTRUCTURA PARAMÉTRICA · OBRA PÚBLICA</span>
+  </div>
+
+  <!-- Barra de progreso -->
+  <div class="hero-progress">
+    <div class="track"><i id="hero-fill"></i></div>
+    <div class="lbl">
+      <span class="mono">ROTACIÓN DE MODELO</span>
+      <span class="pct" id="hero-pct">0%</span>
     </div>
   </div>
 
-  <div class="scroll-ind">
-    <span>Scroll to continue</span>
-    <div class="bar"><i></i></div>
-  </div>
-</header>
+  <!-- Scroll cue -->
+  <div class="scroll-cue"><span>SCROLL TO EXPLORE</span><div class="ln"></div></div>
+</section>
 
-<!-- ============================== MANIFIESTO / ESTUDIO ============================== -->
-<section class="manifesto wrap" id="estudio">
-  <div class="eyebrow reveal">El estudio</div>
-  <div class="manifesto-grid">
-    <div>
-      <p class="manifesto-quote reveal">Diseñamos lo que parecía imposible: <em>estructuras que definen una ciudad</em> y un horizonte entero.</p>
-      <p class="manifesto-text reveal">Joe Jibaja Vega proyecta arquitectura de gran escala —coliseos, arenas deportivas, complejos paramétricos y pabellones gastronómicos— con una visualización 3D fotorrealista que permite habitar cada obra antes de construirla. Cada proyecto nace de la geometría, el cálculo y una ambición monumental.</p>
-    </div>
-    <div class="stats">
-      <div class="stat reveal">
-        <div class="num"><span class="plus">+</span><span class="stat-num" data-count="15">0</span></div>
-        <div class="label">Años de trayectoria</div>
+<!-- ====================== MANIFIESTO ====================== -->
+<section class="section" id="manifiesto">
+  <div class="grid-bg"></div>
+  <div class="intro reveal">
+    <p>
+      <span class="dim">Diseño arquitectura que</span> sostiene multitudes<span class="dim">.</span>
+      Coliseos, arenas y complejos donde la <b>geometría paramétrica</b>
+      se vuelve estructura, <span class="dim">y la estructura se vuelve</span> ciudad<span class="dim">.</span>
+    </p>
+  </div>
+</section>
+
+<!-- ====================== OBRA ====================== -->
+<section class="section" id="obra">
+  <div class="grid-bg"></div>
+  <span class="plus" style="top:30px;left:30px"></span>
+  <span class="plus" style="top:30px;right:30px"></span>
+  <div class="sec-head reveal">
+    <h2><span class="secnum">N°01</span><br>Obra <b>seleccionada</b></h2>
+    <div class="right">REGISTRO DE PROYECTOS<br>TIPOLOGÍA · ÁREA · AFORO · AÑO<br>DATOS DE MUESTRA · EDITABLES</div>
+  </div>
+
+  <div class="obra-list reveal">
+    <!-- Fila 01 -->
+    <div class="obra-row">
+      <span class="idx">01</span>
+      <div class="name">Coliseo Multiuso<small>EVENTOS · DEPORTE · CULTURA</small></div>
+      <div class="specs">
+        <span class="k">Tipología / Área</span><span class="v">Coliseo · 42.000 m²</span>
+        <span class="k">Aforo / Año</span><span class="v">12.500 pers · 2024</span>
       </div>
-      <div class="stat reveal">
-        <div class="num"><span class="plus">+</span><span class="stat-num" data-count="250000">0</span></div>
-        <div class="label">Metros cuadrados proyectados</div>
+      <div class="coord">0°13′S 78°25′O<br>ESC 1:500</div>
+    </div>
+    <!-- Fila 02 -->
+    <div class="obra-row">
+      <span class="idx">02</span>
+      <div class="name">Complejo Deportivo Paramétrico<small>CUBIERTA ONDULANTE</small></div>
+      <div class="specs">
+        <span class="k">Tipología / Área</span><span class="v">Complejo · 86.000 m²</span>
+        <span class="k">Aforo / Año</span><span class="v">9.800 pers · 2023</span>
       </div>
-      <div class="stat reveal">
-        <div class="num"><span class="plus">+</span><span class="stat-num" data-count="30">0</span></div>
-        <div class="label">Proyectos de gran escala</div>
+      <div class="coord">0°11′S 78°23′O<br>ESC 1:750</div>
+    </div>
+    <!-- Fila 03 -->
+    <div class="obra-row">
+      <span class="idx">03</span>
+      <div class="name">Centro de Alto Rendimiento<small>ENTRENAMIENTO OLÍMPICO</small></div>
+      <div class="specs">
+        <span class="k">Tipología / Área</span><span class="v">CAR · 64.500 m²</span>
+        <span class="k">Aforo / Año</span><span class="v">4.200 pers · 2022</span>
       </div>
+      <div class="coord">0°14′S 78°26′O<br>ESC 1:600</div>
+    </div>
+    <!-- Fila 04 -->
+    <div class="obra-row">
+      <span class="idx">04</span>
+      <div class="name">Pabellón Gastronómico<small>ESPACIO PÚBLICO · MERCADO</small></div>
+      <div class="specs">
+        <span class="k">Tipología / Área</span><span class="v">Pabellón · 18.000 m²</span>
+        <span class="k">Aforo / Año</span><span class="v">3.500 pers · 2025</span>
+      </div>
+      <div class="coord">0°12′S 78°24′O<br>ESC 1:400</div>
     </div>
   </div>
 </section>
 
-<!-- ============================== PROYECTOS — INTRO ============================== -->
-<section class="projects-intro wrap" id="proyectos">
-  <div class="eyebrow reveal">Selección de obra</div>
-  <h2 class="reveal">Proyectos<br>monumentales</h2>
-  <p class="reveal">Una secuencia de obras donde la escala se vuelve experiencia. Cada render es una promesa construible: estructura, luz y materia llevadas al límite.</p>
-</section>
-
-<!-- ===== PROYECTO 01 — foto verde a sangre ===== -->
-<section class="project">
-  <div class="project-img"><img src="../../assets/fotos/verde-2.jpg" alt="Edificio con terrazas y jardines verdes escalonados" /></div>
-  <div class="project-shade"></div>
-  <div class="viewfinder"><span class="vf-corner tr"></span><span class="vf-corner bl"></span></div>
-  <div class="project-content">
-    <div class="project-index">Proyecto 01</div>
-    <h3 class="project-name">Coliseo<br>Multiuso</h3>
-    <div class="project-meta">
-      <span><i class="pip"></i> Arena deportiva · Espectáculos</span>
-      <span><i class="pip"></i> Capacidad masiva</span>
-      <span><i class="pip"></i> 2024</span>
-    </div>
+<!-- ====================== PROCESO / VIDEO ====================== -->
+<section class="section" id="proceso">
+  <div class="grid-bg"></div>
+  <div class="sec-head reveal">
+    <h2><span class="secnum">N°02</span><br>Obra <b>construida</b></h2>
+    <div class="right">REGISTRO AUDIOVISUAL<br>RENDER · VISUALIZACIÓN 3D<br>FORMATO 16:9 · LOOP</div>
   </div>
-</section>
 
-<!-- ===== PROYECTO 02 — foto verde a sangre ===== -->
-<section class="project">
-  <div class="project-img"><img src="../../assets/fotos/verde-3.jpg" alt="Torre con vegetación vertical tipo bosque vertical" /></div>
-  <div class="project-shade"></div>
-  <div class="viewfinder"><span class="vf-corner tr"></span><span class="vf-corner bl"></span></div>
-  <div class="project-content">
-    <div class="project-index">Proyecto 02</div>
-    <h3 class="project-name">Complejo Deportivo<br>Paramétrico</h3>
-    <div class="project-meta">
-      <span><i class="pip"></i> Diseño paramétrico</span>
-      <span><i class="pip"></i> Envolvente viva</span>
-      <span><i class="pip"></i> 2024</span>
-    </div>
-  </div>
-</section>
-
-<!-- ============================== VIDEO — OBRA EN MOVIMIENTO ============================== -->
-<section class="videoblock wrap" id="video">
-  <div class="eyebrow reveal">Render en movimiento</div>
-  <div class="videoblock-head">
-    <h2 class="reveal">La obra,<br>en movimiento</h2>
-    <p class="reveal">Visualización 3D real del complejo deportivo: recorre la estructura, la luz y la escala antes de la primera piedra.</p>
-  </div>
   <div class="video-frame reveal">
-    <div class="video-tag"><span class="dot"></span> Obra en movimiento · Complejo deportivo</div>
-    <video autoplay muted loop playsinline poster="../../assets/video/poster.jpg">
-      <source src="../../assets/video/showreel.mp4" type="video/mp4" />
-    </video>
-    <div class="video-shine"></div>
+    <span class="video-cota tr">+ 0,00 m N.P.T.</span>
+    <span class="video-cota bl">REG · 2026 · MUTE/LOOP</span>
+    <div class="vlabel"><span class="tag">OBRA CONSTRUIDA — REGISTRO</span></div>
+    <video src="../../assets/video/showreel.mp4" poster="../../assets/video/poster.jpg"
+           autoplay muted loop playsinline preload="metadata"></video>
+    <div class="vmeta"><span class="mono mono-lime">SHOWREEL · JJV</span></div>
   </div>
 </section>
 
-<!-- ============================== RENDERS DEL CLIENTE — tarjetas medianas ============================== -->
-<section class="renders wrap">
-  <div class="eyebrow reveal">Galería de renders</div>
-  <div class="renders-head">
-    <h2 class="reveal">Detalle<br>de obra</h2>
-    <p class="reveal">Fragmentos fotorrealistas de los proyectos: interiores, fachadas y espacios de hospitalidad llevados al detalle.</p>
+<!-- ====================== SERVICIOS ====================== -->
+<section class="section" id="servicios">
+  <div class="grid-bg"></div>
+  <span class="plus" style="bottom:30px;left:30px"></span>
+  <div class="sec-head reveal">
+    <h2><span class="secnum">N°03</span><br><b>Servicios</b></h2>
+    <div class="right">DEL CONCEPTO A LA OBRA<br>PROCESO INTEGRAL · ESCALA MONUMENTAL</div>
   </div>
-  <div class="renders-grid">
-    <article class="render-card reveal">
-      <div class="render-media">
-        <img src="../../assets/img/exterior-atardecer.jpg" alt="Exterior del complejo deportivo al atardecer" />
-        <div class="render-shade"></div>
-      </div>
-      <div class="render-cap"><div class="rk">Proyecto 01</div><div class="rt">Coliseo Multiuso</div></div>
-    </article>
-    <article class="render-card reveal">
-      <div class="render-media">
-        <img src="../../assets/img/fachada-noche.jpg" alt="Fachada paramétrica iluminada de noche" />
-        <div class="render-shade"></div>
-      </div>
-      <div class="render-cap"><div class="rk">Proyecto 02</div><div class="rt">Fachada Paramétrica</div></div>
-    </article>
-    <article class="render-card reveal">
-      <div class="render-media">
-        <img src="../../assets/img/terraza-restaurante.jpg" alt="Terraza nocturna con estructura iluminada" />
-        <div class="render-shade"></div>
-      </div>
-      <div class="render-cap"><div class="rk">Proyecto 03</div><div class="rt">Pabellón Gastronómico</div></div>
-    </article>
+
+  <div class="serv-list">
+    <div class="serv-item reveal"><span class="si">S/01</span><h3>Diseño arquitectónico</h3><p>Concepto, partido y volumetría de gran escala</p></div>
+    <div class="serv-item reveal"><span class="si">S/02</span><h3>Diseño paramétrico</h3><p>Geometría algorítmica · cubiertas y estructuras complejas</p></div>
+    <div class="serv-item reveal"><span class="si">S/03</span><h3>Visualización 3D</h3><p>Render fotorrealista · recorridos · material gráfico</p></div>
+    <div class="serv-item reveal"><span class="si">S/04</span><h3>Anteproyecto y proyecto ejecutivo</h3><p>Planos técnicos · ingenierías · documentación de obra</p></div>
+    <div class="serv-item reveal"><span class="si">S/05</span><h3>Dirección de obra</h3><p>Supervisión técnica · control de calidad en sitio</p></div>
   </div>
 </section>
 
-<!-- ============================== MARQUEE ============================== -->
-<div class="marquee">
-  <div class="marquee-track">
-    <span class="fill">Coliseos</span><span>·</span><span>Arenas deportivas</span><span>·</span><span class="fill">Diseño paramétrico</span><span>·</span><span>Pabellones</span><span>·</span><span class="fill">Visualización 3D</span><span>·</span>
-    <span class="fill">Coliseos</span><span>·</span><span>Arenas deportivas</span><span>·</span><span class="fill">Diseño paramétrico</span><span>·</span><span>Pabellones</span><span>·</span><span class="fill">Visualización 3D</span><span>·</span>
+<!-- ====================== CIFRAS ====================== -->
+<section class="section" id="cifras">
+  <div class="grid-bg"></div>
+  <div class="sec-head reveal">
+    <h2><b>Trayectoria</b> en datos</h2>
+    <div class="right">PLACEHOLDERS · EDITABLES<br>CIFRAS DE MUESTRA</div>
   </div>
-</div>
-
-<!-- ============================== SERVICIOS ============================== -->
-<section class="services wrap" id="servicios">
-  <div class="eyebrow reveal">Qué hacemos</div>
-  <div class="services-head">
-    <h2 class="reveal">Servicios<br>de estudio</h2>
-    <p class="reveal">Del concepto a la dirección de obra: una metodología integral para proyectos monumentales, con control técnico y visual en cada etapa.</p>
-  </div>
-
-  <div class="service-list">
-    <div class="service-row reveal"><span class="num">01</span><span class="title">Diseño arquitectónico</span><span class="arrow">↗</span></div>
-    <div class="service-row reveal"><span class="num">02</span><span class="title">Diseño paramétrico</span><span class="arrow">↗</span></div>
-    <div class="service-row reveal"><span class="num">03</span><span class="title">Visualización 3D</span><span class="arrow">↗</span></div>
-    <div class="service-row reveal"><span class="num">04</span><span class="title">Anteproyecto y proyecto ejecutivo</span><span class="arrow">↗</span></div>
-    <div class="service-row reveal"><span class="num">05</span><span class="title">Dirección de obra</span><span class="arrow">↗</span></div>
-  </div>
-</section>
-
-<!-- ============================== CONTACTO / CTA ============================== -->
-<section class="contact" id="contacto">
-  <div class="contact-bg"><img src="../../assets/fotos/verde-1.jpg" alt="Torre con jardines verticales y vegetación verde" /></div>
-  <div class="contact-shade"></div>
-  <div class="viewfinder"><span class="vf-corner tr"></span><span class="vf-corner bl"></span></div>
-  <div class="contact-content">
-    <div class="eyebrow reveal">Hablemos</div>
-    <h2 class="reveal">Construyamos<br>lo <em>monumental</em></h2>
-    <p class="contact-sub reveal">Cada gran obra empieza con una conversación. Cuéntanos la escala de tu visión y la haremos tangible con un render que podrás recorrer antes de la primera piedra.</p>
-
-    <div class="contact-info reveal">
-      <div class="info-item"><div class="k">Email</div><div class="v">contacto@joejibajavega.com</div></div>
-      <div class="info-item"><div class="k">Teléfono</div><div class="v">[+593 9 ...]</div></div>
-      <div class="info-item"><div class="k">Ubicación</div><div class="v">Tumbaco, Quito — Ecuador</div></div>
+  <div class="stats reveal">
+    <div class="stat">
+      <span class="plus" style="top:14px;right:14px"></span>
+      <div class="num"><span class="pre">+</span><span class="count" data-to="15">0</span></div>
+      <div class="lbl">Años de trayectoria</div>
     </div>
-
-    <div class="contact-btns reveal">
-      <a href="mailto:contacto@joejibajavega.com" class="btn btn-primary magnetic">Escribir un email <span>↗</span></a>
-      <a href="https://wa.me/5939" target="_blank" rel="noopener" class="btn btn-ghost magnetic">WhatsApp <span>↗</span></a>
+    <div class="stat">
+      <span class="plus" style="top:14px;right:14px"></span>
+      <div class="num"><span class="pre">+</span><span class="count" data-to="250" data-suffix=".000">0</span></div>
+      <div class="lbl">Metros cuadrados proyectados</div>
+    </div>
+    <div class="stat">
+      <span class="plus" style="top:14px;right:14px"></span>
+      <div class="num"><span class="pre">+</span><span class="count" data-to="30">0</span></div>
+      <div class="lbl">Proyectos de gran escala</div>
     </div>
   </div>
 </section>
 
-<!-- ============================== FOOTER ============================== -->
-<footer class="footer">
-  <div class="fbrand">JOE JIBAJA <b>VEGA</b></div>
-  <div class="fmeta">Arquitectura monumental · Tumbaco, Quito — Ecuador</div>
-  <div class="credit">Sitio por <b>Hanlid</b></div>
+<!-- ====================== CONTACTO ====================== -->
+<section class="section contact" id="contacto">
+  <div class="grid-bg"></div>
+  <span class="plus" style="top:40px;right:40px"></span>
+  <div class="reveal"><span class="secnum">N°04 — CONTACTO</span></div>
+  <h2 class="reveal">Construyamos<br>lo <b>monumental</b></h2>
+
+  <div class="contact-grid">
+    <div class="contact-data reveal">
+      <div class="row"><div class="k">Ubicación · Coordenadas</div><div class="v lime">0°12′10″S · 78°24′00″O — Tumbaco, Quito, EC</div></div>
+      <div class="row"><div class="k">Correo</div><div class="v">contacto@joejibajavega.com</div></div>
+      <div class="row"><div class="k">Teléfono</div><div class="v">[+593 9 · · · · · · · ·]</div></div>
+      <div class="row"><div class="k">Disponibilidad</div><div class="v">PROYECTOS 2026 — ABIERTO</div></div>
+    </div>
+    <div class="cta-btns reveal">
+      <a class="btn primary" href="mailto:contacto@joejibajavega.com"><span>Escribir correo</span><span class="arr">→</span></a>
+      <a class="btn" href="#" data-wa><span>WhatsApp</span><span class="arr">↗</span></a>
+      <a class="btn" href="#obra"><span>Ver obra</span><span class="arr">↓</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== FOOTER ====================== -->
+<footer class="foot">
+  <span class="mono">© 2026 JOE JIBAJA VEGA · ARQUITECTO</span>
+  <span class="mono">TUMBACO 0°12′S 78°24′O · EC</span>
+  <span class="mono">SITIO POR <a href="#">HANLID</a></span>
 </footer>
 
-<!-- ============================== SCRIPTS ============================== -->
+<!-- ====================================================================
+     LIBRERÍAS POR CDN
+     ==================================================================== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lenis/1.1.13/lenis.min.js"></script>
-<script>
-/* Guard: si GSAP no cargó (CDN bloqueado / offline), no marcar js-ok →
-   el fallback CSS revela el hero y libera el scroll automáticamente. */
-if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
-  document.documentElement.classList.remove('js-ok');
-  document.body.classList.remove('no-scroll');
-} else {
-document.documentElement.classList.add('js-ok');
-gsap.registerPlugin(ScrollTrigger);
-const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+<script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
 
-/* ---------- Lenis + ScrollTrigger (raf único) ---------- */
-/* Lenis es opcional: si su CDN no carga, el sitio degrada a scroll nativo
-   sin romper GSAP/ScrollTrigger ni las animaciones. */
-let lenis;
-if (!reduce && typeof Lenis !== 'undefined') {
-  lenis = new Lenis({ duration: 1.15, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true, lerp: 0.09 });
-  lenis.on('scroll', ScrollTrigger.update);
-  gsap.ticker.add(t => lenis.raf(t * 1000));
-  gsap.ticker.lagSmoothing(0);
-}
-ScrollTrigger.config({ ignoreMobileResize: true });
+<script>
+/* ====================================================================
+   ESTADO GLOBAL Y PREFERENCIAS
+   ==================================================================== */
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let model = null;            // grupo Three.js con la maqueta
+let heroProgress = 0;        // 0..1 progreso del pin del hero
 
 /* ====================================================================
-   UTILIDADES DE SPLIT TEXT (líneas / palabras / caracteres)
-   Envuelve el contenido en máscaras para barridos cinematográficos.
+   1) MAQUETA 3D WIREFRAME — ARENA / COMPLEJO MONUMENTAL
+   Construye con código una estructura que se lea como arquitectura:
+   cubierta ondulante paramétrica + anillo de gradas + columnas + grid.
    ==================================================================== */
-// Divide un elemento (que usa <br> para líneas) en líneas con máscara,
-// y cada línea en palabras animables. Conserva spans internos (.ambar, em).
-function splitToWordLines(el){
-  const lineNodes = [];
-  let current = [];
-  el.childNodes.forEach(node => {
-    if (node.nodeName === 'BR'){ lineNodes.push(current); current = []; }
-    else current.push(node);
-  });
-  lineNodes.push(current);
-  el.innerHTML = '';
-  const words = [];
-  lineNodes.forEach(nodes => {
-    const lineEl = document.createElement('span');
-    lineEl.className = 'split-line';
-    nodes.forEach(node => {
-      const isEl = node.nodeType === 1;
-      const cls = isEl ? node.getAttribute('class') : null;
-      const text = node.textContent;
-      text.split(/(\s+)/).forEach(tok => {
-        if (tok.trim() === ''){ lineEl.appendChild(document.createTextNode(tok)); return; }
-        const w = document.createElement('span');
-        w.className = 'split-word';
-        const inner = document.createElement('span');
-        inner.textContent = tok;
-        if (cls) inner.className = cls;       // preserva .ambar / estilos
-        w.appendChild(inner);
-        lineEl.appendChild(w);
-        words.push(inner);
-      });
-    });
-    el.appendChild(lineEl);
-  });
-  return words;
-}
+function buildArchitecture(THREE, scene){
+  const group = new THREE.Group();
 
-// Divide en caracteres (para el hero). Conserva spans hijos con clase.
-function splitToChars(el){
-  const chars = [];
-  const walk = (node, cls) => {
-    [...node.childNodes].forEach(child => {
-      if (child.nodeType === 3){
-        const frag = document.createDocumentFragment();
-        child.textContent.split('').forEach(ch => {
-          if (ch === ' '){ frag.appendChild(document.createTextNode(' ')); return; }
-          const s = document.createElement('span');
-          s.className = 'split-char' + (cls ? ' ' + cls : '');
-          s.textContent = ch;
-          frag.appendChild(s);
-          chars.push(s);
-        });
-        node.replaceChild(frag, child);
-      } else if (child.nodeType === 1){
-        walk(child, child.getAttribute('class'));
-      }
-    });
-  };
-  walk(el, null);
-  return chars;
-}
+  const matLine   = new THREE.LineBasicMaterial({ color:0xC6F24E, transparent:true, opacity:0.55 });
+  const matLineHi = new THREE.LineBasicMaterial({ color:0xB4FF39, transparent:true, opacity:0.9 });
+  const matDim    = new THREE.LineBasicMaterial({ color:0xC6F24E, transparent:true, opacity:0.22 });
 
-/* ---------- Navbar sólida al scroll ---------- */
-const nav = document.getElementById('nav');
-function syncNav(){ nav.classList.toggle('solid', window.scrollY > 80); }
-window.addEventListener('scroll', syncNav);
-
-/* ---------- Menú móvil (hamburguesa) ---------- */
-const burger = document.getElementById('burger');
-const mobileMenu = document.getElementById('mobileMenu');
-function closeMenu(){ burger.classList.remove('open'); mobileMenu.classList.remove('open'); document.body.classList.remove('no-scroll'); if(lenis) lenis.start(); }
-burger.addEventListener('click', () => {
-  const open = burger.classList.toggle('open');
-  mobileMenu.classList.toggle('open', open);
-  document.body.classList.toggle('no-scroll', open);
-  if (lenis) open ? lenis.stop() : lenis.start();
-});
-mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
-
-/* ---------- Scroll suave en anclas ---------- */
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => {
-    const t = document.querySelector(a.getAttribute('href'));
-    if (!t) return;
-    e.preventDefault();
-    if (lenis) lenis.scrollTo(t, { offset: 0 }); else t.scrollIntoView({ behavior: 'smooth' });
-  });
-});
-
-/* ---------- INTRO: cortina + reveal del título carácter por carácter ---------- */
-let heroChars = [];
-function startSite(){
-  const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
-  tl.to('.loader-mark, .loader-bar, .loader-pct', { autoAlpha: 0, y: -18, duration: 0.5, ease: 'power2.in' })
-    .to('.loader', { yPercent: -100, duration: 1.15, ease: 'power4.inOut' }, '-=0.15')
-    .set('.loader', { display: 'none' })
-    // Hero: cada carácter sube desde su máscara con leve rotación
-    .from(heroChars, {
-      yPercent: 120, rotateZ: 4, autoAlpha: 0,
-      duration: 1.1, stagger: { each: 0.025, from: 'start' }, ease: 'expo.out'
-    }, '-=0.55')
-    .from('.hero-kicker', { autoAlpha: 0, x: -30, duration: 0.8 }, '-=0.85')
-    .from('.hero-meta span', { autoAlpha: 0, y: 22, duration: 0.7, stagger: 0.09 }, '-=0.6')
-    .from('.scroll-ind, .vf-rec, .viewfinder', { autoAlpha: 0, duration: 0.9, stagger: 0.08 }, '-=0.7')
-    .from('.nav', { autoAlpha: 0, y: -24, duration: 0.8 }, '-=0.9');
-}
-
-/* Salto de loader para QA / captura (?qa=1 o ?skipLoader=1) */
-const skipLoader = /[?&](qa|skipLoader)=1/.test(location.search);
-
-if (reduce || skipLoader) {
-  /* ---------- Versión sin movimiento / salto de intro: mostrar todo limpio ---------- */
-  gsap.set('.loader', { display: 'none' });
-  document.body.classList.remove('no-scroll');
-  gsap.set('.reveal, .hero-title .line', { clearProps: 'all', autoAlpha: 1 });
-}
-
-if (reduce) {
-  /* Hero sin movimiento: un frame estático de la secuencia + título fijo */
-  const cv = document.getElementById('heroCanvas');
-  if (cv) {
-    const cx = cv.getContext('2d');
-    const img = new Image();
-    img.onload = () => {
-      const r = cv.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const cw = Math.round(r.width), ch = Math.round(r.height);
-      cv.width = Math.max(1, Math.round(cw * dpr)); cv.height = Math.max(1, Math.round(ch * dpr));
-      cx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const ir = img.naturalWidth / img.naturalHeight, cr = cw / ch;
-      let dw, dh, dx, dy;
-      if (ir > cr){ dh = ch; dw = ch * ir; dx = (cw - dw) / 2; dy = 0; }
-      else        { dw = cw; dh = cw / ir; dx = 0; dy = (ch - dh) / 2; }
-      cx.drawImage(img, dx, dy, dw, dh);
-    };
-    img.src = '../../assets/seq/seq-001.jpg';
+  // ---- A) CUBIERTA ONDULANTE PARAMÉTRICA (plano deformado por ondas sinusoidales) ----
+  const W = 60, D = 40, segW = 48, segD = 32;
+  const roofGeo = new THREE.PlaneGeometry(W, D, segW, segD);
+  const pos = roofGeo.attributes.position;
+  for(let i=0;i<pos.count;i++){
+    const x = pos.getX(i), y = pos.getY(i);
+    // doble onda: bóvedas longitudinales + abombamiento radial central
+    const wave = Math.sin(x*0.22)*2.6 + Math.cos(y*0.30)*1.8;
+    const dome = Math.cos((x/W)*Math.PI)*Math.cos((y/D)*Math.PI)*5.5;
+    pos.setZ(i, wave + dome);
   }
-} else {
-  /* Preparar split del hero antes de la intro */
-  document.querySelectorAll('.hero-title .line').forEach(line => {
-    heroChars.push(...splitToChars(line));
-  });
+  roofGeo.computeVertexNormals();
+  const roofWire = new THREE.LineSegments(new THREE.WireframeGeometry(roofGeo), matLineHi);
+  roofWire.rotation.x = -Math.PI/2;       // tumbar el plano a horizontal
+  roofWire.position.y = 16;
+  group.add(roofWire);
 
-  if (skipLoader) {
-    /* QA / captura: revelar hero sin animación de intro */
-    gsap.set(heroChars, { clearProps: 'all', autoAlpha: 1 });
-  } else {
-  /* ---------- Barra de progreso simulada del loader ---------- */
-  const bar = document.getElementById('loaderBar');
-  const pct = document.getElementById('loaderPct');
-  let started = false;
-  function launch(){
-    if (started) return; started = true;
-    document.body.classList.remove('no-scroll');
-    startSite();
+  // ---- B) ANILLO / GRADA OVALADA (la "arena" bajo la cubierta) ----
+  // Anillos elípticos (superior, medio, cancha) + costillas radiales (gradas).
+  const ribs = 56;
+  const rxO = 33, rzO = 23;   // exterior
+  const rxI = 19, rzI = 13;   // interior (cancha)
+  const topY = 11, botY = 0;
+
+  const ringTopPts=[], ringMidPts=[], ringBotPts=[];
+  for(let i=0;i<=ribs;i++){
+    const a = (i/ribs)*Math.PI*2;
+    ringTopPts.push(new THREE.Vector3(Math.cos(a)*rxO, topY, Math.sin(a)*rzO));
+    ringMidPts.push(new THREE.Vector3(Math.cos(a)*((rxO+rxI)/2), topY*0.5, Math.sin(a)*((rzO+rzI)/2)));
+    ringBotPts.push(new THREE.Vector3(Math.cos(a)*rxI, botY, Math.sin(a)*rzI));
   }
-  let p = 0;
-  const tick = setInterval(() => {
-    p += Math.random() * 16 + 6;
-    if (p >= 100) { p = 100; clearInterval(tick); }
-    bar.style.width = p + '%';
-    pct.textContent = String(Math.round(p)).padStart(2, '0');
-    if (p === 100) { setTimeout(launch, 280); }
-  }, 150);
-  /* Watchdog de seguridad: si el ticker se estanca (tab en segundo plano,
-     dispositivo lento, captura headless), forzar la entrada al sitio para
-     que el hero nunca quede oculto permanentemente. */
-  setTimeout(() => { if (!started) { clearInterval(tick); bar.style.width = '100%'; pct.textContent = '100'; launch(); } }, 3200);
+  group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(ringTopPts), matLine));
+  group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(ringMidPts), matDim));
+  group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(ringBotPts), matLine));
+
+  // costillas radiales (estructura de gradas) que conectan anillo superior con la cancha
+  for(let i=0;i<ribs;i+=1){
+    const a = (i/ribs)*Math.PI*2;
+    const pTop = new THREE.Vector3(Math.cos(a)*rxO, topY, Math.sin(a)*rzO);
+    const pBot = new THREE.Vector3(Math.cos(a)*rxI, botY, Math.sin(a)*rzI);
+    const g = new THREE.BufferGeometry().setFromPoints([pTop, pBot]);
+    group.add(new THREE.Line(g, i%4===0 ? matLine : matDim));
   }
 
-  /* ====================================================================
-     HERO — IMAGE-SEQUENCE SCRUB (pantalla completa, técnica tipo string-tune)
-     El hero se fija (pin) y, al hacer scroll, la cámara orbita el edificio
-     dibujando frame a frame sobre el canvas. Encima: barra de progreso,
-     porcentaje, palabra central que cambia y el título identitario.
-     Al 100% se suelta el pin y continúa el resto de la página.
-     ==================================================================== */
-  (function initHeroSeq(){
-    const hero    = document.getElementById('hero');
-    const canvas  = document.getElementById('heroCanvas');
-    if (!hero || !canvas) return;
-    const ctx     = canvas.getContext('2d');
-    const barEl   = hero.querySelector('.seq-progress-bar');
-    const pctEl   = hero.querySelector('.seq-pct-num');
-    const wordEl  = document.getElementById('seqWord');
-    // Palabras que cambian con el progreso (umbral → texto), del rubro arquitectura.
-    const WORDS = [
-      { at: 0.00, t: 'CONCIBE' },
-      { at: 0.33, t: 'PROYECTA' },
-      { at: 0.66, t: 'CONSTRUYE' },
-      { at: 0.90, t: 'TRASCIENDE' }
-    ];
+  // ---- C) COLUMNAS / COSTILLAS perimetrales que sostienen la cubierta ----
+  const cols = 28;
+  for(let i=0;i<cols;i++){
+    const a = (i/cols)*Math.PI*2;
+    const x = Math.cos(a)*(rxO+2), z = Math.sin(a)*(rzO+2);
+    const top = new THREE.Vector3(x, 16, z);
+    const bot = new THREE.Vector3(x, -1, z);
+    group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([bot, top]),
+              i%3===0 ? matLineHi : matLine));
+  }
+  // anillo superior de coronación (donde apoya la cubierta)
+  const crownPts=[];
+  for(let i=0;i<=cols;i++){const a=(i/cols)*Math.PI*2;crownPts.push(new THREE.Vector3(Math.cos(a)*(rxO+2),16,Math.sin(a)*(rzO+2)));}
+  group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(crownPts), matLine));
 
-    // ---- Precarga de la secuencia (73 frames) ----
-    const FRAME_COUNT = 73;
-    const pad = n => String(n).padStart(3, '0');
-    const frames = [];
-    let loaded = 0;
-    for (let i = 1; i <= FRAME_COUNT; i++){
-      const img = new Image();
-      img.onload = () => {
-        loaded++;
-        if (i === 1) draw(0);                          // pinta el primero apenas llegue
-        if (loaded === FRAME_COUNT) ScrollTrigger.refresh(); // recalcular con todos cargados
-      };
-      img.src = `../../assets/seq/seq-${pad(i)}.jpg`;
-      frames.push(img);
+  // ---- D) CANCHA / PLATAFORMA central (rectángulo con marcas) ----
+  const fieldGeo = new THREE.PlaneGeometry(rxI*1.4, rzI*1.4, 6, 4);
+  const field = new THREE.LineSegments(new THREE.WireframeGeometry(fieldGeo), matDim);
+  field.rotation.x = -Math.PI/2; field.position.y = 0.05;
+  group.add(field);
+
+  // ---- E) GRID DE PISO (cuadrícula técnica bajo la estructura) ----
+  const grid = new THREE.GridHelper(120, 40, 0xC6F24E, 0xC6F24E);
+  grid.material.transparent = true; grid.material.opacity = 0.08;
+  grid.position.y = -1.2;
+  group.add(grid);
+
+  // ---- F) PUNTOS EN VÉRTICES DE LA CUBIERTA (nodos estructurales) ----
+  const ptsGeo = roofGeo.clone();
+  const ptsMat = new THREE.PointsMaterial({ color:0xB4FF39, size:0.45, transparent:true, opacity:0.8 });
+  const pts = new THREE.Points(ptsGeo, ptsMat);
+  pts.rotation.x = -Math.PI/2; pts.position.y = 16;
+  group.add(pts);
+
+  group.position.y = -5;       // centrar verticalmente en cámara
+  scene.add(group);
+  return group;
+}
+
+/* ====================================================================
+   2) ESCENA THREE.JS + RENDER LOOP
+   ==================================================================== */
+let renderer, scene, camera, threeReady = false;
+
+function initThree(){
+  if(typeof THREE === 'undefined'){
+    // Sin Three: activar fallback estático y salir sin romper
+    document.getElementById('hero-fallback').classList.add('on');
+    return false;
+  }
+  try{
+    const canvas = document.getElementById('three-canvas');
+    scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x07090A, 0.012);   // niebla sutil
+
+    camera = new THREE.PerspectiveCamera(42, window.innerWidth/window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 14, 78);
+    camera.lookAt(0, 4, 0);
+
+    renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x000000, 0);
+
+    model = buildArchitecture(THREE, scene);
+    model.rotation.y = -0.6;     // ángulo inicial: que ya se lea como arquitectura
+
+    threeReady = true;
+    animate();
+    return true;
+  }catch(e){
+    console.warn('Three init fallo:', e);
+    document.getElementById('hero-fallback').classList.add('on');
+    return false;
+  }
+}
+
+let t0 = performance.now();
+function animate(){
+  if(!threeReady) return;
+  requestAnimationFrame(animate);
+  const t = (performance.now()-t0)/1000;
+
+  if(model){
+    // Rotación base controlada por scroll (heroProgress) + leve deriva continua
+    const baseY = -0.6 + heroProgress * Math.PI * 2.2;   // 2+ vueltas al hacer scroll
+    const baseX = 0.12 + heroProgress * 0.35;            // ligera inclinación
+    model.rotation.y = baseY + (reduceMotion ? 0 : Math.sin(t*0.15)*0.04);
+    model.rotation.x = baseX;
+    // respiración sutil de cámara (no si reduce-motion)
+    if(!reduceMotion){
+      camera.position.y = 14 + Math.sin(t*0.4)*0.6;
     }
+    camera.lookAt(0, 4, 0);
+  }
+  renderer.render(scene, camera);
+}
 
-    // Tamaño real del lienzo (devicePixelRatio para nitidez)
-    let cw = 0, ch = 0;
-    function resizeCanvas(){
-      const r = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      cw = Math.round(r.width); ch = Math.round(r.height);
-      canvas.width  = Math.max(1, Math.round(cw * dpr));
-      canvas.height = Math.max(1, Math.round(ch * dpr));
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+function onResize(){
+  if(!threeReady) return;
+  camera.aspect = window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+}
+window.addEventListener('resize', onResize);
+
+/* ====================================================================
+   3) LOADER — barra de carga + watchdog (cierre garantizado a 3.5s)
+   ==================================================================== */
+function runLoader(){
+  const fill = document.getElementById('ld-fill');
+  const pct  = document.getElementById('ld-pct');
+  const loader = document.getElementById('loader');
+  let p = 0, closed = false;
+  const iv = setInterval(()=>{
+    p += Math.random()*16 + 6;
+    if(p>100) p=100;
+    fill.style.width = p+'%';
+    pct.textContent = String(Math.floor(p)).padStart(3,'0');
+    if(p>=100) clearInterval(iv);
+  }, 130);
+
+  function close(){
+    if(closed) return; closed = true;
+    clearInterval(iv);
+    fill.style.width='100%'; pct.textContent='100';
+    loader.classList.add('hidden');
+    if(typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+  }
+  // cierre normal al cargar todo
+  window.addEventListener('load', ()=> setTimeout(close, 600));
+  // WATCHDOG: cierre garantizado a los 3.5s pase lo que pase
+  setTimeout(close, 3500);
+}
+
+/* ====================================================================
+   4) SCROLL: Lenis + ScrollTrigger (pin del hero + scrub)
+   ==================================================================== */
+const WORDS = [
+  {at:0.00, w:'CONCIBE'},
+  {at:0.30, w:'PROYECTA'},
+  {at:0.60, w:'CONSTRUYE'},
+  {at:0.85, w:'TRASCIENDE'}
+];
+function wordFor(p){
+  let cur = WORDS[0].w;
+  for(const it of WORDS){ if(p>=it.at) cur = it.w; }
+  return cur;
+}
+
+function initScroll(){
+  let lenis = null;
+  // Lenis con guard
+  if(typeof Lenis !== 'undefined' && !reduceMotion){
+    lenis = new Lenis({ duration:1.1, smoothWheel:true });
+    document.documentElement.classList.add('lenis');
+    function raf(time){ lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+    if(typeof ScrollTrigger !== 'undefined'){
+      lenis.on('scroll', ScrollTrigger.update);
     }
+  }
 
-    // Dibuja el frame `idx` cubriendo el canvas (cover, centrado)
-    let lastIdx = -1;
-    function draw(idx){
-      const img = frames[idx];
-      if (!img || !img.complete || !img.naturalWidth) return;
-      lastIdx = idx;
-      ctx.clearRect(0, 0, cw, ch);
-      const ir = img.naturalWidth / img.naturalHeight, cr = cw / ch;
-      let dw, dh, dx, dy;
-      if (ir > cr){ dh = ch; dw = ch * ir; dx = (cw - dw) / 2; dy = 0; }
-      else        { dw = cw; dh = cw / ir; dx = 0; dy = (ch - dh) / 2; }
-      ctx.drawImage(img, dx, dy, dw, dh);
-    }
-    function redraw(){ if (lastIdx >= 0) draw(lastIdx); }
+  if(typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+  gsap.registerPlugin(ScrollTrigger);
 
-    // Actualiza barra, porcentaje y palabra central según el progreso
-    let curWord = '';
-    function syncOverlay(progress){
-      barEl.style.width = (progress * 100).toFixed(1) + '%';
-      pctEl.textContent = Math.round(progress * 100);
-      let w = WORDS[0].t;
-      for (const it of WORDS) if (progress >= it.at) w = it.t;
-      if (w !== curWord){
-        curWord = w;
-        // Cambio de palabra con un pequeño fundido (sin romper el scrub)
-        gsap.fromTo(wordEl, { autoAlpha: 0.0, scale: 0.96 }, { autoAlpha: 1, scale: 1, duration: 0.4, ease: 'power2.out', overwrite: true });
-        wordEl.textContent = w;
-      }
-    }
+  const heroFill = document.getElementById('hero-fill');
+  const heroPct  = document.getElementById('hero-pct');
+  const swap     = document.getElementById('hero-swap');
+  let lastWord = 'CONCIBE';
 
-    resizeCanvas();
-    draw(0);
-    syncOverlay(0);
-
-    // ScrollTrigger: hero fijado, scrub continuo. end largo para recorrer 73 frames.
-    ScrollTrigger.create({
-      trigger: hero,
-      start: 'top top',
-      end: '+=400%',
-      pin: true,
-      scrub: 1,
-      anticipatePin: 1,
-      invalidateOnRefresh: true,
-      onRefresh: () => { resizeCanvas(); redraw(); },
-      onUpdate: self => {
-        const p = self.progress;
-        const idx = Math.min(FRAME_COUNT - 1, Math.round(p * (FRAME_COUNT - 1)));
-        if (idx !== lastIdx) draw(idx);
-        syncOverlay(p);
-      }
-    });
-
-    window.addEventListener('resize', () => { resizeCanvas(); redraw(); });
-  })();
-
-  /* ---------- TÍTULOS GIGANTES por palabra (estudio, proyectos-intro, servicios, contacto) ---------- */
-  document.querySelectorAll('.manifesto-quote, .projects-intro h2, .services-head h2, .contact h2')
-    .forEach(h => {
-      const words = splitToWordLines(h);
-      gsap.set(h, { autoAlpha: 1 });
-      gsap.from(words, {
-        yPercent: 115, rotateZ: 3, duration: 1, ease: 'expo.out',
-        stagger: { each: 0.06, from: 'start' },
-        scrollTrigger: { trigger: h, start: 'top 88%', once: true }
-      });
-    });
-
-  /* ---------- REVEAL genérico (fade-up + clip-path) ---------- */
-  // Excluir los títulos ya tratados con split por palabra
-  gsap.utils.toArray('.reveal').forEach(el => {
-    if (el.matches('.manifesto-quote, .projects-intro h2, .services-head h2, .contact h2, .video-frame, .render-card')) return;
-    gsap.from(el, {
-      y: 54, autoAlpha: 0, clipPath: 'inset(0 0 100% 0)', duration: 0.9, ease: 'power3.out',
-      scrollTrigger: { trigger: el, start: 'top 87%', once: true }
-    });
-  });
-
-  /* ---------- VIDEO: entrada cinematográfica (escala + clip + fade) ---------- */
-  gsap.from('.video-frame', {
-    yPercent: 8, scale: 0.94, autoAlpha: 0, clipPath: 'inset(8% 8% 8% 8%)',
-    duration: 1.2, ease: 'power4.out',
-    scrollTrigger: { trigger: '.video-frame', start: 'top 86%', once: true }
-  });
-  // Parallax sutil del bloque de video al recorrerlo
-  gsap.fromTo('.video-frame', { yPercent: 4 }, {
-    yPercent: -4, ease: 'none',
-    scrollTrigger: { trigger: '.videoblock', start: 'top bottom', end: 'bottom top', scrub: true }
-  });
-
-  /* ---------- RENDERS: tarjetas medianas con barrido escalonado ---------- */
-  gsap.from('.render-card', {
-    y: 60, autoAlpha: 0, clipPath: 'inset(0 0 100% 0)', duration: 1, ease: 'power3.out', stagger: 0.12,
-    scrollTrigger: { trigger: '.renders-grid', start: 'top 84%', once: true }
-  });
-
-  /* ---------- Trazado de líneas decorativas (eyebrow) vía clase CSS ---------- */
-  gsap.utils.toArray('.eyebrow').forEach(eb => {
-    ScrollTrigger.create({
-      trigger: eb, start: 'top 90%', once: true,
-      onEnter: () => eb.classList.add('drawn')
-    });
-  });
-
-  /* ---------- ESTUDIO: texto y stats con parallax sutil ---------- */
-  gsap.to('.manifesto-text', {
-    yPercent: -10, ease: 'none',
-    scrollTrigger: { trigger: '.manifesto', start: 'top bottom', end: 'bottom top', scrub: true }
-  });
-  gsap.from('.stat', {
-    y: 50, autoAlpha: 0, duration: 0.9, ease: 'power3.out', stagger: 0.12,
-    scrollTrigger: { trigger: '.stats', start: 'top 85%', once: true }
-  });
-
-  /* ---------- PROYECTOS: wipe + scale scrub + nombre por palabras ---------- */
-  gsap.utils.toArray('.project').forEach(sec => {
-    const img = sec.querySelector('.project-img');
-    const inner = img.querySelector('img');
-    const name = sec.querySelector('.project-name');
-    const nameWords = splitToWordLines(name);
-    gsap.set(name, { autoAlpha: 1 });
-
-    // Wipe de entrada del render
-    gsap.from(img, {
-      clipPath: 'inset(0 0 100% 0)', duration: 1.2, ease: 'power4.inOut',
-      scrollTrigger: { trigger: sec, start: 'top 82%', once: true }
-    });
-    // Scale scrub continuo (contenido por overflow:hidden del .project-img)
-    gsap.fromTo(inner, { scale: 1.32 }, {
-      scale: 1, ease: 'none',
-      scrollTrigger: { trigger: sec, start: 'top bottom', end: 'bottom top', scrub: true }
-    });
-    // El render deriva verticalmente al pasar (capa cinematográfica)
-    gsap.fromTo(img, { yPercent: -6 }, {
-      yPercent: 6, ease: 'none',
-      scrollTrigger: { trigger: sec, start: 'top bottom', end: 'bottom top', scrub: true }
-    });
-    // Índice + meta entran escalonados
-    gsap.from(sec.querySelectorAll('.project-index, .project-meta span'), {
-      y: 28, autoAlpha: 0, duration: 0.8, ease: 'power3.out', stagger: 0.08,
-      scrollTrigger: { trigger: sec, start: 'top 62%', once: true }
-    });
-    // Nombre gigante: barrido por palabras
-    gsap.from(nameWords, {
-      yPercent: 115, rotateZ: 3, duration: 1.05, ease: 'expo.out', stagger: 0.07,
-      scrollTrigger: { trigger: sec, start: 'top 60%', once: true }
-    });
-  });
-
-  /* ---------- SERVICIOS: filas con barrido lateral escalonado ---------- */
-  gsap.from('.service-row', {
-    xPercent: -4, autoAlpha: 0, duration: 0.85, ease: 'power3.out', stagger: 0.1,
-    scrollTrigger: { trigger: '.service-list', start: 'top 82%', once: true }
-  });
-
-  /* ---------- CONTADORES de stats ---------- */
-  gsap.utils.toArray('.stat-num').forEach(el => {
-    const end = +el.dataset.count, obj = { v: 0 };
-    ScrollTrigger.create({ trigger: el, start: 'top 92%', once: true, onEnter: () => {
-      gsap.to(obj, { v: end, duration: 1.8, ease: 'power2.out',
-        onUpdate: () => el.textContent = Math.round(obj.v).toLocaleString('es-ES') });
-    }});
-  });
-
-  /* ---------- MARQUEE infinito + parpadeo del relleno ámbar ---------- */
-  gsap.to('.marquee-track', { xPercent: -50, repeat: -1, duration: 24, ease: 'none' });
-
-  /* ---------- CONTACTO: fondo con parallax propio ---------- */
-  gsap.to('.contact-bg', {
-    yPercent: 14, scale: 1.1, ease: 'none',
-    scrollTrigger: { trigger: '.contact', start: 'top bottom', end: 'bottom top', scrub: true }
-  });
-
-  /* ---------- BOTÓN magnético (retorno elástico sutil) ---------- */
-  gsap.utils.toArray('.magnetic').forEach(btn => {
-    btn.addEventListener('mousemove', e => {
-      const r = btn.getBoundingClientRect();
-      gsap.to(btn, { x: (e.clientX - r.left - r.width/2) * .3, y: (e.clientY - r.top - r.height/2) * .3, duration: .6, ease: 'power3.out' });
-      const lbl = btn.querySelector('span');
-      if (lbl) gsap.to(lbl, { x: (e.clientX - r.left - r.width/2) * .15, duration: .6, ease: 'power3.out' });
-    });
-    btn.addEventListener('mouseleave', () => {
-      gsap.to(btn, { x: 0, y: 0, duration: .7, ease: 'elastic.out(1,.4)' });
-      const lbl = btn.querySelector('span');
-      if (lbl) gsap.to(lbl, { x: 0, duration: .7, ease: 'elastic.out(1,.4)' });
-    });
-  });
-
-  /* ---------- SKEW por velocidad de scroll (capas grandes) ---------- */
-  const skewSetter = gsap.quickTo('.marquee-track', 'skewX', { duration: 0.5, ease: 'power3' });
+  // PIN del hero con scrub: el modelo gira mientras se hace scroll
   ScrollTrigger.create({
-    onUpdate: self => {
-      const v = gsap.utils.clamp(-7, 7, self.getVelocity() / -260);
-      skewSetter(v);
+    trigger:'#hero',
+    start:'top top',
+    end:'+=450%',
+    pin:true,
+    scrub:1,
+    onUpdate:(self)=>{
+      heroProgress = self.progress;                 // alimenta el render loop
+      const pc = Math.round(self.progress*100);
+      heroFill.style.width = pc + '%';
+      heroPct.textContent  = pc + '%';
+      // palabra que cambia
+      const w = wordFor(self.progress);
+      if(w !== lastWord){
+        lastWord = w;
+        swap.textContent = w;
+        if(!reduceMotion) gsap.fromTo(swap, {opacity:0, y:18}, {opacity:1, y:0, duration:.5, ease:'power2.out'});
+      }
     }
   });
 
-  /* ---------- CURSOR personalizado tipo visor ---------- */
-  const cursor = document.getElementById('cursor');
-  const cx = gsap.quickTo(cursor, 'x', { duration: 0.45, ease: 'power3.out' });
-  const cy = gsap.quickTo(cursor, 'y', { duration: 0.45, ease: 'power3.out' });
-  window.addEventListener('mousemove', e => {
-    cursor.classList.add('is-active');
-    cx(e.clientX); cy(e.clientY);
-  });
-  window.addEventListener('mouseleave', () => cursor.classList.remove('is-active'));
-  document.querySelectorAll('a, button, .magnetic, .service-row, .project, .video-frame, .render-card').forEach(el => {
-    el.addEventListener('mouseenter', () => cursor.classList.add('is-grow'));
-    el.addEventListener('mouseleave', () => cursor.classList.remove('is-grow'));
+  // Reveals de secciones
+  gsap.utils.toArray('.reveal').forEach((el)=>{
+    ScrollTrigger.create({
+      trigger:el, start:'top 85%',
+      onEnter:()=> el.classList.add('in'),
+    });
   });
 
-  /* ---------- Refrescar ScrollTrigger tras cargar imágenes (evita saltos) ---------- */
-  window.addEventListener('load', () => ScrollTrigger.refresh());
-  // Refresco extra: tras crear el pin del showcase, recalcular medidas para
-  // que Lenis y ScrollTrigger queden sincronizados sin saltos.
-  ScrollTrigger.refresh();
+  // Contadores
+  gsap.utils.toArray('.count').forEach((el)=>{
+    const to = parseFloat(el.dataset.to);
+    const suffix = el.dataset.suffix || '';
+    ScrollTrigger.create({
+      trigger:el, start:'top 90%', once:true,
+      onEnter:()=>{
+        const obj={v:0};
+        gsap.to(obj,{v:to, duration:1.6, ease:'power2.out',
+          onUpdate:()=>{ el.textContent = Math.floor(obj.v) + (obj.v>=to?suffix:''); }});
+      }
+    });
+  });
+
+  // refrescar tras montar
+  setTimeout(()=> ScrollTrigger.refresh(), 400);
 }
 
-syncNav();
-} /* fin guard GSAP disponible */
+/* ====================================================================
+   5) WHATSAPP placeholder (sin inventar número)
+   ==================================================================== */
+document.querySelectorAll('[data-wa]').forEach(b=>{
+  b.addEventListener('click',(e)=>{ e.preventDefault();
+    alert('WhatsApp pendiente de número definitivo del arquitecto.'); });
+});
+
+/* ====================================================================
+   ARRANQUE
+   ==================================================================== */
+runLoader();
+initThree();
+initScroll();
+// si reduce-motion: render estático ya válido (heroProgress queda en 0, modelo visible)
 </script>
 </body>
 </html>
