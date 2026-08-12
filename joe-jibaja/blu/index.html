@@ -461,7 +461,13 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
   .hero-loc{ white-space:normal; }
   .project{ height:88svh; }
   .serv-item{ grid-template-columns:auto 1fr; }
-  .serv-desc{ display:none; }
+  /* En movil la descripcion pasa debajo del nombre, alineada a la izquierda.
+     Antes se ocultaba con display:none, y como el enlace se abre sobre todo
+     desde el telefono, ahi se perdia lo que Joe escribio de cada servicio. */
+  .serv-desc{
+    grid-column:2; grid-row:2; text-align:left; justify-self:start;
+    max-width:46ch; margin-top:7px; color:rgba(255,255,255,.66);
+  }
 }
 @media (max-width:560px){
   /* En movil el ancho util es ~88vw. Estos topes evitan que se corten las
