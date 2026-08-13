@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- `<meta charset>` va lo PRIMERO del `<head>`, dentro de los primeros 1024 bytes del
+     archivo: es la ventana que la spec HTML da al prescan de codificación. El bloque de
+     notas de versión vivía aquí arriba y lo empujaba al byte 1477; los motores con
+     detector de UTF-8 lo salvaban, pero uno que cayera a windows-1252 mostraría toda la
+     página en español con mojibake. Las notas van ahora debajo. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Sim Solutions — FUSIÓN C · Lectura literal del feedback del cliente · ES
+     Base clara: Demo 3 (editorial). Donante: Demo 1 (cinematográfica).
+     Trasplantados tal cual desde la Demo 1: hero oscuro (avión + animación de
+     entrada + parallax + palabra de fondo), la barra/pastilla circular del nav
+     y la cuadrícula de «cuadrados» de beneficios.
+
+     v2 (2026-08-10) · Eje invertido: 80 % aviones, 20 % simuladores.
+     Copy aplicado desde `.claude/briefing-v2/COPY-V2-AVIONES.md`, traducido al
+     español. Los tres datos que solo el cliente puede cerrar aparecen marcados
+     en pantalla con la píldora `.pend` — nunca con una cifra elegida por nosotros.
+
+     v3 (2026-08-11) · La sección de aviones incorpora fotos ILUSTRATIVAS de aeronaves
+     ajenas del mismo tipo, en `assets/airplanes/`. Todas son de dominio público o CC0
+     (sin atribución obligatoria) y todas van etiquetadas «Imagen de referencia» sobre la
+     propia foto. Cada `<figure>` lleva al lado su procedencia y licencia en comentario.
+
+     v4 (2026-08-11) · Correcciones de la auditoría visual (`.claude/reports/auditoria-visual-fusionC.md`):
+     menú móvil a pantalla completa (A-1), clase `.rol` en los cargos (M-2), doctype y `lang` (M-3)
+     y siete ajustes menores. El avión del hero NO se toca: lo aprobó el cliente.
+
+     v5 (2026-08-12) · Sincronía de fidelidad al cliente: textos, diseño y estructura
+     revisados contra la reunión del 2026-08-10 y el Loom del 2026-07-31. Detalle en
+     `.claude/reports/sincronia-2026-08-12/04_IMPLEMENTACION.md`. -->
+<script>document.documentElement.className += ' js';</script>
+<title>Sim Solutions — Leasing de aviones de entrenamiento y simuladores para escuelas de aviación</title>
+<meta name="description" content="Leasing de aviones de entrenamiento nuevos y usados —y de simuladores AATD aprobados por la FAA— para escuelas de vuelo y universidades de aviación. Un pago mensual fijo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Inter:wght@300..600&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet">
+
+<style>
+/* ============ RESET ============ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+:focus-visible{outline:2px solid var(--cian-d);outline-offset:3px}
+/* sobre fondo oscuro el cian oscuro se queda en 3,43:1; el cian de marca sube a 11,9:1 */
+.nav :focus-visible,.hero :focus-visible{outline-color:var(--cian)}
+
+/* ============ TOKENS ============ */
+:root{
+  /* --- claros: base de la Demo 3 --- */
+  --paper:#fbfcfe; --paper2:#f1f4fa;
+  --ink:#0d1626; --ink2:#4c5b74; --ink3:#646f83;
+  --line:rgba(13,22,38,.13); --line2:rgba(13,22,38,.08);
+  /* --- oscuros: donante Demo 1 --- */
+  --abismo:#000a1f; --abismo2:#03102a;
+  --blanco:#eaf2ff; --gris:#8fa3bd;
+  --glass:rgba(255,255,255,.055); --glass-str:rgba(255,255,255,.09);
+  /* --- acento compartido por las dos demos --- */
+  --cian:#33bfef; --cian-d:#136f96;
+  /* --- ámbar de marca, reservado a los datos pendientes de confirmar --- */
+  --ambar:#ffb547; --ambar-txt:#7a4708; --ambar-bg:#fff3e0; --ambar-line:#e3a54a;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --display:"Clash Display","Space Grotesk","Segoe UI",sans-serif;
+  --grotesk:"Space Grotesk","Segoe UI",sans-serif;
+  --body:"Inter","Segoe UI",system-ui,sans-serif;
+  --edge:clamp(20px,5vw,64px); --maxw:1180px;
+  /* separación de la pastilla del nav al borde superior. Es variable porque el overlay
+     del menú móvil la necesita para descontarla y llegar al borde real de la pantalla. */
+  --nav-top:clamp(12px,2vw,22px);
+}
+html{background:var(--paper)}
+body{font-family:var(--body);color:var(--ink);background:var(--paper);line-height:1.6;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;font-weight:400}
+
+/* ============ TIPOGRAFÍA ============ */
+h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;letter-spacing:-.02em;line-height:1.04}
+.eyebrow{font-family:var(--grotesk);font-weight:500;font-size:.72rem;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--cian-d);display:inline-flex;align-items:center;gap:.7em;flex-wrap:wrap;max-width:100%}
+.eyebrow::before{content:"";width:30px;height:1px;background:var(--cian-d);opacity:.65}
+.it{font-style:normal;color:var(--cian-d)}
+.section-index{font-family:var(--grotesk);font-weight:500;font-size:.78rem;letter-spacing:.26em;color:var(--ink2)}
+.section-index b{color:var(--cian-d);font-weight:500}
+/* el mismo índice sobre el hero oscuro: abre la serie en 01 en lugar de arrancar en 02 */
+.hero-index{display:block;margin-bottom:1.2rem;color:var(--gris)}
+.hero-index b{color:var(--cian)}
+
+/* ============ DATO PENDIENTE DE CONFIRMAR ============
+   Marcador visible para los tres datos que solo el cliente puede cerrar.
+   Nunca se sustituye por una cifra inventada: si aparece la píldora, falta el dato. */
+.pend{display:inline-flex;align-items:center;gap:.45em;vertical-align:baseline;
+  font-family:var(--grotesk);font-weight:500;font-size:.78em;letter-spacing:.02em;line-height:1.3;
+  padding:.28em .7em;border-radius:100px;white-space:nowrap;
+  color:var(--ambar-txt);background:var(--ambar-bg);
+  box-shadow:inset 0 0 0 1px var(--ambar-line)}
+.pend::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ambar);flex:none}
+/* sobre el hero oscuro */
+.pend-dark{color:#ffd79a;background:rgba(255,181,71,.13);
+  box-shadow:inset 0 0 0 1px rgba(255,181,71,.42)}
+/* versión de bloque, para cuando ocupa una línea propia dentro de una tarjeta */
+.pend-block{white-space:normal;margin-top:.9rem;align-self:flex-start;text-align:left}
+
+/* ============ BOTONES (pastilla circular, como en la Demo 1) ============ */
+.btn{display:inline-flex;align-items:center;gap:.55em;font-family:var(--grotesk);font-weight:500;
+  font-size:.92rem;padding:.9em 1.7em;border-radius:100px;
+  transition:transform .45s var(--ease),box-shadow .45s var(--ease),background .35s var(--ease)}
+.btn .arw{transition:transform .45s var(--ease)}
+.btn:hover .arw{transform:translateX(4px)}
+.btn-ink{background:var(--ink);color:#fff}
+.btn-ink:hover{transform:translateY(-2px);box-shadow:0 14px 30px -14px rgba(13,22,38,.6)}
+.btn-out{box-shadow:inset 0 0 0 1px var(--line);color:var(--ink)}
+.btn-out:hover{box-shadow:inset 0 0 0 1px var(--ink);transform:translateY(-2px)}
+/* botones sobre el hero oscuro */
+.btn-luz{background:linear-gradient(180deg,#ffffff,#e7eefc);color:#04122b;font-weight:600;
+  box-shadow:0 10px 30px -10px rgba(160,195,255,.4), inset 0 1px 0 rgba(255,255,255,.7)}
+.btn-luz:hover{transform:translateY(-3px);box-shadow:0 18px 46px -12px rgba(160,195,255,.5), inset 0 1px 0 rgba(255,255,255,.7)}
+.btn-glass{background:var(--glass-str);color:var(--blanco);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.18), 0 6px 22px -12px #000}
+.btn-glass:hover{transform:translateY(-3px);background:rgba(255,255,255,.15)}
+.link{display:inline-flex;align-items:center;gap:.5em;min-height:44px;
+  font-family:var(--grotesk);font-weight:500;font-size:.92rem;color:var(--cian-d)}
+.link .arw{transition:transform .4s var(--ease)}
+.link:hover .arw{transform:translateX(4px)}
+
+/* ============ REVEAL ============ */
+.js .reveal{opacity:0;transform:translateY(26px)}
+.reveal.in{opacity:1;transform:none;transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.js .wr{display:inline-block;opacity:0;transform:translateY(.5em) rotate(2deg);filter:blur(8px)}
+.wr.in{opacity:1;transform:none;filter:none;
+  transition:opacity .9s var(--ease),transform .9s var(--ease),filter .9s var(--ease)}
+.no-js .reveal,.no-js .wr{opacity:1;transform:none;filter:none}
+
+/* ============ NAV — pastilla circular trasplantada de la Demo 1 ============ */
+.nav{
+  position:fixed;top:var(--nav-top);left:50%;transform:translateX(-50%);
+  z-index:100;width:min(1180px,calc(100% - 28px));
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:.55rem .7rem .55rem 1.2rem;border-radius:100px;
+  background:rgba(6,16,36,.5);
+  backdrop-filter:blur(22px) saturate(140%);-webkit-backdrop-filter:blur(22px) saturate(140%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.1), 0 10px 40px -18px rgba(0,10,31,.7);
+  transition:padding .5s var(--ease),background .5s var(--ease),top .5s var(--ease),box-shadow .5s var(--ease);
+}
+/* al salir del hero la pastilla se vuelve opaca para mantener contraste sobre el fondo claro */
+.nav.scrolled{--nav-top:8px;top:var(--nav-top);padding:.4rem .5rem .4rem 1.1rem;background:rgba(6,16,36,.92);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12), 0 16px 40px -20px rgba(13,22,38,.55)}
+.brand{display:flex;align-items:center;gap:.6rem}
+.brand img{height:26px;width:auto}
+.nav-links{display:flex;gap:.25rem;align-items:center}
+/* :not(.btn) evita que el color gris de los enlaces gane al del botón CTA */
+.nav-links a:not(.btn){font-family:var(--grotesk);font-size:.88rem;color:var(--gris);
+  padding:.5em .8em;border-radius:100px;transition:color .35s var(--ease),background .35s var(--ease)}
+.nav-links a:not(.btn):hover{color:var(--blanco);background:rgba(255,255,255,.08)}
+.nav .btn{padding:.6em 1.2em;font-size:.85rem}
+/* 44 px: el mínimo cómodo para el pulgar según las guías de Apple y Google */
+.nav-toggle{display:none;width:44px;height:44px;border-radius:50%;
+  background:var(--glass-str);align-items:center;justify-content:center}
+.nav-toggle span{position:relative;width:17px;height:1.5px;background:var(--blanco);transition:.4s var(--ease)}
+.nav-toggle span::before,.nav-toggle span::after{content:"";position:absolute;left:0;width:17px;height:1.5px;background:var(--blanco);transition:.4s var(--ease)}
+.nav-toggle span::before{top:-5px}.nav-toggle span::after{top:5px}
+.nav.open .nav-toggle span{background:transparent}
+.nav.open .nav-toggle span::before{top:0;transform:rotate(45deg)}
+.nav.open .nav-toggle span::after{top:0;transform:rotate(-45deg)}
+
+/* ============ HERO OSCURO — trasplantado de la Demo 1 ============ */
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(118px,15vh,160px) var(--edge) clamp(3rem,8vh,5rem);
+  overflow:hidden;isolation:isolate;color:var(--blanco);
+  background:
+    radial-gradient(120% 80% at 78% -10%, rgba(51,191,239,.14), transparent 55%),
+    radial-gradient(90% 70% at 12% 106%, rgba(51,191,239,.07), transparent 60%),
+    linear-gradient(180deg,#00081a 0%, var(--abismo) 45%, #010a1e 100%);
+}
+/* palabra gigante de fondo (la que el cliente pidió conservar) */
+.ghost{
+  position:absolute;z-index:-2;left:50%;top:46%;transform:translate(-50%,-50%);
+  font-family:var(--grotesk);font-weight:700;line-height:.8;
+  font-size:clamp(9rem,30vw,34rem);letter-spacing:-.03em;white-space:nowrap;
+  color:transparent;-webkit-text-stroke:1px rgba(234,242,255,.10);
+  background:linear-gradient(180deg,rgba(234,242,255,.15),rgba(234,242,255,.03));
+  -webkit-background-clip:text;background-clip:text;pointer-events:none;user-select:none;
+}
+/* Avión del hero. Sustituido el 2026-08-12: era un jet ejecutivo birreactor, que con el
+   eje invertido a 80 % aviones dejó de ser decoración y pasó a leerse como catálogo.
+   Ahora es el Cessna 172, que es el avión que el cliente llama su estrella (6:13).
+   La foto es 2,50:1 frente al 1,58:1 del jet, así que a la misma anchura quedaba un 37 %
+   más baja y flotando: se ensancha y se baja el `top` para que el centro óptico caiga a
+   la altura del bloque de texto, sin invadirlo (el texto acaba en x=750 a 1440).
+
+   ⚠️ ANTES DE TOCAR `width`, `right` O `top`, LEE ESTO. El PNG casi no tiene margen
+   transparente, al revés que el del jet. Medido sobre el canal alfa a cuatro umbrales
+   (izq / der / arriba / abajo, en px de imagen):
+
+        umbral    cessna-172-hero.png        plane.png (el jet)
+         >0        0 /  0 /   0 / 0           8 /  6 / 0 /  6
+         >16       4 /  2 / 101 / 1          18 / 14 / 0 / 14
+         >64       6 /  2 / 102 / 2          18 / 18 / 1 / 24
+         >128      7 /  3 / 102 / 2          18 / 18 / 1 / 144
+
+   Dos consecuencias:
+   1) A los lados hay 0-3 px de aire frente a los 14-18 del jet: **la punta del ala ES el
+      borde del elemento**. Un `right` que parecía seguro con el jet ya no lo es. Y el
+      `rotate(-4deg)` añade además ±(alto/2)·sin4° al ancho del bounding box.
+   2) Arriba hay ~102 px vacíos de 517, o sea que el 20 % superior del elemento no pinta
+      nada: el avión se ve más bajo de lo que sugiere el `top`. Está compensado en los
+      valores actuales; si se cambia la imagen, hay que recompensarlo.
+
+   **Medir en el navegador, no estimar.** Y al medir, aislar POR DIFERENCIA (render normal
+   menos render con `.plane-wrap` en `display:none`): contar píxeles por umbral de brillo
+   sobre un fondo fabricado cuenta el `drop-shadow` como si fuera el avión, y eso ya
+   produjo un falso positivo de «ala cortada» el 2026-08-12. */
+.plane-wrap{position:absolute;z-index:-1;right:1%;top:26%;width:min(46vw,660px);pointer-events:none;
+  filter:drop-shadow(0 40px 60px rgba(0,5,20,.6))}
+.plane-wrap img{width:100%;transform:rotate(-4deg)}
+@media (prefers-reduced-motion:no-preference){
+  .plane-wrap img{animation:planeEnter 2.7s cubic-bezier(.16,.84,.44,1) .15s backwards}
+}
+@keyframes planeEnter{
+  0%{opacity:0;transform:translateX(-44vw) translateY(10vh) scale(.12) rotate(-4deg)}
+  55%{opacity:1}
+  100%{opacity:1;transform:translateX(0) translateY(0) scale(1) rotate(-4deg)}
+}
+/* La foto del hero tampoco es de un avión de Sim Solutions, así que lleva la misma
+   declaración que las tres de la flota. Va FUERA de `.plane-wrap` a propósito: ese
+   contenedor baja de opacidad y se difumina en las bandas media y móvil, y la etiqueta
+   tiene que leerse igual en las tres. Posición de crédito fotográfico, abajo a la derecha:
+   es el único punto del hero libre en todos los anchos (la franja de datos acaba antes).
+   #7f93ad sobre el fondo del hero = 6,0:1, pasa AA. */
+.hero-ref{position:absolute;right:var(--edge);bottom:1.1rem;z-index:1;
+  font-family:var(--grotesk);font-weight:500;font-size:.63rem;letter-spacing:.14em;
+  text-transform:uppercase;line-height:1.2;color:#7f93ad;pointer-events:none}
+/* único acento gráfico del hero: la estela */
+.contrail{position:absolute;z-index:-1;left:0;top:26%;width:60%;height:40%;pointer-events:none;overflow:visible}
+.contrail path{fill:none;stroke:url(#trailg);stroke-width:2.5;stroke-linecap:round;
+  stroke-dasharray:1400;filter:drop-shadow(0 0 6px rgba(51,191,239,.5))}
+/* el trazo solo se esconde si hay JS para dibujarlo: quien navegue sin JS ve la estela
+   completa en lugar de no verla nunca (la clase `.in` la reparte el script) */
+.js .contrail path{stroke-dashoffset:1400}
+.contrail.in path{animation:draw 2.4s .6s var(--ease) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+.hero-inner{max-width:var(--maxw);width:100%;margin:0 auto;position:relative}
+.hero-inner>*{max-width:620px}
+/* la franja de datos necesita más ancho que el bloque de texto: si no, el tercer
+   dato salta de fila y el hero pierde su remate horizontal */
+.hero-inner>.hero-figs{max-width:840px}
+.hero-badge{display:inline-flex;align-items:center;gap:.6em;margin-bottom:1.6rem;
+  padding:.5em 1em;border-radius:100px;font-family:var(--grotesk);font-size:.78rem;letter-spacing:.04em;
+  background:var(--glass);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);color:var(--blanco)}
+.hero-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--cian);box-shadow:0 0 10px var(--cian);animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.hero h1{font-size:clamp(2.3rem,4.9vw,4.4rem);line-height:1;margin-bottom:1.4rem;text-wrap:balance}
+.hero h1 .it{color:var(--cian)}
+.hero p.lead{font-size:clamp(1.05rem,1.6vw,1.3rem);color:#a9bcd4;font-weight:300;margin-bottom:2.2rem}
+.hero-cta{display:flex;gap:1rem;flex-wrap:wrap}
+/* franja de datos que el cliente elogió, ahora en términos de avión */
+.hero-figs{display:flex;flex-wrap:wrap;gap:clamp(1.6rem,4vw,3.4rem);
+  margin-top:clamp(2.4rem,5vh,3.6rem);padding-top:1.7rem;border-top:1px solid rgba(255,255,255,.16)}
+.hero-fig{min-width:max-content}
+.hero-fig .fv{font-family:var(--display);font-weight:600;font-variant-numeric:tabular-nums;
+  font-size:clamp(1.9rem,3.6vw,2.8rem);line-height:1;white-space:nowrap;
+  background:linear-gradient(180deg,var(--blanco),var(--cian));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-fig .fl{font-family:var(--grotesk);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gris);margin-top:.5rem}
+/* la píldora de dato pendiente ocupa el lugar de la cifra: hay que devolverle
+   el color propio, porque .fv recorta un degradado sobre texto transparente */
+.hero-fig .fv{display:flex;align-items:flex-end;min-height:1em}
+.hero-fig .fv .pend{font-size:.86rem;-webkit-text-fill-color:#ffd79a;color:#ffd79a;
+  font-family:var(--grotesk);letter-spacing:.02em}
+
+/* ============ LAYOUT DE SECCIONES (aire generoso) ============ */
+.section{position:relative;padding:clamp(5.5rem,10vw,10rem) var(--edge)}
+.wrap{max-width:var(--maxw);margin:0 auto}
+.sec-head{max-width:var(--maxw);margin:0 auto clamp(2.6rem,4.5vw,4.2rem)}
+.sec-head .top{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.sec-head h2{font-size:clamp(2rem,4.6vw,3.5rem);color:var(--ink);max-width:20ch;text-wrap:balance}
+.sec-head .lead{color:var(--ink2);max-width:56ch;font-size:clamp(1.02rem,1.4vw,1.16rem);margin-top:1.2rem}
+/* la única tirada de superficies iguales de la página son beneficios → productos → aviones:
+   4 043 px seguidos del mismo blanco. Dos filetes le dicen al ojo dónde termina cada bloque
+   sin añadir ni un color más. El resto de secciones ya tienen junta propia (tinte, banda). */
+#productos, #aviones{box-shadow:inset 0 1px 0 var(--line2)}
+/* el único cambio de fondo del cuerpo: la sección de simuladores.
+   Plano y no degradado: en degradado el borde superior quedaba a 1,07 del papel —o sea,
+   invisible justo en la junta donde tiene que leerse el cambio— y metía la etiqueta del
+   selector en la zona baja, al límite de AA. Plano a #dcecf8 el salto es 1,18 en los dos
+   bordes y el contraste del texto deja de depender de la altura a la que caiga. */
+.tint{background:#dcecf8;
+  box-shadow:inset 0 1px 0 rgba(13,22,38,.10), inset 0 -1px 0 rgba(13,22,38,.10)}
+.band{background:linear-gradient(165deg,#c4e8fb 0%,#a3d9f4 100%)}
+.band .eyebrow{color:#0e4c6b}
+.band .eyebrow::before{background:#0e4c6b;opacity:.6}
+.band .contact-copy p{color:#284159}
+.band .form{background:#fff;padding:clamp(1.6rem,3vw,2.4rem);border-radius:20px;
+  box-shadow:0 24px 60px -24px rgba(10,50,80,.42)}
+/* segunda —y última— palabra de fondo. La Demo 1 llevaba dos («VUELO» en el hero,
+   «DESPEGA» en el cierre) y el cliente las citó en plural (0:19). Va solo en escritorio:
+   por debajo de 900 px la sección pasa a una columna y la palabra caería sobre el texto. */
+/* `.section` (más arriba) ya es position:relative; aquí solo hace falta recortar el
+   desborde, igual que hace `.hero` con la palabra del hero. */
+.band{overflow:hidden}
+/* alineada al borde izquierdo del texto y con la palabra ENTERA visible: cae en el hueco
+   que dejan las dos columnas desiguales, no detrás del formulario. El 11vw está medido
+   para que el borde derecho no llegue nunca a la tarjeta blanca. */
+.cta-ghost{position:absolute;z-index:0;left:var(--edge);bottom:1.2rem;
+  font-family:var(--grotesk);font-weight:700;line-height:.8;
+  font-size:clamp(5.5rem,11vw,11rem);letter-spacing:-.03em;white-space:nowrap;
+  color:transparent;-webkit-text-stroke:1px rgba(13,22,38,.11);
+  pointer-events:none;user-select:none}
+.band .contact-grid{position:relative;z-index:1}
+@media (max-width:900px){.cta-ghost{display:none}}
+
+/* ============ BENEFICIOS — «cuadrados» trasplantados de la Demo 1 ============ */
+.why-grid{max-width:var(--maxw);margin:0 auto;
+  display:grid;grid-template-columns:repeat(3,1fr);border-radius:22px;overflow:hidden;
+  background:#fff;box-shadow:inset 0 0 0 1px rgba(12,21,38,.09), 0 30px 70px -44px rgba(12,21,38,.3)}
+.why-cell{position:relative;padding:clamp(1.8rem,2.8vw,2.5rem);
+  box-shadow:inset -1px 0 0 rgba(12,21,38,.07), inset 0 -1px 0 rgba(12,21,38,.07);
+  transition:background .5s var(--ease);display:flex;flex-direction:column;gap:1rem}
+.why-cell:hover{background:rgba(51,191,239,.06)}
+.why-top{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.why-ico{width:clamp(48px,4vw,58px);aspect-ratio:1;border-radius:50%;
+  display:grid;place-items:center;color:var(--cian-d);flex:none;
+  background:radial-gradient(120% 120% at 30% 20%,rgba(51,191,239,.18),rgba(51,191,239,.05));
+  box-shadow:inset 0 0 0 1px rgba(51,191,239,.34), 0 8px 22px -14px rgba(51,191,239,.5);
+  transition:box-shadow .5s var(--ease),transform .5s var(--ease)}
+.why-cell:hover .why-ico{transform:translateY(-2px);box-shadow:inset 0 0 0 1px rgba(51,191,239,.55), 0 12px 26px -12px rgba(51,191,239,.6)}
+.why-ico svg{width:54%;height:54%;display:block}
+/* la numeración 01–06 que el cliente elogió de la Demo 3 */
+.why-num{font-family:var(--grotesk);font-weight:500;font-variant-numeric:tabular-nums;
+  font-size:.95rem;letter-spacing:.18em;color:var(--cian-d)}
+.why-title{font-family:var(--display);font-weight:600;font-size:clamp(1.06rem,1.35vw,1.22rem);
+  line-height:1.2;letter-spacing:-.01em;color:var(--ink);text-wrap:balance}
+.why-txt{font-size:.94rem;line-height:1.6;color:var(--ink2);max-width:34ch}
+
+/* ============ SIMULADORES — selector compacto de la Demo 3 ============ */
+.sim-show{max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:1.05fr .95fr;
+  gap:clamp(1.8rem,4.5vw,4rem);align-items:center}
+.sim-stage{position:relative;border-radius:18px;overflow:hidden;aspect-ratio:4/3;
+  box-shadow:0 34px 70px -44px rgba(13,22,38,.55)}
+.sim-stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.04);
+  transition:opacity .6s var(--ease),transform .8s var(--ease)}
+.sim-stage img.on{opacity:1;transform:scale(1)}
+/* cian propio, más oscuro que `--cian-d`: a 768 px esta etiqueta cae en la parte baja del
+   degradado de `.tint` (#d8e8f1) y con `--cian-d` se quedaba en 4,47:1, por debajo de AA */
+.sim-info .sl{font-family:var(--grotesk);font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;color:#115f80;margin-bottom:.8rem}
+.sim-info h3{font-size:clamp(1.7rem,3.2vw,2.4rem);color:var(--ink);margin-bottom:.9rem}
+.sim-info p{color:var(--ink2);font-size:1.04rem;margin-bottom:1.4rem;max-width:46ch;min-height:3.2em}
+.sim-tabs{display:flex;flex-direction:column;border-top:1px solid var(--line);margin-top:2rem}
+.sim-tabs button{display:flex;align-items:center;justify-content:space-between;gap:1rem;text-align:left;
+  padding:1rem .2rem;border-bottom:1px solid var(--line);font-family:var(--grotesk);font-size:1.02rem;color:var(--ink2);
+  transition:color .35s var(--ease),padding-left .35s var(--ease)}
+.sim-tabs button .tl{display:inline-flex;align-items:baseline;gap:.7em}
+.sim-tabs button .tn{font-size:.8rem;color:var(--ink2);letter-spacing:.1em}
+.sim-tabs button:hover{color:var(--ink);padding-left:8px}
+.sim-tabs button.active{color:var(--ink);font-weight:500}
+.sim-tabs button.active .tn{color:var(--cian-d)}
+.sim-tabs button .dot{width:7px;height:7px;border-radius:50%;background:var(--cian-d);opacity:0;transition:opacity .35s var(--ease)}
+.sim-tabs button.active .dot{opacity:1}
+
+/* ============ QUÉ ARRENDAMOS — dos accesos, no una retícula de modelos ============ */
+/* los dos accesos son una lista de destinos, no artículos: el reset general solo mata
+   `margin` y `padding`, así que la viñeta hay que quitarla aquí. */
+.acc-grid{list-style:none}
+.acc-grid{max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:clamp(1.2rem,2.4vw,2rem)}
+.acc{position:relative;display:flex;flex-direction:column;gap:1rem;overflow:hidden;
+  padding:clamp(1.9rem,3.4vw,3rem);border-radius:22px;background:#fff;
+  box-shadow:inset 0 0 0 1px rgba(12,21,38,.09), 0 30px 70px -46px rgba(12,21,38,.3);
+  transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
+.acc:hover{transform:translateY(-4px);
+  box-shadow:inset 0 0 0 1px rgba(51,191,239,.42), 0 36px 76px -40px rgba(12,21,38,.36)}
+/* el enlace cubre toda la tarjeta sin robarle el foco a nada más */
+.acc .acc-link::after{content:"";position:absolute;inset:0;border-radius:22px}
+.acc-top{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.acc-num{font-family:var(--grotesk);font-weight:500;font-size:.9rem;letter-spacing:.2em;color:var(--cian-d);font-variant-numeric:tabular-nums}
+.acc-ico{width:clamp(52px,4.6vw,64px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;
+  color:var(--cian-d);flex:none;
+  background:radial-gradient(120% 120% at 30% 20%,rgba(51,191,239,.18),rgba(51,191,239,.05));
+  box-shadow:inset 0 0 0 1px rgba(51,191,239,.34)}
+.acc-ico svg{width:56%;height:56%;display:block}
+.acc h3{font-size:clamp(1.5rem,2.6vw,2.1rem);color:var(--ink)}
+.acc p{color:var(--ink2);font-size:1rem;max-width:38ch}
+.acc .link{margin-top:auto;padding-top:.4rem}
+
+/* ============ FLOTA — marcas, no modelos, con fotos declaradas como referencia ============ */
+.flota{max-width:var(--maxw);margin:0 auto;display:grid;gap:clamp(1.2rem,2.4vw,1.8rem)}
+.fl-card{position:relative;display:flex;flex-direction:column;
+  padding:clamp(1.6rem,2.8vw,2.2rem);border-radius:18px;background:#fff;
+  box-shadow:inset 0 0 0 1px rgba(12,21,38,.09)}
+.fl-top{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;
+  padding-bottom:1.1rem;margin-bottom:1.2rem;border-bottom:1px solid var(--line)}
+.fl-num{font-family:var(--grotesk);font-weight:500;font-size:.9rem;letter-spacing:.2em;color:var(--cian-d);font-variant-numeric:tabular-nums}
+.fl-badge{font-family:var(--grotesk);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink2);text-align:right}
+.fl-card h3{font-size:clamp(1.3rem,2vw,1.6rem);color:var(--ink);margin-bottom:.7rem}
+.fl-card p{color:var(--ink2);font-size:.97rem;max-width:46ch}
+/* el avión estrella: primera fila entera, tipografía mayor y filete cian */
+.fl-card--estrella{background:linear-gradient(180deg,#fff,#f4fafe);
+  box-shadow:inset 0 0 0 1px rgba(51,191,239,.34), 0 26px 60px -46px rgba(12,21,38,.35)}
+.fl-card--estrella .fl-badge{color:var(--cian-d);font-weight:500}
+.fl-card--estrella h3{font-size:clamp(1.9rem,3.6vw,2.9rem)}
+.fl-card--estrella p{font-size:clamp(1.02rem,1.4vw,1.14rem);max-width:52ch}
+.fl-resto{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(1.2rem,2.4vw,1.8rem)}
+.flota-nota{max-width:var(--maxw);margin:clamp(1.6rem,3vw,2.2rem) auto 0;color:var(--ink2);font-size:.92rem}
+.flota-nota span{display:block;max-width:72ch}
+
+/* --- fotos ilustrativas ---------------------------------------------------
+   Ninguna de estas fotos es de la flota del cliente: son aeronaves ajenas del
+   mismo tipo. Por eso la etiqueta «Imagen de referencia» va SIEMPRE encima de
+   la foto y no solo en el `alt`. Misma proporción (16/10) en las cuatro celdas
+   para que la fila se lea como una sola pieza. */
+.fl-foto{position:relative;overflow:hidden;border-radius:14px;aspect-ratio:16/10;
+  background:var(--paper2);box-shadow:inset 0 0 0 1px rgba(12,21,38,.10)}
+.fl-foto img{width:100%;height:100%;object-fit:cover}
+.fl-card>.fl-foto{margin-bottom:1.3rem}
+.fl-ref{position:absolute;left:.7rem;bottom:.7rem;z-index:1;
+  font-family:var(--grotesk);font-weight:500;font-size:.63rem;letter-spacing:.14em;
+  text-transform:uppercase;line-height:1.2;color:#fff;background:rgba(4,12,28,.88);
+  padding:.44em .82em;border-radius:100px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
+/* «Y otros» no tiene un modelo que enseñar: panel liso en lugar de foto, para no dar a
+   entender un avión concreto ni dejar la celda coja. Sin rayado: la trama diagonal es el
+   idioma de «imagen rota» y suma ruido justo donde el cliente pidió quitarlo. */
+.fl-foto--abierta{display:grid;place-items:center;background:var(--paper2);
+  box-shadow:inset 0 0 0 1px rgba(13,22,38,.10)}
+.fl-foto--abierta span{position:relative;padding:0 1.1rem;text-align:center;
+  font-family:var(--grotesk);font-weight:500;font-size:.72rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--cian-d)}
+/* el avión estrella parte la tarjeta en dos a partir de tableta */
+@media (min-width:900px){
+  .fl-card--estrella{display:grid;grid-template-columns:1.04fr .96fr;
+    gap:clamp(1.8rem,3.4vw,3rem);align-items:center}
+  .fl-card--estrella .fl-foto{grid-column:2;grid-row:1;margin-bottom:0}
+  .fl-card--estrella .fl-cuerpo{grid-column:1;grid-row:1}
+}
+
+/* cierre de la sección de SIMULADORES: aviones y simuladores, contratos separados.
+   Vivía al final de `#aviones`; se mudó para que la correspondencia avión↔simulador se
+   enuncie como dato técnico y no como gancho de venta desde la sección de aviones. */
+.cierre{max-width:var(--maxw);margin:clamp(2.6rem,5vw,4rem) auto 0;
+  display:grid;grid-template-columns:1fr auto;align-items:center;gap:clamp(1.6rem,3vw,3rem);
+  padding:clamp(1.8rem,3.4vw,2.8rem);border-radius:22px;color:var(--blanco);
+  background:linear-gradient(150deg,var(--abismo) 0%,#062042 100%)}
+.cierre h3{font-size:clamp(1.4rem,2.4vw,2rem);margin-bottom:.8rem}
+.cierre p{color:#b7c8de;font-size:1rem;max-width:62ch}
+
+/* ============ CÓMO FUNCIONA ============ */
+.steps{max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(1.8rem,3.4vw,3.2rem)}
+.step{padding-top:1.5rem;border-top:2px solid var(--cian)}
+.step .sn{font-family:var(--grotesk);font-weight:500;font-size:.85rem;letter-spacing:.16em;color:var(--cian-d);margin-bottom:1.4rem}
+.step h3{font-size:clamp(1.4rem,2.4vw,1.9rem);color:var(--ink);margin-bottom:.6rem}
+.step p{color:var(--ink2);font-size:1rem}
+/* botón de cierre de sección, común a «cómo funciona» y testimonios */
+.sec-cta{max-width:var(--maxw);margin:clamp(2.4rem,4vw,3.2rem) auto 0;display:flex}
+
+/* ============ TESTIMONIOS ============ */
+.tst-wrap{max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:clamp(2.2rem,5vw,4.5rem)}
+/* Segundo rango del `.eyebrow`, no un componente nuevo: hereda su geometría
+   (.72rem / .24em / filete de 30 px) y solo baja de color, para que a 60 px del
+   eyebrow de la sección se lea como la misma pieza en un escalón menor.
+   ⚠️ Este bloque tiene que ir DESPUÉS de la regla `.eyebrow` de la zona de tipografía:
+   misma especificidad, gana la última. Si se sube ahí arriba, la etiqueta sale cian. */
+.eyebrow--sub{color:var(--ink2)}
+.eyebrow--sub::before{background:currentColor;opacity:.45}
+.tst .eyebrow--sub{margin-bottom:1.1rem}
+.tst .stars{display:flex;gap:.2rem;margin-bottom:1.3rem}
+.tst .stars svg{width:17px;height:17px;fill:var(--cian-d)}
+.tst blockquote{font-family:var(--display);font-weight:500;font-size:clamp(1.25rem,2vw,1.6rem);line-height:1.34;
+  color:var(--ink);margin-bottom:1.6rem;letter-spacing:-.02em}
+.tst .who{display:flex;align-items:center;gap:.9rem;padding-top:1.2rem;border-top:1px solid var(--line)}
+.tst .who .av{width:46px;height:46px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;
+  font-family:var(--grotesk);font-weight:500;color:#fff;background:var(--abismo)}
+.tst .who .wn{font-family:var(--grotesk);font-weight:500;font-size:1rem;color:var(--ink)}
+/* `.rol`, no `.wr`: `.wr` es la animación palabra a palabra del titular y dejaba los dos
+   cargos invisibles hasta que saltaba la red de seguridad de los 2,6 s */
+.tst .who .rol{color:var(--ink2);font-size:.86rem}
+
+/* ============ CONTACTO ============ */
+.contact-grid{max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:clamp(2.2rem,5vw,4.5rem);align-items:start}
+/* las dos columnas tienen alturas muy distintas: centrándolas, el aire sobrante se
+   reparte arriba y abajo en vez de acumularse en un hueco bajo el teléfono */
+@media (min-width:900px){.contact-grid{align-items:center}}
+.contact-copy h2{font-size:clamp(2rem,4.4vw,3.4rem);color:var(--ink);margin-bottom:1.2rem}
+.contact-copy p{font-size:1.06rem;margin-bottom:2rem;max-width:42ch}
+/* la fila del índice de sección: `#contacto` no usa `.sec-head`, así que necesita la suya */
+.contact-copy .top{display:flex;justify-content:space-between;align-items:baseline;
+  gap:1rem;flex-wrap:wrap}
+/* sobre la banda azul los colores por defecto del índice no llegan a AA:
+   --cian-d cae a 3,68:1. Se usan los dos tonos que la propia banda ya emplea
+   para eyebrow y copy, que sí pasan (#284159 = 7,04:1 y #0e4c6b = 5,89:1). */
+.band .section-index{color:#284159}
+.band .section-index b{color:#0e4c6b}
+.contact-list{display:flex;flex-direction:column;gap:1rem}
+.contact-list a{display:inline-flex;align-items:center;gap:.8rem;color:var(--ink);font-family:var(--grotesk);font-size:1.02rem}
+.contact-list a:hover{color:#0e4c6b}
+.contact-list svg{width:20px;height:20px;stroke:#0e4c6b;stroke-width:1.6;fill:none;flex:none}
+.form .fhead{font-family:var(--grotesk);font-weight:500;font-size:1.05rem;margin-bottom:1.2rem;color:var(--ink)}
+.field{margin-bottom:1rem}
+.field label{display:block;font-family:var(--grotesk);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);margin-bottom:.4rem}
+.field input,.field select{width:100%;font-family:var(--body);font-size:.97rem;color:var(--ink);
+  background:#fff;border:1px solid var(--line);border-radius:10px;padding:.82em 1em;
+  transition:border-color .3s var(--ease),box-shadow .3s var(--ease)}
+.field input::placeholder{color:var(--ink3)}
+.field input:focus,.field select:focus{outline:none;border-color:var(--cian-d);box-shadow:0 0 0 3px rgba(19,111,150,.15)}
+.field select{appearance:none;-webkit-appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23136f96' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>");
+  background-repeat:no-repeat;background-position:right 1em center}
+.form .btn-ink{width:100%;justify-content:center;margin-top:.4rem}
+.form-ok{display:none;margin-top:1rem;font-family:var(--grotesk);font-size:.9rem;color:#0e4c6b;text-align:center;
+  padding:.75em;border-radius:10px;background:rgba(19,111,150,.1)}
+.form-ok.show{display:block}
+
+/* ============ FOOTER ============ */
+.footer{padding:clamp(2.8rem,5vw,3.8rem) var(--edge) 2.4rem;border-top:1px solid var(--line)}
+.footer-in{max-width:var(--maxw);margin:0 auto;display:flex;justify-content:space-between;gap:2rem;flex-wrap:wrap;align-items:flex-start}
+.footer .blogo{height:34px;width:auto}
+.footer .ftag{color:var(--ink2);max-width:34ch;margin-top:.9rem;font-size:.94rem}
+.foot-nav{display:flex;gap:2rem;flex-wrap:wrap}
+.foot-nav a{display:inline-flex;align-items:center;min-height:44px;
+  font-family:var(--grotesk);font-size:.92rem;color:var(--ink2);transition:color .3s var(--ease)}
+.foot-nav a:hover{color:var(--cian-d)}
+.foot-bottom{max-width:var(--maxw);margin:2.6rem auto 0;padding-top:1.4rem;border-top:1px solid var(--line2);
+  display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-family:var(--grotesk);font-size:.8rem;color:var(--ink3)}
+
+/* ============ SCROLL-DRIVEN (mejora progresiva, igual que la Demo 1) ============ */
+@supports (animation-timeline:view()){
+  @media (prefers-reduced-motion:no-preference){
+    .ghost{animation:ghostpan linear both;animation-timeline:scroll(root);animation-range:0 60vh}
+    @keyframes ghostpan{to{transform:translate(-50%,-50%) translateX(-14%) scale(1.12)}}
+    .plane-wrap{animation:planescroll linear both;animation-timeline:scroll(root);animation-range:0 80vh}
+    @keyframes planescroll{to{transform:translateY(14%) scale(1.1)}}
+  }
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:1000px){
+  /* El `transform` y el `backdrop-filter` de `.nav` lo convierten en bloque contenedor de
+     sus descendientes `position:fixed`, así que `inset:0` no resolvía contra el viewport
+     sino contra la pastilla del nav: quedaban 14 px de página visibles a cada lado y otros
+     tantos arriba. Los márgenes negativos devuelven el panel al borde real de la pantalla
+     —`-50vw` en horizontal, `--nav-top` en vertical— y `margin` entra en la transición para
+     que acompañe a la pastilla cuando esta sube al pasar a `.scrolled`. */
+  .nav-links{position:fixed;top:0;left:50%;width:100vw;
+    margin:calc(-1 * var(--nav-top)) 0 0 -50vw;
+    flex-direction:column;justify-content:center;align-items:center;
+    height:100svh;gap:1.2rem;background:rgba(3,10,26,.96);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+    opacity:0;pointer-events:none;transform:translateY(-10px);
+    transition:opacity .5s var(--ease),transform .5s var(--ease),margin .5s var(--ease);z-index:-1}
+  .nav.open .nav-links{opacity:1;pointer-events:auto;transform:none}
+  .nav-links a:not(.btn){font-size:1.25rem}
+  .nav-links .btn{margin-top:.6rem}
+  .nav-toggle{display:flex}
+}
+/* BANDA MEDIA DEL AVIÓN (561-1250 px). DECISIÓN DE COMPOSICIÓN, NO ARREGLO DE UN FALLO.
+   Que quede claro para quien lo lea dentro de seis meses: los DOS estados pasan AA con
+   0 px de tinta por debajo del umbral. Esto no sostiene la accesibilidad de nada; se hizo
+   porque el avión a plena opacidad se cruza con el texto en esta banda.
+   El bloque de texto del hero mide 620 px fijos, así que por debajo de ~1250 px deja de
+   haber hueco a su derecha. Medido, solape del avión con el `h1`: 256×36 px a 768 (y ahí
+   además el fuselaje cae encima de la píldora del badge), 146×98 a 1000 y 98×108 a 1100,
+   donde el ala pasa justo por la palabra «Sin» del titular.
+   Subirlo al aire que queda entre el nav y el texto no vale, porque ese aire depende de
+   la ALTURA del viewport: son 210 px a 768×1024 pero solo 73 px a 1250×900.
+   Solución: el mismo recurso que ya usa la página por debajo de 560 px — el avión pasa a
+   textura de fondo, con opacidad baja y difuminado por la izquierda, para que pueda
+   cruzarse con el texto sin ensuciarlo. Sigue estando y sigue moviéndose, que es lo que
+   pidió el cliente (Loom 0:19).
+   Si alguien prefiere el avión entero y nítido en esta banda, es defendible: revertir a
+   `top:26%;right:1%;width:min(46vw,660px)` y borrar este bloque. No se corta nada en
+   ninguno de los dos estados — el «ala cortada» que se reportó el 12/08 era un falso
+   positivo de medición, ver §6 ter del informe. */
+@media (min-width:561px) and (max-width:1250px){
+  .plane-wrap{top:12%;right:-8%;width:min(92vw,760px);opacity:.24;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 40%);
+            mask-image:linear-gradient(90deg,transparent 0,#000 40%)}
+}
+@media (max-width:900px){
+  .why-grid{grid-template-columns:repeat(2,1fr)}
+  .acc-grid{grid-template-columns:1fr}
+  .fl-resto{grid-template-columns:1fr}
+  .cierre{grid-template-columns:1fr;align-items:start}
+  .sim-show{grid-template-columns:1fr;gap:1.8rem}
+  .steps{grid-template-columns:1fr;gap:1.8rem}
+  .tst-wrap,.contact-grid{grid-template-columns:1fr}
+  /* por debajo de 900 px la estela deja de pasar por encima del titular y cruza en
+     diagonal las primeras líneas del párrafo: ahí ya no aporta, estorba */
+  .contrail{display:none}
+}
+@media (max-width:640px){
+  .why-grid{grid-template-columns:1fr}
+  .why-txt{max-width:none}
+  .fl-top{flex-direction:column;align-items:flex-start;gap:.4rem}
+  .fl-badge{text-align:left}
+}
+@media (max-width:560px){
+  :root{--edge:20px}
+  /* en móvil el avión queda detrás de la franja de datos: se baja la opacidad y
+     se difumina por la izquierda para no comprometer la legibilidad (AA) */
+  .plane-wrap{width:118vw;right:-24vw;top:auto;bottom:2%;opacity:.18;animation:none!important;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 42%);mask-image:linear-gradient(90deg,transparent 0,#000 42%)}
+  .plane-wrap img{animation:none!important}
+  /* a 38 % los travesaños de la E y la L caían justo detrás del párrafo y dibujaban
+     rectángulos sobre el texto corrido; a 26 % la palabra queda tras el titular */
+  .ghost{font-size:40vw;top:26%;animation:none!important}
+  .contrail{display:none}
+  .hero-figs{gap:1.4rem 2rem}
+}
+
+/* ============ REDUCED MOTION ============ */
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .js .reveal,.js .wr{opacity:1!important;transform:none!important;filter:none!important}
+  /* con `.js` delante para ganarle en especificidad a la regla que esconde el trazo */
+  .js .contrail path,.contrail path{stroke-dashoffset:0}
+}
+</style>
+</head>
+
+<body>
+<!-- Sim Solutions — Fusión C · lectura literal · ES -->
+
+<!-- ===================== NAV (pastilla circular de la Demo 1) ===================== -->
+<nav class="nav" id="nav" aria-label="Principal">
+  <a href="#top" class="brand" aria-label="Sim Solutions inicio"><img src="assets/logo_sim_white.png" alt="Sim Solutions"></a>
+  <div class="nav-links" id="navlinks">
+    <a href="#top">Inicio</a>
+    <a href="#aviones">Aviones</a>
+    <a href="#simuladores">Simuladores</a>
+    <a href="#como-funciona">Cómo funciona</a>
+    <a href="#testimonios">Testimonios</a>
+    <a href="#contacto" class="btn btn-luz">Contáctanos <span class="arw">→</span></a>
+  </div>
+  <button class="nav-toggle" id="navtoggle" aria-label="Abrir menú" aria-expanded="false"><span></span></button>
+</nav>
+
+<!-- ===================== HERO OSCURO ===================== -->
+<header class="hero" id="top" aria-labelledby="h-hero">
+  <div class="ghost" aria-hidden="true">VUELO</div>
+
+  <div class="plane-wrap" aria-hidden="true">
+    <img src="assets/airplanes/cessna-172-hero.png" alt="">
+  </div>
+
+  <svg class="contrail" id="contrail" viewBox="0 0 600 400" aria-hidden="true" preserveAspectRatio="none">
+    <defs><linearGradient id="trailg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#33bfef" stop-opacity="0"/>
+      <stop offset="1" stop-color="#33bfef" stop-opacity=".9"/>
+    </linearGradient></defs>
+    <path d="M-20 240 C 160 200, 320 150, 600 60"/>
+  </svg>
+
+  <div class="hero-inner">
+    <span class="section-index hero-index"><b>01</b> — Inicio</span>
+    <span class="hero-badge"><span class="dot"></span> Aviones de entrenamiento y simuladores aprobados por la FAA</span>
+    <h1 id="h-hero">
+      <span class="wr">Haz</span> <span class="wr">crecer</span> <span class="wr">tu</span> <span class="wr">flota.</span>
+      <span class="wr it">Sin</span> <span class="wr it">capital</span>
+      <span class="wr it">por</span> <span class="wr it">delante.</span>
+    </h1>
+    <p class="lead reveal">Sim Solutions arrienda aviones de entrenamiento nuevos y usados —y simuladores aprobados por la FAA— a escuelas de vuelo y universidades de aviación de todo Estados Unidos. Un pago mensual fijo. Con nuestro equipo de soporte detrás.</p>
+    <div class="hero-cta reveal">
+      <a href="#contacto" class="btn btn-luz">Pregunta qué hay disponible <span class="arw">→</span></a>
+      <a href="#como-funciona" class="btn btn-glass">Cómo funciona <span class="arw">↓</span></a>
+    </div>
+    <!-- Franja de datos en términos de avión. Dos de los tres valores son datos
+         que solo el cliente puede cerrar: van marcados, no inventados. -->
+    <div class="hero-figs reveal">
+      <div class="hero-fig"><div class="fv">Fijo</div><div class="fl">Pago mensual</div></div>
+      <div class="hero-fig"><div class="fv"><span class="pend pend-dark">Por confirmar</span></div><div class="fl">Plazo del avión (desde)</div></div>
+      <div class="hero-fig"><div class="fv"><span class="pend pend-dark">1 o 2 · por confirmar</span></div><div class="fl">Semanas hasta el avión</div></div>
+    </div>
+  </div>
+
+  <!-- Misma declaración que las tres fotos de la flota. La foto del hero es un Cessna 172
+       real (PH-VOP, matrícula holandesa) que NO pertenece a Sim Solutions. -->
+  <span class="hero-ref">Imagen de referencia</span>
+</header>
+
+<!-- ===================== BENEFICIOS · «cuadrados» + numeración 01–06 ===================== -->
+<section class="section" id="beneficios" aria-labelledby="h-beneficios">
+  <div class="sec-head">
+    <div class="top">
+      <span class="eyebrow reveal">Las condiciones</span>
+      <span class="section-index"><b>02</b> — Ventajas</span>
+    </div>
+    <h2 class="reveal" id="h-beneficios">Por qué las escuelas arriendan <span class="it">en vez de comprar.</span></h2>
+    <p class="lead reveal">Elegir el avión es la parte fácil. Estas son las condiciones que deciden el acuerdo.</p>
+  </div>
+
+  <div class="why-grid">
+    <div class="why-cell reveal">
+      <div class="why-top">
+        <span class="why-ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,80V192a8,8,0,0,1-8,8H56a16,16,0,0,1-16-16V56A16,16,0,0,0,56,72H216A8,8,0,0,1,224,80Z" opacity="0.2"/><path d="M216,64H56a8,8,0,0,1,0-16H192a8,8,0,0,0,0-16H56A24,24,0,0,0,32,56V184a24,24,0,0,0,24,24H216a16,16,0,0,0,16-16V80A16,16,0,0,0,216,64Zm0,128H56a8,8,0,0,1-8-8V78.63A23.84,23.84,0,0,0,56,80H216Zm-48-60a12,12,0,1,1,12,12A12,12,0,0,1,168,132Z"/></svg></span>
+        <span class="why-num">01</span>
+      </div>
+      <h3 class="why-title">Pagos mensuales fijos</h3>
+      <p class="why-txt">Sin desembolso de capital para poner el avión en la línea de vuelo. Una sola cifra que presupuestas durante toda la vida del contrato.</p>
+    </div>
+
+    <div class="why-cell reveal">
+      <div class="why-top">
+        <span class="why-ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128 20c9 0 16 15 17 36l1 24 82 50v22l-83-24-3 42 28 24v16l-42-11-42 11v-16l28-24-3-42-83 24v-22l82-50 1-24c1-21 8-36 17-36z"/></svg></span>
+        <span class="why-num">02</span>
+      </div>
+      <h3 class="why-title">Acceso a aviones de entrenamiento</h3>
+      <p class="why-txt">Accede a distintos tipos de avión. Pon en la línea de vuelo el que tu programa necesita de verdad, no el que podías permitirte comprar.</p>
+    </div>
+
+    <div class="why-cell reveal">
+      <div class="why-top">
+        <span class="why-ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M232,128c0,12.51-17.82,21.95-22.68,33.69-4.68,11.32,1.42,30.65-7.78,39.85s-28.53,3.1-39.85,7.78C150,214.18,140.5,232,128,232s-22-17.82-33.69-22.68c-11.32-4.68-30.65,1.42-39.85-7.78s-3.1-28.53-7.78-39.85C41.82,150,24,140.5,24,128s17.82-22,22.68-33.69C51.36,83,45.26,63.66,54.46,54.46S83,51.36,94.31,46.68C106.05,41.82,115.5,24,128,24S150,41.82,161.69,46.68c11.32,4.68,30.65-1.42,39.85,7.78s3.1,28.53,7.78,39.85C214.18,106.05,232,115.5,232,128Z" opacity="0.2"/><path d="M225.86,102.82c-3.77-3.94-7.67-8-9.14-11.57-1.36-3.27-1.44-8.69-1.52-13.94-.15-9.76-.31-20.82-8-28.51s-18.75-7.85-28.51-8c-5.25-.08-10.67-.16-13.94-1.52-3.56-1.47-7.63-5.37-11.57-9.14C146.28,23.51,138.44,16,128,16s-18.27,7.51-25.18,14.14c-3.94,3.77-8,7.67-11.57,9.14C88,40.64,82.56,40.72,77.31,40.8c-9.76.15-20.82.31-28.51,8S41,67.55,40.8,77.31c-.08,5.25-.16,10.67-1.52,13.94-1.47,3.56-5.37,7.63-9.14,11.57C23.51,109.72,16,117.56,16,128s7.51,18.27,14.14,25.18c3.77,3.94,7.67,8,9.14,11.57,1.36,3.27,1.44,8.69,1.52,13.94.15,9.76.31,20.82,8,28.51s18.75,7.85,28.51,8c5.25.08,10.67.16,13.94,1.52,3.56,1.47,7.63,5.37,11.57,9.14C109.72,232.49,117.56,240,128,240s18.27-7.51,25.18-14.14c3.94-3.77,8-7.67,11.57-9.14,3.27-1.36,8.69-1.44,13.94-1.52,9.76-.15,20.82-.31,28.51-8s7.85-18.75,8-28.51c.08-5.25.16-10.67,1.52-13.94,1.47-3.56,5.37-7.63,9.14-11.57C232.49,146.28,240,138.44,240,128S232.49,109.73,225.86,102.82Zm-11.55,39.29c-4.79,5-9.75,10.17-12.38,16.52-2.52,6.1-2.63,13.07-2.73,19.82-.1,7-.21,14.33-3.32,17.43s-10.39,3.22-17.43,3.32c-6.75.1-13.72.21-19.82,2.73-6.35,2.63-11.52,7.59-16.52,12.38S132,224,128,224s-9.15-4.92-14.11-9.69-10.17-9.75-16.52-12.38c-6.1-2.52-13.07-2.63-19.82-2.73-7-.1-14.33-.21-17.43-3.32s-3.22-10.39-3.32-17.43c-.1-6.75-.21-13.72-2.73-19.82-2.63-6.35-7.59-11.52-12.38-16.52S32,132,32,128s4.92-9.15,9.69-14.11,9.75-10.17,12.38-16.52c2.52-6.1,2.63-13.07,2.73-19.82.1-7,.21-14.33,3.32-17.43S70.51,56.9,77.55,56.8c6.75-.1,13.72-.21,19.82-2.73,6.35-2.63,11.52-7.59,16.52-12.38S124,32,128,32s9.15,4.92,14.11,9.69,10.17,9.75,16.52,12.38c6.1,2.52,13.07,2.63,19.82,2.73,7,.1,14.33.21,17.43,3.32s3.22,10.39,3.32,17.43c.1,6.75.21,13.72,2.73,19.82,2.63,6.35,7.59,11.52,12.38,16.52S224,124,224,128,219.08,137.15,214.31,142.11ZM173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34Z"/></svg></span>
+        <span class="why-num">03</span>
+      </div>
+      <h3 class="why-title">Aviones listos para volar</h3>
+      <p class="why-txt">Tu avión llega listo para la línea de vuelo, no como un proyecto que haya que terminar antes de volarlo.</p>
+    </div>
+
+    <div class="why-cell reveal">
+      <div class="why-top">
+        <span class="why-ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128,80a24,24,0,1,1-24-24A24,24,0,0,1,128,80Zm40,72a24,24,0,1,0,24,24A24,24,0,0,0,168,152Z" opacity="0.2"/><path d="M40,88H73a32,32,0,0,0,62,0h81a8,8,0,0,0,0-16H135a32,32,0,0,0-62,0H40a8,8,0,0,0,0,16Zm64-24A16,16,0,1,1,88,80,16,16,0,0,1,104,64ZM216,168H199a32,32,0,0,0-62,0H40a8,8,0,0,0,0,16h97a32,32,0,0,0,62,0h17a8,8,0,0,0,0-16Zm-48,24a16,16,0,1,1,16-16A16,16,0,0,1,168,192Z"/></svg></span>
+        <span class="why-num">04</span>
+      </div>
+      <h3 class="why-title">Leasing de aviones flexible</h3>
+      <p class="why-txt">Los programas cambian y las matrículas se mueven. El contrato se estructura en torno a la flota que necesitas ahora. Cuando eso cambie, hablamos.</p>
+    </div>
+
+    <div class="why-cell reveal">
+      <div class="why-top">
+        <span class="why-ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128,40a88,88,0,1,0,88,88A88,88,0,0,0,128,40Z" opacity="0.2"/><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"/></svg></span>
+        <span class="why-num">05</span>
+      </div>
+      <h3 class="why-title">Plazos que eliges tú</h3>
+      <p class="why-txt">El leasing de simuladores va de 12 a 72 meses: lo bastante corto para cubrir una temporada alta y lo bastante largo para construir un programa alrededor.</p>
+      <span class="pend pend-block">Plazo mínimo de avión por confirmar</span>
+    </div>
+
+    <div class="why-cell reveal">
+      <div class="why-top">
+        <span class="why-ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><rect x="34" y="140" width="46" height="80" rx="9" opacity="0.25"/><rect x="105" y="96" width="46" height="124" rx="9" opacity="0.45"/><rect x="176" y="44" width="46" height="176" rx="9"/></svg></span>
+        <span class="why-num">06</span>
+      </div>
+      <h3 class="why-title">Espacio para crecer</h3>
+      <p class="why-txt">Suma aviones en la escuela que ya diriges, o abre una segunda sede, sin poner capital por delante en ninguna de las dos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== QUÉ ARRENDAMOS · dos accesos ===================== -->
+<section class="section" id="productos" aria-labelledby="h-productos">
+  <div class="sec-head">
+    <div class="top">
+      <span class="eyebrow reveal">Qué arrendamos</span>
+      <span class="section-index"><b>03</b> — Productos</span>
+    </div>
+    <h2 class="reveal" id="h-productos">Aviones <span class="it">y simuladores.</span></h2>
+    <p class="lead reveal">Dos productos, dos contratos separados. Empieza por el que tu programa necesite primero.</p>
+  </div>
+
+  <!-- DOS ACCESOS · pedido literal del cliente (2026-08-10, 3:29):
+       «que sean dos pestañas en vez de tres: que sean aviones y que sean simuladores.
+        Que para que den clic y obviamente vaya a otro lado.»
+       Las páginas destino (aviones.html / simuladores.html) TODAVÍA NO EXISTEN. Hasta que
+       se construyan, cada acceso lleva a su sección de esta misma página, que es su
+       equivalente funcional. El destino final queda declarado en `data-destino-final`
+       para que al construirlas solo haya que cambiar el `href`. No convertir esto en una
+       lista de modelos: eso es exactamente lo que el cliente descartó. -->
+  <ul class="acc-grid">
+    <li class="acc reveal" data-destino-final="aviones.html">
+      <div class="acc-top">
+        <span class="acc-ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128 20c9 0 16 15 17 36l1 24 82 50v22l-83-24-3 42 28 24v16l-42-11-42 11v-16l28-24-3-42-83 24v-22l82-50 1-24c1-21 8-36 17-36z"/></svg></span>
+        <span class="acc-num">01</span>
+      </div>
+      <h3 id="acc-aviones">Aviones de entrenamiento</h3>
+      <!-- La enumeración de marcas se queda AQUÍ y no en el encabezado de #aviones: es
+           donde el lector decide si hace clic. -->
+      <p>Aviones nuevos y usados para tu línea de vuelo. Cessna, Piper, Tecnam y otros.</p>
+      <a href="#aviones" class="link acc-link" aria-describedby="acc-aviones">Ver los aviones <span class="arw">→</span></a>
+    </li>
+
+    <li class="acc reveal" data-destino-final="simuladores.html">
+      <div class="acc-top">
+        <span class="acc-ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,80V176a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V80a8,8,0,0,1,8-8H216A8,8,0,0,1,224,80Z" opacity="0.2"/><path d="M216,56H40A16,16,0,0,0,24,72V176a16,16,0,0,0,16,16H80v16a8,8,0,0,0,16,0V192h64v16a8,8,0,0,0,16,0V192h40a16,16,0,0,0,16-16V72A16,16,0,0,0,216,56Zm0,120H40V72H216V176ZM72,112a8,8,0,0,1,8-8h96a8,8,0,0,1,0,16H80A8,8,0,0,1,72,112Zm0,32a8,8,0,0,1,8-8h56a8,8,0,0,1,0,16H80A8,8,0,0,1,72,144Z"/></svg></span>
+        <span class="acc-num">02</span>
+      </div>
+      <h3 id="acc-simuladores">Simuladores aprobados por la FAA</h3>
+      <!-- NO decir «cada dispositivo es un AATD»: la página del cliente no presenta el
+           Redbird LD como AATD (cero apariciones de «FAA» y «AATD» en redbird.html). -->
+      <p>VirtualFly SOLO PRO, Redbird LD y Frasca RTD, con su propio contrato. El SOLO PRO y el RTD son dispositivos AATD aprobados por la FAA.</p>
+      <a href="#simuladores" class="link acc-link" aria-describedby="acc-simuladores">Ver los simuladores <span class="arw">→</span></a>
+    </li>
+  </ul>
+</section>
+
+<!-- ===================== AVIONES · marcas, no modelos ===================== -->
+<section class="section" id="aviones" aria-labelledby="h-aviones">
+  <div class="sec-head">
+    <div class="top">
+      <span class="eyebrow reveal">Nuestra flota</span>
+      <span class="section-index"><b>04</b> — Aviones</span>
+    </div>
+    <h2 class="reveal" id="h-aviones">Aviones de entrenamiento <span class="it">nuevos y usados.</span></h2>
+    <p class="lead reveal">Nuevos y usados, con un pago mensual fijo. Cuéntanos qué vuela tu programa y te decimos qué tenemos.</p>
+  </div>
+
+  <div class="flota">
+    <!-- FOTOS DE LA SECCIÓN: ninguna es de la flota de Sim Solutions.
+         Son aeronaves ajenas del mismo tipo, usadas solo para ilustrar la marca, y por eso
+         cada una lleva la etiqueta «Imagen de referencia» visible sobre la propia foto.
+         Antes de publicar: no describir estas unidades como propias ni citar sus matrículas
+         como parte del inventario. Si el cliente aporta fotos reales de su flota, sustituir
+         estos archivos y retirar la etiqueta. Licencias verificadas una a una más abajo. -->
+
+    <!-- El avión estrella abre la sección, con el peso tipográfico de la fila entera.
+         FOTO · Cessna 172R «PH-VOP» en Hilversum (EHHV), 2014 — autor: Alf van Beem.
+         Licencia: CC0 1.0 (dominio público, sin atribución obligatoria). Uso comercial libre.
+         Origen: https://commons.wikimedia.org/wiki/File:PH-VOP_Cessna_172R_Skyhawk_at_Hilversum_Airport_(ICAO_EHHV).JPG -->
+    <article class="fl-card fl-card--estrella reveal">
+      <figure class="fl-foto">
+        <img src="assets/airplanes/cessna-172-referencia.jpg" width="1400" height="875" loading="lazy" decoding="async"
+             alt="Imagen de referencia: un Cessna 172 Skyhawk, monomotor de ala alta, en vuelo. La fotografía es ilustrativa y no corresponde a la flota de Sim Solutions.">
+        <figcaption class="fl-ref">Imagen de referencia</figcaption>
+      </figure>
+      <div class="fl-cuerpo">
+        <div class="fl-top"><span class="fl-num">01</span><span class="fl-badge">Nuestro avión estrella</span></div>
+        <h3>Cessna 172</h3>
+        <p>El avión sobre el que se construyen casi todos los programas de piloto privado.</p>
+      </div>
+    </article>
+
+    <div class="fl-resto">
+      <!-- FOTO · Piper PA-28-151 Cherokee Warrior «N405DS», Delaware Airpark, 2019 — autor:
+           Roland Balik, fotógrafo de la Fuerza Aérea de EE. UU. (dover.af.mil).
+           Licencia: dominio público (obra de un funcionario federal estadounidense en acto de
+           servicio). Sin atribución obligatoria, uso comercial libre.
+           Origen: https://commons.wikimedia.org/wiki/File:Piper_PA-28-151_Cherokee_Warrior_N405DS.jpg
+           Nota: el escaparate es la MARCA, no el modelo. Ni la tarjeta ni el `alt` nombran el
+           PA-28, y no se menciona plataforma bimotor: ninguna fuente dice que el cliente
+           arriende bimotores (eso reintroducía el Seminole, descartado en 5:45). -->
+      <article class="fl-card reveal">
+        <figure class="fl-foto">
+          <img src="assets/airplanes/piper-pa28-referencia.jpg" width="1400" height="875" loading="lazy" decoding="async"
+               alt="Imagen de referencia: un avión Piper monomotor de ala baja, en vuelo. La fotografía es ilustrativa y no corresponde a la flota de Sim Solutions.">
+          <figcaption class="fl-ref">Imagen de referencia</figcaption>
+        </figure>
+        <div class="fl-top"><span class="fl-num">02</span></div>
+        <h3>Piper</h3>
+        <p>Alas bajas de referencia para el entrenamiento de piloto privado e instrumental. Pregúntanos qué Piper hay disponibles ahora mismo.</p>
+      </article>
+
+      <!-- FOTO · Dos Tecnam P2008 JC MK2 de la escuela de vuelo Bay Việt, 2022 — autor: Xhoailethi.
+           Licencia: CC0 1.0 (dominio público, sin atribución obligatoria). Uso comercial libre.
+           Origen: https://commons.wikimedia.org/wiki/File:2_m%C3%A1y_bay_Tecnam_P2008_JC_MK2_mang_s%E1%BB%91_hi%E1%BB%87u_VN-C918_V%C3%A0_VN-C919_c%E1%BB%A7a_Bay_Vi%E1%BB%87t.jpg
+           Nota: el modelo concreto que arrendará Sim Solutions está sin confirmar; la foto
+           ilustra la marca, no el modelo. -->
+      <article class="fl-card reveal">
+        <figure class="fl-foto">
+          <img src="assets/airplanes/tecnam-p2008-referencia.jpg" width="1400" height="875" loading="lazy" decoding="async"
+               alt="Imagen de referencia: dos avionetas de entrenamiento Tecnam de una escuela de vuelo, en plataforma. La fotografía es ilustrativa y no corresponde a la flota de Sim Solutions.">
+          <figcaption class="fl-ref">Imagen de referencia</figcaption>
+        </figure>
+        <div class="fl-top"><span class="fl-num">03</span></div>
+        <h3>Tecnam</h3>
+        <p>Pregunta a nuestro equipo qué aviones Tecnam están disponibles ahora mismo.</p>
+        <span class="pend pend-block">Modelos por confirmar</span>
+      </article>
+
+      <!-- Sin foto a propósito: «Y otros» no es un modelo, es un catálogo abierto. Poner aquí
+           la foto de un avión concreto contradiría el propio mensaje de la tarjeta. El panel
+           de marca mantiene la proporción de la fila sin afirmar nada que no sea cierto. -->
+      <article class="fl-card reveal">
+        <div class="fl-foto fl-foto--abierta" aria-hidden="true"><span>Catálogo abierto</span></div>
+        <div class="fl-top"><span class="fl-num">04</span></div>
+        <h3>Y otros</h3>
+        <p>Si tu programa vuela otra cosa, pregúntanos. Esta no es toda la lista.</p>
+      </article>
+    </div>
+  </div>
+
+  <!-- `#aviones` cierra con la nota de disponibilidad, que es su remate natural: la
+       disponibilidad es el motivo real por el que la escuela tiene que escribir. El bloque
+       `.cierre` que vivía aquí se mudó al final de `#simuladores`: usaba la correspondencia
+       avión↔simulador como gancho desde la sección de aviones, y ahí solo puede leerse
+       como «el simulador de tu avión». Se rentan por separado (2026-08-10, 5:23). -->
+  <p class="flota-nota reveal"><span>La disponibilidad cambia. Contacta con nuestro equipo para confirmar qué aviones están libres ahora mismo y cómo se estructura el contrato.</span></p>
+</section>
+
+<!-- ===================== SIMULADORES (única sección con otro fondo) ===================== -->
+<section class="section tint" id="simuladores" aria-labelledby="h-simuladores">
+  <div class="sec-head">
+    <div class="top">
+      <span class="eyebrow reveal">Nuestros simuladores</span>
+      <span class="section-index"><b>05</b> — Simuladores</span>
+    </div>
+    <h2 class="reveal" id="h-simuladores">Simuladores aprobados <span class="it">por la FAA.</span></h2>
+    <p class="lead reveal">Tres dispositivos para el entrenamiento en tierra, dos de ellos AATD aprobados por la FAA. Se arriendan con su propio contrato, por separado del avión.</p>
+  </div>
+
+  <div class="sim-show">
+    <div class="sim-stage reveal">
+      <img class="on" data-i="0" src="assets/hero_virtualfly.jpg" alt="Simulador VirtualFly SOLO PRO, cabina con triple pantalla y aviónica de vidrio">
+      <img data-i="1" src="assets/hero_redbird.jpg" alt="Simulador Redbird LD de doble puesto con pantallas envolventes">
+      <img data-i="2" src="assets/hero_frasca.jpg" alt="Simulador Frasca RTD con instructor y alumno entrenando">
+    </div>
+    <div class="sim-info reveal">
+      <div class="sl" id="simLabel">01 — VirtualFly</div>
+      <h3 id="simName">VirtualFly SOLO PRO</h3>
+      <p id="simDesc">Simulador AATD aprobado por la FAA para el entrenamiento avanzado de pilotos e instructores.</p>
+      <a href="#contacto" class="link">Más información <span class="arw">→</span></a>
+      <div class="sim-tabs" id="simTabs">
+        <button class="active" data-i="0"><span class="tl"><span class="tn">01</span> VirtualFly SOLO PRO</span><span class="dot"></span></button>
+        <button data-i="1"><span class="tl"><span class="tn">02</span> Redbird LD</span><span class="dot"></span></button>
+        <button data-i="2"><span class="tl"><span class="tn">03</span> Frasca RTD</span><span class="dot"></span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cierre de la sección de simuladores. El emparejamiento avión↔simulador vive AQUÍ y
+       solo aquí: es un dato técnico publicable (qué reproduce cada dispositivo, lo dice el
+       propio sitio del cliente), NUNCA un argumento de paquete. El cliente lo desmintió
+       expresamente: «se rentan por separado, son dos contratos separados» (2026-08-10, 5:23).
+       No añadir aquí ninguna frase que sugiera que arrendar un avión da acceso a su
+       simulador, ni al revés. Y no decir «cada simulador es un AATD»: el cliente no
+       presenta el Redbird LD como AATD en su propia web. -->
+  <div class="cierre reveal">
+    <div>
+      <h3>Aviones en la línea de vuelo, simuladores en tierra</h3>
+      <p>Arrendamos las dos cosas, con dos contratos separados. Nuestros AATD aprobados por la FAA son el VirtualFly SOLO PRO y el Frasca RTD, y cada dispositivo reproduce modelos de avión concretos: pregúntanos cuáles. Puedes tomar un simulador ahora y un avión cuando tu programa esté listo, o al revés.</p>
+    </div>
+    <a href="#contacto" class="btn btn-luz">Pregunta qué hay disponible <span class="arw">→</span></a>
+  </div>
+</section>
+
+<!-- ===================== CÓMO FUNCIONA ===================== -->
+<section class="section" id="como-funciona" aria-labelledby="h-como-funciona">
+  <div class="sec-head">
+    <div class="top">
+      <span class="eyebrow reveal">Cómo funciona</span>
+      <span class="section-index"><b>06</b> — Cómo funciona</span>
+    </div>
+    <h2 class="reveal" id="h-como-funciona">Tres pasos, <span class="it">alrededor de una semana.</span></h2>
+    <p class="lead reveal">Calificas, eliges tu avión y recibes la entrega. Todo el proceso puede completarse en alrededor de una semana.</p>
+  </div>
+  <div class="steps">
+    <div class="step reveal"><div class="sn">PASO 01</div><h3>Calificación</h3><p>Las escuelas de vuelo califican antes de redactar el contrato. Cuéntanos cómo es tu programa, tus instalaciones y el plazo que tienes en mente, y volvemos con lo que hay disponible para tu escuela.</p></div>
+    <div class="step reveal"><div class="sn">PASO 02</div><h3>Elige tu avión</h3><p>Escoge el avión que tu programa necesita —nuevo o usado— entre lo que tenemos disponible.</p></div>
+    <!-- El plazo de entrega del avión es UN SOLO dato y vive en UN SOLO sitio: la franja
+         del hero, que es donde lo pidió el cliente (1:17). El paso 03 describe qué pasa,
+         no cuánto tarda: dos píldoras del mismo dato se leen como dos preguntas distintas. -->
+    <div class="step reveal"><div class="sn">PASO 03</div><h3>Recibe la entrega</h3><p>Tu avión llega listo para la línea de vuelo.</p></div>
+  </div>
+  <div class="sec-cta reveal"><a href="#contacto" class="btn btn-ink">Pregunta qué hay disponible <span class="arw">→</span></a></div>
+</section>
+
+<!-- ===================== TESTIMONIOS ===================== -->
+<section class="section" id="testimonios" aria-labelledby="h-testimonios">
+  <div class="sec-head">
+    <div class="top">
+      <span class="eyebrow reveal">Opiniones de clientes</span>
+      <span class="section-index"><b>07</b> — Testimonios</span>
+    </div>
+    <h2 class="reveal" id="h-testimonios">Escuelas que ya <span class="it">trabajan con nosotros.</span></h2>
+    <p class="lead reveal">Dos de las escuelas con las que trabajamos, en sus propias palabras.</p>
+  </div>
+  <div class="tst-wrap">
+    <!-- Cada testimonio declara de qué producto habla. Los dos que hay son los de
+         simuladores del sitio real, y la página va al 80 % de aviones: sin la etiqueta,
+         lo que la cita de John D. dice de las horas de vuelo se lee sobre el avión, y en un
+         avión real las horas consumen vida de motor y célula. Etiqueta distinta en
+         cada uno: la cita de Sarah K. NO menciona los simuladores. -->
+    <figure class="tst reveal">
+      <span class="eyebrow eyebrow--sub">Sobre trabajar con nosotros</span>
+      <div class="stars" aria-label="5 de 5 estrellas">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>
+      </div>
+      <blockquote>La flexibilidad y el soporte de Sim Solutions han sido increíbles. Ahora ofrecemos un programa de entrenamiento más completo para nuestra base de estudiantes.</blockquote>
+      <figcaption class="who"><span class="av">SK</span><span><span class="wn">Sarah K.</span><br><span class="rol">Directora de Programa de Aviación</span></span></figcaption>
+    </figure>
+    <figure class="tst reveal">
+      <span class="eyebrow eyebrow--sub">Sobre nuestros simuladores</span>
+      <div class="stars" aria-label="5 de 5 estrellas">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>
+      </div>
+      <blockquote>El leasing con Sim Solutions transformó nuestro programa. Los simuladores son de primera y la instalación fue impecable. ¡Nuestros estudiantes aman el acceso ilimitado a horas de vuelo!</blockquote>
+      <figcaption class="who"><span class="av">JD</span><span><span class="wn">John D.</span><br><span class="rol">Dueño de Escuela de Vuelo</span></span></figcaption>
+    </figure>
+  </div>
+  <!-- Estado vacío honesto: el cliente eligió «escuelas que ya trabajan con nosotros»
+       (4:01) y esas las tiene que dar él, con permiso para nombrarlas. Mientras tanto la
+       sección enseña los dos testimonios de simulador que ya publica su sitio. -->
+  <div class="wrap"><span class="pend pend-block">Testimonios de escuelas con aviones: pendientes del cliente</span></div>
+  <div class="sec-cta reveal"><a href="#contacto" class="btn btn-ink">Pregunta qué hay disponible <span class="arw">→</span></a></div>
+</section>
+
+<!-- ===================== CONTACTO ===================== -->
+<section class="section band" id="contacto" aria-labelledby="h-contacto">
+  <!-- Segunda y última palabra de fondo de la página («VUELO» en el hero es la primera).
+       El cliente las citó en plural (0:19). Decorativa: aria-hidden, sin animación y
+       oculta por debajo de 900 px, donde la sección pasa a una columna. -->
+  <div class="cta-ghost" aria-hidden="true">DESPEGA</div>
+  <div class="contact-grid">
+    <div class="contact-copy">
+      <div class="top">
+        <span class="eyebrow reveal">Contacto</span>
+        <span class="section-index"><b>08</b> — Contacto</span>
+      </div>
+      <h2 class="reveal" id="h-contacto" style="margin-top:1.1rem">Habla con <span style="color:#0e4c6b">nuestro equipo.</span></h2>
+      <p class="reveal">Cuéntanos qué vuela hoy tu programa y a cuántos alumnos formas. Volvemos con lo que hay disponible para tu escuela y con las condiciones del contrato.</p>
+      <p class="reveal" style="margin-bottom:1rem;font-family:var(--grotesk);font-size:.92rem;color:#284159">O contáctanos directamente:</p>
+      <div class="contact-list reveal">
+        <a href="mailto:sales@airplanesims.com"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>sales@airplanesims.com</a>
+        <a href="tel:+14079251337"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>+1 (407) 925-1337</a>
+      </div>
+    </div>
+    <form class="form reveal" id="ctaForm" novalidate>
+      <div class="fhead">Solicita información</div>
+      <div class="field"><label for="f-escuela">Nombre de la escuela de vuelo</label>
+        <input id="f-escuela" name="escuela" type="text" placeholder="Nombre de tu escuela" required></div>
+      <div class="field"><label for="f-contacto">Persona de contacto</label>
+        <input id="f-contacto" name="contacto" type="text" placeholder="Nombre y apellido" required></div>
+      <div class="field"><label for="f-email">Correo electrónico</label>
+        <input id="f-email" name="email" type="email" placeholder="tu@escuela.com" required></div>
+      <div class="field"><label for="f-tel">Teléfono</label>
+        <input id="f-tel" name="telefono" type="tel" placeholder="+1 (___) ___-____" required></div>
+      <!-- El campo deja de llamarse «simulador»: si no, los avisos que recibe el
+           equipo comercial llegan mal etiquetados en cuanto entren aviones. -->
+      <div class="field"><label for="f-producto">¿Qué estás buscando?</label>
+        <select id="f-producto" name="producto" required>
+          <option value="" disabled selected>Selecciona una opción</option>
+          <option>Aviones</option>
+          <option>Simuladores</option>
+          <option>Aviones y simuladores</option>
+          <option>Aún no lo sé</option>
+        </select></div>
+      <button type="submit" class="btn btn-ink">Enviar mi mensaje <span class="arw">→</span></button>
+      <p class="form-ok" id="formOk">Recibido. Nuestro equipo te contactará pronto. ✈</p>
+    </form>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer">
+  <div class="footer-in">
+    <div>
+      <a href="#top" class="brand"><img class="blogo" src="assets/logo_sim_dark.png" alt="Sim Solutions"></a>
+      <p class="ftag">Leasing de aviones de entrenamiento nuevos y usados, y de simuladores AATD aprobados por la FAA, para escuelas de vuelo y universidades de aviación.</p>
+    </div>
+    <nav class="foot-nav" aria-label="Pie de página">
+      <a href="#top">Inicio</a><a href="#aviones">Aviones</a><a href="#simuladores">Simuladores</a>
+      <a href="#como-funciona">Cómo funciona</a><a href="#testimonios">Testimonios</a><a href="#contacto">Contacto</a>
+    </nav>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2026 Sim Solutions. Todos los derechos reservados.</span>
+    <span>Aviones de entrenamiento · Simuladores AATD aprobados por la FAA</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduce=window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+  /* --- red de seguridad: si algo falla, se revela todo --- */
+  function revealAll(){
+    document.querySelectorAll(".reveal,.wr").forEach(function(el){el.classList.add("in");});
+  }
+  setTimeout(revealAll,2600);
+
+  /* --- palabra por palabra en el titular del hero --- */
+  function heroWords(){
+    document.querySelectorAll(".hero .wr").forEach(function(el,i){
+      setTimeout(function(){el.classList.add("in");},120+i*70);
+    });
+    var c=document.getElementById("contrail"); if(c)c.classList.add("in");
+  }
+  window.addEventListener("load",heroWords);
+  if(document.readyState==="complete")heroWords();
+
+  /* --- reveals por scroll ---
+     El conteo de cifras se retiró con la franja de datos antigua: los valores de
+     avión aún no están confirmados y no hay ningún número que animar. */
+  if("IntersectionObserver" in window && !reduce){
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          e.target.classList.add("in");
+          io.unobserve(e.target);
+        }
+      });
+    },{threshold:.14,rootMargin:"0px 0px -7% 0px"});
+    document.querySelectorAll(".reveal").forEach(function(el){io.observe(el);});
+  }else{revealAll();}
+
+  /* --- nav: condensar al hacer scroll + menú móvil --- */
+  var nav=document.getElementById("nav"),toggle=document.getElementById("navtoggle"),navlinks=document.getElementById("navlinks");
+  window.addEventListener("scroll",function(){
+    if(window.scrollY>40)nav.classList.add("scrolled");else nav.classList.remove("scrolled");
+  },{passive:true});
+  toggle.addEventListener("click",function(){
+    var open=nav.classList.toggle("open");
+    toggle.setAttribute("aria-expanded",open?"true":"false");
+    toggle.setAttribute("aria-label",open?"Cerrar menú":"Abrir menú");
+  });
+  navlinks.addEventListener("click",function(e){
+    if(e.target.closest("a")){nav.classList.remove("open");toggle.setAttribute("aria-expanded","false");}
+  });
+
+  /* --- parallax suave del avión y de la palabra de fondo (igual que la Demo 1) --- */
+  if(!reduce && window.matchMedia("(min-width:561px)").matches){
+    var planeImg=document.querySelector(".plane-wrap img");
+    var ghost=document.querySelector(".hero .ghost");
+    var tx=0,ty=0,cx=0,cy=0,ticking=false;
+    window.addEventListener("mousemove",function(e){
+      tx=(e.clientX/window.innerWidth-.5);
+      ty=(e.clientY/window.innerHeight-.5);
+      if(!ticking){ticking=true;requestAnimationFrame(loop);}
+    });
+    function loop(){
+      cx+=(tx-cx)*.06; cy+=(ty-cy)*.06;
+      if(planeImg)planeImg.style.transform="rotate(-4deg) translate3d("+(cx*26)+"px,"+(cy*18)+"px,0)";
+      if(ghost)ghost.style.marginLeft=(cx*-14)+"px";
+      if(Math.abs(tx-cx)>.001||Math.abs(ty-cy)>.001){requestAnimationFrame(loop);}else{ticking=false;}
+    }
+  }
+
+  /* --- selector de simuladores --- */
+  var sims=[
+    // El `desc` del 01 tiene que ser LITERALMENTE el mismo que el del HTML (`#simDesc`),
+    // o el visitante ve cambiar el texto al volver a la pestaña 01 desde otra.
+    {label:"01 — VirtualFly",name:"VirtualFly SOLO PRO",desc:"Simulador AATD aprobado por la FAA para el entrenamiento avanzado de pilotos e instructores."},
+    {label:"02 — Redbird",name:"Redbird LD",desc:"Dispositivo de vanguardia, diseñado para escenarios realistas que potencian a alumnos e instructores."},
+    {label:"03 — Frasca",name:"Frasca RTD",desc:"AATD de experiencia inmersiva que desarrolla las habilidades esenciales que el piloto lleva a la cabina."}
+  ];
+  var simImgs=document.querySelectorAll(".sim-stage img"),simTabs=document.querySelectorAll("#simTabs button"),
+      simLabel=document.getElementById("simLabel"),simName=document.getElementById("simName"),simDesc=document.getElementById("simDesc");
+  function showSim(i){
+    simImgs.forEach(function(im,x){im.classList.toggle("on",x===i);});
+    simTabs.forEach(function(b,x){b.classList.toggle("active",x===i);});
+    if(simLabel){simLabel.textContent=sims[i].label;simName.textContent=sims[i].name;simDesc.textContent=sims[i].desc;}
+  }
+  simTabs.forEach(function(b){b.addEventListener("click",function(){showSim(parseInt(b.getAttribute("data-i"),10));});});
+
+  /* --- formulario (demo) --- */
+  var f=document.getElementById("ctaForm");
+  if(f)f.addEventListener("submit",function(e){
+    e.preventDefault();
+    if(!f.checkValidity()){f.reportValidity();return;}
+    document.getElementById("formOk").classList.add("show");
+    f.querySelectorAll("input,select,button").forEach(function(el){el.disabled=true;});
+  });
+})();
+</script>
+</body>
+</html>
