@@ -31,7 +31,16 @@
 
      v5 (2026-08-12) · Sincronía de fidelidad al cliente: textos, diseño y estructura
      revisados contra la reunión del 2026-08-10 y el Loom del 2026-07-31. Detalle en
-     `.claude/reports/sincronia-2026-08-12/04_IMPLEMENTACION.md`. -->
+     `.claude/reports/sincronia-2026-08-12/04_IMPLEMENTACION.md`.
+
+     v6 (2026-08-16) · 🚫 EL AVIÓN DEL HERO NO SE TOCA. En la v5 se había sustituido por un
+     Cessna 172; Joel lo revirtió a este jet y dejó la regla: no se cambia salvo que él lo
+     diga expresamente. Revertido el paquete entero (imagen, geometría de `.plane-wrap`, la
+     banda 561-1250 px y la etiqueta «Imagen de referencia» del hero). El recorte
+     `assets/airplanes/cessna-172-hero.png` se conserva sin usar por si cambia de idea.
+     Que el jet sea un ejecutivo y el cliente arriende entrenadores es una observación YA
+     CONOCIDA Y YA DECIDIDA: no hace falta volver a reportarla. Todo lo demás de la v5
+     —copy, estructura, badges, los tres pasos, las píldoras— se queda como estaba. -->
 <script>document.documentElement.className += ' js';</script>
 <title>Sim Solutions — Leasing de aviones de entrenamiento y simuladores para escuelas de aviación</title>
 <meta name="description" content="Leasing de aviones de entrenamiento nuevos y usados —y de simuladores AATD aprobados por la FAA— para escuelas de vuelo y universidades de aviación. Un pago mensual fijo.">
@@ -186,36 +195,12 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
   background:linear-gradient(180deg,rgba(234,242,255,.15),rgba(234,242,255,.03));
   -webkit-background-clip:text;background-clip:text;pointer-events:none;user-select:none;
 }
-/* Avión del hero. Sustituido el 2026-08-12: era un jet ejecutivo birreactor, que con el
-   eje invertido a 80 % aviones dejó de ser decoración y pasó a leerse como catálogo.
-   Ahora es el Cessna 172, que es el avión que el cliente llama su estrella (6:13).
-   La foto es 2,50:1 frente al 1,58:1 del jet, así que a la misma anchura quedaba un 37 %
-   más baja y flotando: se ensancha y se baja el `top` para que el centro óptico caiga a
-   la altura del bloque de texto, sin invadirlo (el texto acaba en x=750 a 1440).
-
-   ⚠️ ANTES DE TOCAR `width`, `right` O `top`, LEE ESTO. El PNG casi no tiene margen
-   transparente, al revés que el del jet. Medido sobre el canal alfa a cuatro umbrales
-   (izq / der / arriba / abajo, en px de imagen):
-
-        umbral    cessna-172-hero.png        plane.png (el jet)
-         >0        0 /  0 /   0 / 0           8 /  6 / 0 /  6
-         >16       4 /  2 / 101 / 1          18 / 14 / 0 / 14
-         >64       6 /  2 / 102 / 2          18 / 18 / 1 / 24
-         >128      7 /  3 / 102 / 2          18 / 18 / 1 / 144
-
-   Dos consecuencias:
-   1) A los lados hay 0-3 px de aire frente a los 14-18 del jet: **la punta del ala ES el
-      borde del elemento**. Un `right` que parecía seguro con el jet ya no lo es. Y el
-      `rotate(-4deg)` añade además ±(alto/2)·sin4° al ancho del bounding box.
-   2) Arriba hay ~102 px vacíos de 517, o sea que el 20 % superior del elemento no pinta
-      nada: el avión se ve más bajo de lo que sugiere el `top`. Está compensado en los
-      valores actuales; si se cambia la imagen, hay que recompensarlo.
-
-   **Medir en el navegador, no estimar.** Y al medir, aislar POR DIFERENCIA (render normal
-   menos render con `.plane-wrap` en `display:none`): contar píxeles por umbral de brillo
-   sobre un fondo fabricado cuenta el `drop-shadow` como si fuera el avión, y eso ya
-   produjo un falso positivo de «ala cortada» el 2026-08-12. */
-.plane-wrap{position:absolute;z-index:-1;right:1%;top:26%;width:min(46vw,660px);pointer-events:none;
+/* avión: mismo tamaño, posición y entrada que en la Demo 1.
+   ⚠️ NO SE TOCA. El 2026-08-12 se sustituyó por un Cessna 172 y Joel lo revirtió a este
+   jet el 2026-08-16, dejando la regla: el avión del hero no se cambia salvo que él lo
+   diga expresamente. El recorte `assets/airplanes/cessna-172-hero.png` sigue en la
+   carpeta por si cambia de idea, pero no se usa. */
+.plane-wrap{position:absolute;z-index:-1;right:2%;top:22%;width:min(46vw,620px);pointer-events:none;
   filter:drop-shadow(0 40px 60px rgba(0,5,20,.6))}
 .plane-wrap img{width:100%;transform:rotate(-4deg)}
 @media (prefers-reduced-motion:no-preference){
@@ -226,15 +211,6 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
   55%{opacity:1}
   100%{opacity:1;transform:translateX(0) translateY(0) scale(1) rotate(-4deg)}
 }
-/* La foto del hero tampoco es de un avión de Sim Solutions, así que lleva la misma
-   declaración que las tres de la flota. Va FUERA de `.plane-wrap` a propósito: ese
-   contenedor baja de opacidad y se difumina en las bandas media y móvil, y la etiqueta
-   tiene que leerse igual en las tres. Posición de crédito fotográfico, abajo a la derecha:
-   es el único punto del hero libre en todos los anchos (la franja de datos acaba antes).
-   #7f93ad sobre el fondo del hero = 6,0:1, pasa AA. */
-.hero-ref{position:absolute;right:var(--edge);bottom:1.1rem;z-index:1;
-  font-family:var(--grotesk);font-weight:500;font-size:.63rem;letter-spacing:.14em;
-  text-transform:uppercase;line-height:1.2;color:#7f93ad;pointer-events:none}
 /* único acento gráfico del hero: la estela */
 .contrail{position:absolute;z-index:-1;left:0;top:26%;width:60%;height:40%;pointer-events:none;overflow:visible}
 .contrail path{fill:none;stroke:url(#trailg);stroke-width:2.5;stroke-linecap:round;
@@ -555,29 +531,6 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
   .nav-links .btn{margin-top:.6rem}
   .nav-toggle{display:flex}
 }
-/* BANDA MEDIA DEL AVIÓN (561-1250 px). DECISIÓN DE COMPOSICIÓN, NO ARREGLO DE UN FALLO.
-   Que quede claro para quien lo lea dentro de seis meses: los DOS estados pasan AA con
-   0 px de tinta por debajo del umbral. Esto no sostiene la accesibilidad de nada; se hizo
-   porque el avión a plena opacidad se cruza con el texto en esta banda.
-   El bloque de texto del hero mide 620 px fijos, así que por debajo de ~1250 px deja de
-   haber hueco a su derecha. Medido, solape del avión con el `h1`: 256×36 px a 768 (y ahí
-   además el fuselaje cae encima de la píldora del badge), 146×98 a 1000 y 98×108 a 1100,
-   donde el ala pasa justo por la palabra «Sin» del titular.
-   Subirlo al aire que queda entre el nav y el texto no vale, porque ese aire depende de
-   la ALTURA del viewport: son 210 px a 768×1024 pero solo 73 px a 1250×900.
-   Solución: el mismo recurso que ya usa la página por debajo de 560 px — el avión pasa a
-   textura de fondo, con opacidad baja y difuminado por la izquierda, para que pueda
-   cruzarse con el texto sin ensuciarlo. Sigue estando y sigue moviéndose, que es lo que
-   pidió el cliente (Loom 0:19).
-   Si alguien prefiere el avión entero y nítido en esta banda, es defendible: revertir a
-   `top:26%;right:1%;width:min(46vw,660px)` y borrar este bloque. No se corta nada en
-   ninguno de los dos estados — el «ala cortada» que se reportó el 12/08 era un falso
-   positivo de medición, ver §6 ter del informe. */
-@media (min-width:561px) and (max-width:1250px){
-  .plane-wrap{top:12%;right:-8%;width:min(92vw,760px);opacity:.24;
-    -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 40%);
-            mask-image:linear-gradient(90deg,transparent 0,#000 40%)}
-}
 @media (max-width:900px){
   .why-grid{grid-template-columns:repeat(2,1fr)}
   .acc-grid{grid-template-columns:1fr}
@@ -642,7 +595,7 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
   <div class="ghost" aria-hidden="true">VUELO</div>
 
   <div class="plane-wrap" aria-hidden="true">
-    <img src="assets/airplanes/cessna-172-hero.png" alt="">
+    <img src="assets/plane.png" alt="">
   </div>
 
   <svg class="contrail" id="contrail" viewBox="0 0 600 400" aria-hidden="true" preserveAspectRatio="none">
@@ -675,9 +628,6 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
     </div>
   </div>
 
-  <!-- Misma declaración que las tres fotos de la flota. La foto del hero es un Cessna 172
-       real (PH-VOP, matrícula holandesa) que NO pertenece a Sim Solutions. -->
-  <span class="hero-ref">Imagen de referencia</span>
 </header>
 
 <!-- ===================== BENEFICIOS · «cuadrados» + numeración 01–06 ===================== -->
