@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <!-- `<meta charset>` va lo PRIMERO del `<head>`, dentro de los primeros 1024 bytes del
      archivo: es la ventana que la spec HTML da al prescan de codificación. El bloque de
      notas de versión vivía aquí arriba y lo empujaba al byte 1477; los motores con
      detector de UTF-8 lo salvaban, pero uno que cayera a windows-1252 mostraría toda la
-     página con mojibake. Las notas van ahora debajo. -->
+     página en español con mojibake. Las notas van ahora debajo. -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- Sim Solutions — FUSIÓN C · Lectura literal del feedback del cliente · EN
+<!-- Sim Solutions — FUSIÓN C · Lectura literal del feedback del cliente · ES
      Base clara: Demo 3 (editorial). Donante: Demo 1 (cinematográfica).
      Trasplantados tal cual desde la Demo 1: hero oscuro (avión + animación de
      entrada + parallax + palabra de fondo), la barra/pastilla circular del nav
      y la cuadrícula de «cuadrados» de beneficios.
 
      v2 (2026-08-10) · Eje invertido: 80 % aviones, 20 % simuladores.
-     Copy aplicado desde `.claude/briefing-v2/COPY-V2-AVIONES.md`. Los tres datos
-     que solo el cliente puede cerrar aparecen marcados
+     Copy aplicado desde `.claude/briefing-v2/COPY-V2-AVIONES.md`, traducido al
+     español. Los tres datos que solo el cliente puede cerrar aparecen marcados
      en pantalla con la píldora `.pend` — nunca con una cifra elegida por nosotros.
 
      v3 (2026-08-11) · La sección de aviones incorpora fotos ILUSTRATIVAS de aeronaves
@@ -36,40 +36,14 @@
      v6 (2026-08-16) · 🚫 EL AVIÓN DEL HERO NO SE TOCA. En la v5 se había sustituido por un
      Cessna 172; Joel lo revirtió a este jet y dejó la regla: no se cambia salvo que él lo
      diga expresamente. Revertido el paquete entero (imagen, geometría de `.plane-wrap`, la
-     banda 561-1250 px y la etiqueta «Reference image» del hero). El recorte
+     banda 561-1250 px y la etiqueta «Imagen de referencia» del hero). El recorte
      `assets/airplanes/cessna-172-hero.png` se conserva sin usar por si cambia de idea.
      Que el jet sea un ejecutivo y el cliente arriende entrenadores es una observación YA
      CONOCIDA Y YA DECIDIDA: no hace falta volver a reportarla. Todo lo demás de la v5
-     —copy, estructura, badges, los tres pasos, las píldoras— se queda como estaba.
-
-     v7 (2026-08-16) · VERSIÓN EN INGLÉS, derivada de `Sim-Solutions_FusionC_Literal_ES.html`.
-     El inglés es el idioma real del sitio: el público son escuelas de vuelo y universidades
-     de aviación de Estados Unidos. NO es una retraducción del español. Donde Georgie dictó la
-     frase en inglés (reunión del 2026-08-10) se usa su palabra literal —training aircraft,
-     FAA Approved Simulators, Fixed Monthly Payments, Access to Training Aircraft, Ready to Fly
-     Aircraft, Flexible Aircraft Leasing, Select your aircraft, Take delivery, Qualification,
-     Aircraft Terms From…, no capital outlay—, y los testimonios y la terminología de producto
-     se copian textuales del sitio publicado del cliente (`dist/`). Trazabilidad frase a frase en
-     `.claude/reports/sincronia-2026-08-12/07_TRADUCCION-EN.md`.
-     Los comentarios siguen en español a propósito: son notas nuestras de mantenimiento,
-     no contenido de la página.
-
-     v8 (2026-08-16) · Cuatro decisiones de main sobre la v7, SOLO en el EN (el ES se queda
-     como estaba y a partir de aquí diverge en estructura):
-       1. ids y anclas al inglés (#airplanes, #simulators, #how-it-works, #testimonials,
-          #contact, #benefits, #products, y los h-*/acc-*/f-* correspondientes). Motivo: el
-          fragmento se ve en la barra de direcciones. ⚠️ El selector CSS de los dos filetes
-          (`#products, #airplanes`) y tres comentarios que citaban ids se renombraron con ellos.
-       2. `data-destino-final` apunta ya a `airplanes.html` y `virtual-fly.html`, que son los
-          nombres reales de su sitio.
-       3. Beneficio 05: «Terms you choose» → «Lease terms». «you choose» afirmaba que la
-          escuela elige el plazo y eso no está confirmado para los aviones.
-       4. Se confirma «Our flagship aircraft» (ya estaba) y se mantiene a propósito la mezcla
-          `Airplanes` en el nav (copia su web) con `aircraft` en el cuerpo (su palabra del
-          vídeo): las dos tienen fuente. NO unificar creyendo que es un descuido. -->
+     —copy, estructura, badges, los tres pasos, las píldoras— se queda como estaba. -->
 <script>document.documentElement.className += ' js';</script>
-<title>Sim Solutions — Training Aircraft &amp; Simulator Leasing for Flight Schools</title>
-<meta name="description" content="Sim Solutions leases new and used training aircraft — and FAA-approved AATD flight simulators — to flight schools and aviation universities across the United States. One fixed monthly payment.">
+<title>Sim Solutions — Leasing de aviones de entrenamiento y simuladores para escuelas de aviación</title>
+<meta name="description" content="Leasing de aviones de entrenamiento nuevos y usados —y de simuladores AATD aprobados por la FAA— para escuelas de vuelo y universidades de aviación. Un pago mensual fijo.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Inter:wght@300..600&display=swap" rel="stylesheet">
@@ -286,7 +260,7 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
 /* la única tirada de superficies iguales de la página son beneficios → productos → aviones:
    4 043 px seguidos del mismo blanco. Dos filetes le dicen al ojo dónde termina cada bloque
    sin añadir ni un color más. El resto de secciones ya tienen junta propia (tinte, banda). */
-#products, #airplanes{box-shadow:inset 0 1px 0 var(--line2)}
+#productos, #aviones{box-shadow:inset 0 1px 0 var(--line2)}
 /* el único cambio de fondo del cuerpo: la sección de simuladores.
    Plano y no degradado: en degradado el borde superior quedaba a 1,07 del papel —o sea,
    invisible justo en la junta donde tiene que leerse el cambio— y metía la etiqueta del
@@ -300,8 +274,8 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
 .band .contact-copy p{color:#284159}
 .band .form{background:#fff;padding:clamp(1.6rem,3vw,2.4rem);border-radius:20px;
   box-shadow:0 24px 60px -24px rgba(10,50,80,.42)}
-/* segunda —y última— palabra de fondo. La Demo 1 llevaba dos («FLIGHT» en el hero,
-   «TAKEOFF» en el cierre) y el cliente las citó en plural (0:19). Va solo en escritorio:
+/* segunda —y última— palabra de fondo. La Demo 1 llevaba dos («VUELO» en el hero,
+   «DESPEGA» en el cierre) y el cliente las citó en plural (0:19). Va solo en escritorio:
    por debajo de 900 px la sección pasa a una columna y la palabra caería sobre el texto. */
 /* `.section` (más arriba) ya es position:relative; aquí solo hace falta recortar el
    desborde, igual que hace `.hero` con la palabra del hero. */
@@ -413,7 +387,7 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
 
 /* --- fotos ilustrativas ---------------------------------------------------
    Ninguna de estas fotos es de la flota del cliente: son aeronaves ajenas del
-   mismo tipo. Por eso la etiqueta «Reference image» va SIEMPRE encima de
+   mismo tipo. Por eso la etiqueta «Imagen de referencia» va SIEMPRE encima de
    la foto y no solo en el `alt`. Misma proporción (16/10) en las cuatro celdas
    para que la fila se lea como una sola pieza. */
 .fl-foto{position:relative;overflow:hidden;border-radius:14px;aspect-ratio:16/10;
@@ -424,7 +398,7 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
   font-family:var(--grotesk);font-weight:500;font-size:.63rem;letter-spacing:.14em;
   text-transform:uppercase;line-height:1.2;color:#fff;background:rgba(4,12,28,.88);
   padding:.44em .82em;border-radius:100px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
-/* «And others» no tiene un modelo que enseñar: panel liso en lugar de foto, para no dar a
+/* «Y otros» no tiene un modelo que enseñar: panel liso en lugar de foto, para no dar a
    entender un avión concreto ni dejar la celda coja. Sin rayado: la trama diagonal es el
    idioma de «imagen rota» y suma ruido justo donde el cliente pidió quitarlo. */
 .fl-foto--abierta{display:grid;place-items:center;background:var(--paper2);
@@ -441,7 +415,7 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
 }
 
 /* cierre de la sección de SIMULADORES: aviones y simuladores, contratos separados.
-   Vivía al final de `#airplanes`; se mudó para que la correspondencia avión↔simulador se
+   Vivía al final de `#aviones`; se mudó para que la correspondencia avión↔simulador se
    enuncie como dato técnico y no como gancho de venta desde la sección de aviones. */
 .cierre{max-width:var(--maxw);margin:clamp(2.6rem,5vw,4rem) auto 0;
   display:grid;grid-template-columns:1fr auto;align-items:center;gap:clamp(1.6rem,3vw,3rem);
@@ -488,7 +462,7 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
 @media (min-width:900px){.contact-grid{align-items:center}}
 .contact-copy h2{font-size:clamp(2rem,4.4vw,3.4rem);color:var(--ink);margin-bottom:1.2rem}
 .contact-copy p{font-size:1.06rem;margin-bottom:2rem;max-width:42ch}
-/* la fila del índice de sección: `#contact` no usa `.sec-head`, así que necesita la suya */
+/* la fila del índice de sección: `#contacto` no usa `.sec-head`, así que necesita la suya */
 .contact-copy .top{display:flex;justify-content:space-between;align-items:baseline;
   gap:1rem;flex-wrap:wrap}
 /* sobre la banda azul los colores por defecto del índice no llegan a AA:
@@ -582,7 +556,7 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
   .plane-wrap{width:118vw;right:-24vw;top:auto;bottom:2%;opacity:.18;animation:none!important;
     -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 42%);mask-image:linear-gradient(90deg,transparent 0,#000 42%)}
   .plane-wrap img{animation:none!important}
-  /* a 38 % los travesaños de las letras caían justo detrás del párrafo y dibujaban
+  /* a 38 % los travesaños de la E y la L caían justo detrás del párrafo y dibujaban
      rectángulos sobre el texto corrido; a 26 % la palabra queda tras el titular */
   .ghost{font-size:40vw;top:26%;animation:none!important}
   .contrail{display:none}
@@ -600,25 +574,25 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
 </head>
 
 <body>
-<!-- Sim Solutions — Fusión C · lectura literal · EN -->
+<!-- Sim Solutions — Fusión C · lectura literal · ES -->
 
 <!-- ===================== NAV (pastilla circular de la Demo 1) ===================== -->
-<nav class="nav" id="nav" aria-label="Main">
-  <a href="#top" class="brand" aria-label="Sim Solutions home"><img src="assets/logo_sim_white.png" alt="Sim Solutions"></a>
+<nav class="nav" id="nav" aria-label="Principal">
+  <a href="#top" class="brand" aria-label="Sim Solutions inicio"><img src="assets/logo_sim_white.png" alt="Sim Solutions"></a>
   <div class="nav-links" id="navlinks">
-    <a href="#top">Home</a>
-    <a href="#airplanes">Airplanes</a>
-    <a href="#simulators">Simulators</a>
-    <a href="#how-it-works">How it works</a>
-    <a href="#testimonials">Testimonials</a>
-    <a href="#contact" class="btn btn-luz">Contact us <span class="arw">→</span></a>
+    <a href="#top">Inicio</a>
+    <a href="#aviones">Aviones</a>
+    <a href="#simuladores">Simuladores</a>
+    <a href="#como-funciona">Cómo funciona</a>
+    <a href="#testimonios">Testimonios</a>
+    <a href="#contacto" class="btn btn-luz">Contáctanos <span class="arw">→</span></a>
   </div>
-  <button class="nav-toggle" id="navtoggle" aria-label="Open menu" aria-expanded="false"><span></span></button>
+  <button class="nav-toggle" id="navtoggle" aria-label="Abrir menú" aria-expanded="false"><span></span></button>
 </nav>
 
 <!-- ===================== HERO OSCURO ===================== -->
 <header class="hero" id="top" aria-labelledby="h-hero">
-  <div class="ghost" aria-hidden="true">FLIGHT</div>
+  <div class="ghost" aria-hidden="true">VUELO</div>
 
   <div class="plane-wrap" aria-hidden="true">
     <img src="assets/plane.png" alt="">
@@ -633,38 +607,38 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
   </svg>
 
   <div class="hero-inner">
-    <span class="section-index hero-index"><b>01</b> — Home</span>
-    <span class="hero-badge"><span class="dot"></span> Training aircraft and FAA Approved Simulators</span>
+    <span class="section-index hero-index"><b>01</b> — Inicio</span>
+    <span class="hero-badge"><span class="dot"></span> Aviones de entrenamiento y simuladores aprobados por la FAA</span>
     <h1 id="h-hero">
-      <span class="wr">Grow</span> <span class="wr">your</span> <span class="wr">fleet.</span>
-      <span class="wr it">No</span> <span class="wr it">capital</span>
-      <span class="wr it">outlay.</span>
+      <span class="wr">Haz</span> <span class="wr">crecer</span> <span class="wr">tu</span> <span class="wr">flota.</span>
+      <span class="wr it">Sin</span> <span class="wr it">capital</span>
+      <span class="wr it">por</span> <span class="wr it">delante.</span>
     </h1>
-    <p class="lead reveal">Sim Solutions leases new and used training aircraft — and FAA Approved Simulators — to flight schools and aviation universities across the United States. One fixed monthly payment. With our support team behind you.</p>
+    <p class="lead reveal">Sim Solutions arrienda aviones de entrenamiento nuevos y usados —y simuladores aprobados por la FAA— a escuelas de vuelo y universidades de aviación de todo Estados Unidos. Un pago mensual fijo. Con nuestro equipo de soporte detrás.</p>
     <div class="hero-cta reveal">
-      <a href="#contact" class="btn btn-luz">Ask what’s available <span class="arw">→</span></a>
-      <a href="#how-it-works" class="btn btn-glass">How it works <span class="arw">↓</span></a>
+      <a href="#contacto" class="btn btn-luz">Pregunta qué hay disponible <span class="arw">→</span></a>
+      <a href="#como-funciona" class="btn btn-glass">Cómo funciona <span class="arw">↓</span></a>
     </div>
     <!-- Franja de datos en términos de avión. Dos de los tres valores son datos
          que solo el cliente puede cerrar: van marcados, no inventados. -->
     <div class="hero-figs reveal">
-      <div class="hero-fig"><div class="fv">Fixed</div><div class="fl">Monthly payment</div></div>
-      <div class="hero-fig"><div class="fv"><span class="pend pend-dark">To be confirmed</span></div><div class="fl">Aircraft terms from</div></div>
-      <div class="hero-fig"><div class="fv"><span class="pend pend-dark">1 or 2 · to be confirmed</span></div><div class="fl">Weeks to your aircraft</div></div>
+      <div class="hero-fig"><div class="fv">Fijo</div><div class="fl">Pago mensual</div></div>
+      <div class="hero-fig"><div class="fv"><span class="pend pend-dark">Por confirmar</span></div><div class="fl">Plazo del avión (desde)</div></div>
+      <div class="hero-fig"><div class="fv"><span class="pend pend-dark">1 o 2 · por confirmar</span></div><div class="fl">Semanas hasta el avión</div></div>
     </div>
   </div>
 
 </header>
 
 <!-- ===================== BENEFICIOS · «cuadrados» + numeración 01–06 ===================== -->
-<section class="section" id="benefits" aria-labelledby="h-benefits">
+<section class="section" id="beneficios" aria-labelledby="h-beneficios">
   <div class="sec-head">
     <div class="top">
-      <span class="eyebrow reveal">The terms</span>
-      <span class="section-index"><b>02</b> — Benefits</span>
+      <span class="eyebrow reveal">Las condiciones</span>
+      <span class="section-index"><b>02</b> — Ventajas</span>
     </div>
-    <h2 class="reveal" id="h-benefits">Why schools lease <span class="it">instead of buying.</span></h2>
-    <p class="lead reveal">Choosing the aircraft is the easy part. These are the terms that decide the deal.</p>
+    <h2 class="reveal" id="h-beneficios">Por qué las escuelas arriendan <span class="it">en vez de comprar.</span></h2>
+    <p class="lead reveal">Elegir el avión es la parte fácil. Estas son las condiciones que deciden el acuerdo.</p>
   </div>
 
   <div class="why-grid">
@@ -673,8 +647,8 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
         <span class="why-ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,80V192a8,8,0,0,1-8,8H56a16,16,0,0,1-16-16V56A16,16,0,0,0,56,72H216A8,8,0,0,1,224,80Z" opacity="0.2"/><path d="M216,64H56a8,8,0,0,1,0-16H192a8,8,0,0,0,0-16H56A24,24,0,0,0,32,56V184a24,24,0,0,0,24,24H216a16,16,0,0,0,16-16V80A16,16,0,0,0,216,64Zm0,128H56a8,8,0,0,1-8-8V78.63A23.84,23.84,0,0,0,56,80H216Zm-48-60a12,12,0,1,1,12,12A12,12,0,0,1,168,132Z"/></svg></span>
         <span class="why-num">01</span>
       </div>
-      <h3 class="why-title">Fixed Monthly Payments</h3>
-      <p class="why-txt">No capital outlay to put the aircraft on your flight line. One number you budget for the life of the lease.</p>
+      <h3 class="why-title">Pagos mensuales fijos</h3>
+      <p class="why-txt">Sin desembolso de capital para poner el avión en la línea de vuelo. Una sola cifra que presupuestas durante toda la vida del contrato.</p>
     </div>
 
     <div class="why-cell reveal">
@@ -682,8 +656,8 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
         <span class="why-ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128 20c9 0 16 15 17 36l1 24 82 50v22l-83-24-3 42 28 24v16l-42-11-42 11v-16l28-24-3-42-83 24v-22l82-50 1-24c1-21 8-36 17-36z"/></svg></span>
         <span class="why-num">02</span>
       </div>
-      <h3 class="why-title">Access to Training Aircraft</h3>
-      <p class="why-txt">Access different types of aircraft. Put the airplane your program actually needs on the flight line, not the one you could afford to buy.</p>
+      <h3 class="why-title">Acceso a aviones de entrenamiento</h3>
+      <p class="why-txt">Accede a distintos tipos de avión. Pon en la línea de vuelo el que tu programa necesita de verdad, no el que podías permitirte comprar.</p>
     </div>
 
     <div class="why-cell reveal">
@@ -691,8 +665,8 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
         <span class="why-ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M232,128c0,12.51-17.82,21.95-22.68,33.69-4.68,11.32,1.42,30.65-7.78,39.85s-28.53,3.1-39.85,7.78C150,214.18,140.5,232,128,232s-22-17.82-33.69-22.68c-11.32-4.68-30.65,1.42-39.85-7.78s-3.1-28.53-7.78-39.85C41.82,150,24,140.5,24,128s17.82-22,22.68-33.69C51.36,83,45.26,63.66,54.46,54.46S83,51.36,94.31,46.68C106.05,41.82,115.5,24,128,24S150,41.82,161.69,46.68c11.32,4.68,30.65-1.42,39.85,7.78s3.1,28.53,7.78,39.85C214.18,106.05,232,115.5,232,128Z" opacity="0.2"/><path d="M225.86,102.82c-3.77-3.94-7.67-8-9.14-11.57-1.36-3.27-1.44-8.69-1.52-13.94-.15-9.76-.31-20.82-8-28.51s-18.75-7.85-28.51-8c-5.25-.08-10.67-.16-13.94-1.52-3.56-1.47-7.63-5.37-11.57-9.14C146.28,23.51,138.44,16,128,16s-18.27,7.51-25.18,14.14c-3.94,3.77-8,7.67-11.57,9.14C88,40.64,82.56,40.72,77.31,40.8c-9.76.15-20.82.31-28.51,8S41,67.55,40.8,77.31c-.08,5.25-.16,10.67-1.52,13.94-1.47,3.56-5.37,7.63-9.14,11.57C23.51,109.72,16,117.56,16,128s7.51,18.27,14.14,25.18c3.77,3.94,7.67,8,9.14,11.57,1.36,3.27,1.44,8.69,1.52,13.94.15,9.76.31,20.82,8,28.51s18.75,7.85,28.51,8c5.25.08,10.67.16,13.94,1.52,3.56,1.47,7.63,5.37,11.57,9.14C109.72,232.49,117.56,240,128,240s18.27-7.51,25.18-14.14c3.94-3.77,8-7.67,11.57-9.14,3.27-1.36,8.69-1.44,13.94-1.52,9.76-.15,20.82-.31,28.51-8s7.85-18.75,8-28.51c.08-5.25.16-10.67,1.52-13.94,1.47-3.56,5.37-7.63,9.14-11.57C232.49,146.28,240,138.44,240,128S232.49,109.73,225.86,102.82Zm-11.55,39.29c-4.79,5-9.75,10.17-12.38,16.52-2.52,6.1-2.63,13.07-2.73,19.82-.1,7-.21,14.33-3.32,17.43s-10.39,3.22-17.43,3.32c-6.75.1-13.72.21-19.82,2.73-6.35,2.63-11.52,7.59-16.52,12.38S132,224,128,224s-9.15-4.92-14.11-9.69-10.17-9.75-16.52-12.38c-6.1-2.52-13.07-2.63-19.82-2.73-7-.1-14.33-.21-17.43-3.32s-3.22-10.39-3.32-17.43c-.1-6.75-.21-13.72-2.73-19.82-2.63-6.35-7.59-11.52-12.38-16.52S32,132,32,128s4.92-9.15,9.69-14.11,9.75-10.17,12.38-16.52c2.52-6.1,2.63-13.07,2.73-19.82.1-7,.21-14.33,3.32-17.43S70.51,56.9,77.55,56.8c6.75-.1,13.72-.21,19.82-2.73,6.35-2.63,11.52-7.59,16.52-12.38S124,32,128,32s9.15,4.92,14.11,9.69,10.17,9.75,16.52,12.38c6.1,2.52,13.07,2.63,19.82,2.73,7,.1,14.33.21,17.43,3.32s3.22,10.39,3.32,17.43c.1,6.75.21,13.72,2.73,19.82,2.63,6.35,7.59,11.52,12.38,16.52S224,124,224,128,219.08,137.15,214.31,142.11ZM173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34Z"/></svg></span>
         <span class="why-num">03</span>
       </div>
-      <h3 class="why-title">Ready to Fly Aircraft</h3>
-      <p class="why-txt">Your aircraft arrives ready for the flight line, not as a project to finish before it can fly.</p>
+      <h3 class="why-title">Aviones listos para volar</h3>
+      <p class="why-txt">Tu avión llega listo para la línea de vuelo, no como un proyecto que haya que terminar antes de volarlo.</p>
     </div>
 
     <div class="why-cell reveal">
@@ -700,8 +674,8 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
         <span class="why-ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128,80a24,24,0,1,1-24-24A24,24,0,0,1,128,80Zm40,72a24,24,0,1,0,24,24A24,24,0,0,0,168,152Z" opacity="0.2"/><path d="M40,88H73a32,32,0,0,0,62,0h81a8,8,0,0,0,0-16H135a32,32,0,0,0-62,0H40a8,8,0,0,0,0,16Zm64-24A16,16,0,1,1,88,80,16,16,0,0,1,104,64ZM216,168H199a32,32,0,0,0-62,0H40a8,8,0,0,0,0,16h97a32,32,0,0,0,62,0h17a8,8,0,0,0,0-16Zm-48,24a16,16,0,1,1,16-16A16,16,0,0,1,168,192Z"/></svg></span>
         <span class="why-num">04</span>
       </div>
-      <h3 class="why-title">Flexible Aircraft Leasing</h3>
-      <p class="why-txt">Programs change and enrollment moves. The lease is built around the fleet you need now. When that changes, we talk.</p>
+      <h3 class="why-title">Leasing de aviones flexible</h3>
+      <p class="why-txt">Los programas cambian y las matrículas se mueven. El contrato se estructura en torno a la flota que necesitas ahora. Cuando eso cambie, hablamos.</p>
     </div>
 
     <div class="why-cell reveal">
@@ -709,9 +683,9 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
         <span class="why-ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128,40a88,88,0,1,0,88,88A88,88,0,0,0,128,40Z" opacity="0.2"/><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"/></svg></span>
         <span class="why-num">05</span>
       </div>
-      <h3 class="why-title">Lease terms</h3>
-      <p class="why-txt">Simulator leases run from 12 to 72 months: short enough to cover a peak season, long enough to build a program around.</p>
-      <span class="pend pend-block">Minimum aircraft term to be confirmed</span>
+      <h3 class="why-title">Plazos que eliges tú</h3>
+      <p class="why-txt">El leasing de simuladores va de 12 a 72 meses: lo bastante corto para cubrir una temporada alta y lo bastante largo para construir un programa alrededor.</p>
+      <span class="pend pend-block">Plazo mínimo de avión por confirmar</span>
     </div>
 
     <div class="why-cell reveal">
@@ -719,73 +693,73 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
         <span class="why-ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><rect x="34" y="140" width="46" height="80" rx="9" opacity="0.25"/><rect x="105" y="96" width="46" height="124" rx="9" opacity="0.45"/><rect x="176" y="44" width="46" height="176" rx="9"/></svg></span>
         <span class="why-num">06</span>
       </div>
-      <h3 class="why-title">Room to grow</h3>
-      <p class="why-txt">Add aircraft at the school you already run, or open a second location, with no capital outlay at either one.</p>
+      <h3 class="why-title">Espacio para crecer</h3>
+      <p class="why-txt">Suma aviones en la escuela que ya diriges, o abre una segunda sede, sin poner capital por delante en ninguna de las dos.</p>
     </div>
   </div>
 </section>
 
 <!-- ===================== QUÉ ARRENDAMOS · dos accesos ===================== -->
-<section class="section" id="products" aria-labelledby="h-products">
+<section class="section" id="productos" aria-labelledby="h-productos">
   <div class="sec-head">
     <div class="top">
-      <span class="eyebrow reveal">What we lease</span>
-      <span class="section-index"><b>03</b> — Products</span>
+      <span class="eyebrow reveal">Qué arrendamos</span>
+      <span class="section-index"><b>03</b> — Productos</span>
     </div>
-    <h2 class="reveal" id="h-products">Aircraft <span class="it">and simulators.</span></h2>
-    <p class="lead reveal">Two products, two separate contracts. Start with whichever your program needs first.</p>
+    <h2 class="reveal" id="h-productos">Aviones <span class="it">y simuladores.</span></h2>
+    <p class="lead reveal">Dos productos, dos contratos separados. Empieza por el que tu programa necesite primero.</p>
   </div>
 
   <!-- DOS ACCESOS · pedido literal del cliente (2026-08-10, 3:29):
        «que sean dos pestañas en vez de tres: que sean aviones y que sean simuladores.
         Que para que den clic y obviamente vaya a otro lado.»
-       Las páginas destino (airplanes.html / virtual-fly.html, los nombres que ya usa su sitio) TODAVÍA NO EXISTEN. Hasta que
+       Las páginas destino (aviones.html / simuladores.html) TODAVÍA NO EXISTEN. Hasta que
        se construyan, cada acceso lleva a su sección de esta misma página, que es su
        equivalente funcional. El destino final queda declarado en `data-destino-final`
        para que al construirlas solo haya que cambiar el `href`. No convertir esto en una
        lista de modelos: eso es exactamente lo que el cliente descartó. -->
   <ul class="acc-grid">
-    <li class="acc reveal" data-destino-final="airplanes.html">
+    <li class="acc reveal" data-destino-final="aviones.html">
       <div class="acc-top">
         <span class="acc-ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128 20c9 0 16 15 17 36l1 24 82 50v22l-83-24-3 42 28 24v16l-42-11-42 11v-16l28-24-3-42-83 24v-22l82-50 1-24c1-21 8-36 17-36z"/></svg></span>
         <span class="acc-num">01</span>
       </div>
-      <h3 id="acc-airplanes">Training aircraft</h3>
-      <!-- La enumeración de marcas se queda AQUÍ y no en el encabezado de #airplanes: es
+      <h3 id="acc-aviones">Aviones de entrenamiento</h3>
+      <!-- La enumeración de marcas se queda AQUÍ y no en el encabezado de #aviones: es
            donde el lector decide si hace clic. -->
-      <p>New and used aircraft for your flight line. Cessna, Piper, Tecnam and others.</p>
-      <a href="#airplanes" class="link acc-link" aria-describedby="acc-airplanes">See the aircraft <span class="arw">→</span></a>
+      <p>Aviones nuevos y usados para tu línea de vuelo. Cessna, Piper, Tecnam y otros.</p>
+      <a href="#aviones" class="link acc-link" aria-describedby="acc-aviones">Ver los aviones <span class="arw">→</span></a>
     </li>
 
-    <li class="acc reveal" data-destino-final="virtual-fly.html">
+    <li class="acc reveal" data-destino-final="simuladores.html">
       <div class="acc-top">
         <span class="acc-ico"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,80V176a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V80a8,8,0,0,1,8-8H216A8,8,0,0,1,224,80Z" opacity="0.2"/><path d="M216,56H40A16,16,0,0,0,24,72V176a16,16,0,0,0,16,16H80v16a8,8,0,0,0,16,0V192h64v16a8,8,0,0,0,16,0V192h40a16,16,0,0,0,16-16V72A16,16,0,0,0,216,56Zm0,120H40V72H216V176ZM72,112a8,8,0,0,1,8-8h96a8,8,0,0,1,0,16H80A8,8,0,0,1,72,112Zm0,32a8,8,0,0,1,8-8h56a8,8,0,0,1,0,16H80A8,8,0,0,1,72,144Z"/></svg></span>
         <span class="acc-num">02</span>
       </div>
-      <h3 id="acc-simulators">FAA Approved Simulators</h3>
+      <h3 id="acc-simuladores">Simuladores aprobados por la FAA</h3>
       <!-- NO decir «cada dispositivo es un AATD»: la página del cliente no presenta el
            Redbird LD como AATD (cero apariciones de «FAA» y «AATD» en redbird.html). -->
-      <p>VirtualFly SOLO PRO, Redbird LD and Frasca RTD, each under its own contract. The SOLO PRO and the RTD are FAA-approved AATD devices.</p>
-      <a href="#simulators" class="link acc-link" aria-describedby="acc-simulators">See the simulators <span class="arw">→</span></a>
+      <p>VirtualFly SOLO PRO, Redbird LD y Frasca RTD, con su propio contrato. El SOLO PRO y el RTD son dispositivos AATD aprobados por la FAA.</p>
+      <a href="#simuladores" class="link acc-link" aria-describedby="acc-simuladores">Ver los simuladores <span class="arw">→</span></a>
     </li>
   </ul>
 </section>
 
 <!-- ===================== AVIONES · marcas, no modelos ===================== -->
-<section class="section" id="airplanes" aria-labelledby="h-airplanes">
+<section class="section" id="aviones" aria-labelledby="h-aviones">
   <div class="sec-head">
     <div class="top">
-      <span class="eyebrow reveal">Our fleet</span>
-      <span class="section-index"><b>04</b> — Airplanes</span>
+      <span class="eyebrow reveal">Nuestra flota</span>
+      <span class="section-index"><b>04</b> — Aviones</span>
     </div>
-    <h2 class="reveal" id="h-airplanes">New and used <span class="it">training aircraft.</span></h2>
-    <p class="lead reveal">New and used, with a fixed monthly payment. Tell us what your program flies and we’ll tell you what we have.</p>
+    <h2 class="reveal" id="h-aviones">Aviones de entrenamiento <span class="it">nuevos y usados.</span></h2>
+    <p class="lead reveal">Nuevos y usados, con un pago mensual fijo. Cuéntanos qué vuela tu programa y te decimos qué tenemos.</p>
   </div>
 
   <div class="flota">
     <!-- FOTOS DE LA SECCIÓN: ninguna es de la flota de Sim Solutions.
          Son aeronaves ajenas del mismo tipo, usadas solo para ilustrar la marca, y por eso
-         cada una lleva la etiqueta «Reference image» visible sobre la propia foto.
+         cada una lleva la etiqueta «Imagen de referencia» visible sobre la propia foto.
          Antes de publicar: no describir estas unidades como propias ni citar sus matrículas
          como parte del inventario. Si el cliente aporta fotos reales de su flota, sustituir
          estos archivos y retirar la etiqueta. Licencias verificadas una a una más abajo. -->
@@ -797,13 +771,13 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
     <article class="fl-card fl-card--estrella reveal">
       <figure class="fl-foto">
         <img src="assets/airplanes/cessna-172-referencia.jpg" width="1400" height="875" loading="lazy" decoding="async"
-             alt="Reference image: a Cessna 172 Skyhawk, a single-engine high-wing airplane, in flight. This photograph is illustrative and does not show the Sim Solutions fleet.">
-        <figcaption class="fl-ref">Reference image</figcaption>
+             alt="Imagen de referencia: un Cessna 172 Skyhawk, monomotor de ala alta, en vuelo. La fotografía es ilustrativa y no corresponde a la flota de Sim Solutions.">
+        <figcaption class="fl-ref">Imagen de referencia</figcaption>
       </figure>
       <div class="fl-cuerpo">
-        <div class="fl-top"><span class="fl-num">01</span><span class="fl-badge">Our flagship aircraft</span></div>
+        <div class="fl-top"><span class="fl-num">01</span><span class="fl-badge">Nuestro avión estrella</span></div>
         <h3>Cessna 172</h3>
-        <p>The airplane nearly every private pilot program is built on.</p>
+        <p>El avión sobre el que se construyen casi todos los programas de piloto privado.</p>
       </div>
     </article>
 
@@ -819,12 +793,12 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
       <article class="fl-card reveal">
         <figure class="fl-foto">
           <img src="assets/airplanes/piper-pa28-referencia.jpg" width="1400" height="875" loading="lazy" decoding="async"
-               alt="Reference image: a single-engine low-wing Piper airplane in flight. This photograph is illustrative and does not show the Sim Solutions fleet.">
-          <figcaption class="fl-ref">Reference image</figcaption>
+               alt="Imagen de referencia: un avión Piper monomotor de ala baja, en vuelo. La fotografía es ilustrativa y no corresponde a la flota de Sim Solutions.">
+          <figcaption class="fl-ref">Imagen de referencia</figcaption>
         </figure>
         <div class="fl-top"><span class="fl-num">02</span></div>
         <h3>Piper</h3>
-        <p>Benchmark low-wing trainers for private pilot and instrument training. Ask us which Pipers are available right now.</p>
+        <p>Alas bajas de referencia para el entrenamiento de piloto privado e instrumental. Pregúntanos qué Piper hay disponibles ahora mismo.</p>
       </article>
 
       <!-- FOTO · Dos Tecnam P2008 JC MK2 de la escuela de vuelo Bay Việt, 2022 — autor: Xhoailethi.
@@ -835,23 +809,23 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
       <article class="fl-card reveal">
         <figure class="fl-foto">
           <img src="assets/airplanes/tecnam-p2008-referencia.jpg" width="1400" height="875" loading="lazy" decoding="async"
-               alt="Reference image: two Tecnam training airplanes from a flight school, on the ramp. This photograph is illustrative and does not show the Sim Solutions fleet.">
-          <figcaption class="fl-ref">Reference image</figcaption>
+               alt="Imagen de referencia: dos avionetas de entrenamiento Tecnam de una escuela de vuelo, en plataforma. La fotografía es ilustrativa y no corresponde a la flota de Sim Solutions.">
+          <figcaption class="fl-ref">Imagen de referencia</figcaption>
         </figure>
         <div class="fl-top"><span class="fl-num">03</span></div>
         <h3>Tecnam</h3>
-        <p>Ask our team which Tecnam aircraft are available right now.</p>
-        <span class="pend pend-block">Models to be confirmed</span>
+        <p>Pregunta a nuestro equipo qué aviones Tecnam están disponibles ahora mismo.</p>
+        <span class="pend pend-block">Modelos por confirmar</span>
       </article>
 
       <!-- Sin foto a propósito: «Y otros» no es un modelo, es un catálogo abierto. Poner aquí
            la foto de un avión concreto contradiría el propio mensaje de la tarjeta. El panel
            de marca mantiene la proporción de la fila sin afirmar nada que no sea cierto. -->
       <article class="fl-card reveal">
-        <div class="fl-foto fl-foto--abierta" aria-hidden="true"><span>Open catalog</span></div>
+        <div class="fl-foto fl-foto--abierta" aria-hidden="true"><span>Catálogo abierto</span></div>
         <div class="fl-top"><span class="fl-num">04</span></div>
-        <h3>And others</h3>
-        <p>If your program flies something else, ask us. This isn’t the whole list.</p>
+        <h3>Y otros</h3>
+        <p>Si tu programa vuela otra cosa, pregúntanos. Esta no es toda la lista.</p>
       </article>
     </div>
   </div>
@@ -861,31 +835,31 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
        `.cierre` que vivía aquí se mudó al final de `#simuladores`: usaba la correspondencia
        avión↔simulador como gancho desde la sección de aviones, y ahí solo puede leerse
        como «el simulador de tu avión». Se rentan por separado (2026-08-10, 5:23). -->
-  <p class="flota-nota reveal"><span>Availability changes. Contact our team to confirm which aircraft are open right now and how the lease is structured.</span></p>
+  <p class="flota-nota reveal"><span>La disponibilidad cambia. Contacta con nuestro equipo para confirmar qué aviones están libres ahora mismo y cómo se estructura el contrato.</span></p>
 </section>
 
 <!-- ===================== SIMULADORES (única sección con otro fondo) ===================== -->
-<section class="section tint" id="simulators" aria-labelledby="h-simulators">
+<section class="section tint" id="simuladores" aria-labelledby="h-simuladores">
   <div class="sec-head">
     <div class="top">
-      <span class="eyebrow reveal">Our simulators</span>
-      <span class="section-index"><b>05</b> — Simulators</span>
+      <span class="eyebrow reveal">Nuestros simuladores</span>
+      <span class="section-index"><b>05</b> — Simuladores</span>
     </div>
-    <h2 class="reveal" id="h-simulators">FAA Approved <span class="it">Simulators.</span></h2>
-    <p class="lead reveal">Three ground training devices, two of them FAA-approved AATDs. They lease under their own contract, separately from the aircraft.</p>
+    <h2 class="reveal" id="h-simuladores">Simuladores aprobados <span class="it">por la FAA.</span></h2>
+    <p class="lead reveal">Tres dispositivos para el entrenamiento en tierra, dos de ellos AATD aprobados por la FAA. Se arriendan con su propio contrato, por separado del avión.</p>
   </div>
 
   <div class="sim-show">
     <div class="sim-stage reveal">
-      <img class="on" data-i="0" src="assets/hero_virtualfly.jpg" alt="VirtualFly SOLO PRO simulator, cockpit with three screens and glass avionics">
-      <img data-i="1" src="assets/hero_redbird.jpg" alt="Redbird LD two-seat simulator with wraparound screens">
-      <img data-i="2" src="assets/hero_frasca.jpg" alt="Frasca RTD simulator with an instructor and a student training">
+      <img class="on" data-i="0" src="assets/hero_virtualfly.jpg" alt="Simulador VirtualFly SOLO PRO, cabina con triple pantalla y aviónica de vidrio">
+      <img data-i="1" src="assets/hero_redbird.jpg" alt="Simulador Redbird LD de doble puesto con pantallas envolventes">
+      <img data-i="2" src="assets/hero_frasca.jpg" alt="Simulador Frasca RTD con instructor y alumno entrenando">
     </div>
     <div class="sim-info reveal">
       <div class="sl" id="simLabel">01 — VirtualFly</div>
       <h3 id="simName">VirtualFly SOLO PRO</h3>
-      <p id="simDesc">An advanced, FAA-approved Aviation Training Device for pilot and instructor training and proficiency.</p>
-      <a href="#contact" class="link">More information <span class="arw">→</span></a>
+      <p id="simDesc">Simulador AATD aprobado por la FAA para el entrenamiento avanzado de pilotos e instructores.</p>
+      <a href="#contacto" class="link">Más información <span class="arw">→</span></a>
       <div class="sim-tabs" id="simTabs">
         <button class="active" data-i="0"><span class="tl"><span class="tn">01</span> VirtualFly SOLO PRO</span><span class="dot"></span></button>
         <button data-i="1"><span class="tl"><span class="tn">02</span> Redbird LD</span><span class="dot"></span></button>
@@ -903,43 +877,43 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
        presenta el Redbird LD como AATD en su propia web. -->
   <div class="cierre reveal">
     <div>
-      <h3>Aircraft on the flight line, simulators on the ground</h3>
-      <p>We lease both, under two separate contracts. Our FAA-approved AATDs are the VirtualFly SOLO PRO and the Frasca RTD, and each device simulates specific aircraft models: ask us which. You can take a simulator now and an aircraft when your program is ready, or the other way around.</p>
+      <h3>Aviones en la línea de vuelo, simuladores en tierra</h3>
+      <p>Arrendamos las dos cosas, con dos contratos separados. Nuestros AATD aprobados por la FAA son el VirtualFly SOLO PRO y el Frasca RTD, y cada dispositivo reproduce modelos de avión concretos: pregúntanos cuáles. Puedes tomar un simulador ahora y un avión cuando tu programa esté listo, o al revés.</p>
     </div>
-    <a href="#contact" class="btn btn-luz">Ask what’s available <span class="arw">→</span></a>
+    <a href="#contacto" class="btn btn-luz">Pregunta qué hay disponible <span class="arw">→</span></a>
   </div>
 </section>
 
 <!-- ===================== CÓMO FUNCIONA ===================== -->
-<section class="section" id="how-it-works" aria-labelledby="h-how-it-works">
+<section class="section" id="como-funciona" aria-labelledby="h-como-funciona">
   <div class="sec-head">
     <div class="top">
-      <span class="eyebrow reveal">The process</span>
-      <span class="section-index"><b>06</b> — How it works</span>
+      <span class="eyebrow reveal">Cómo funciona</span>
+      <span class="section-index"><b>06</b> — Cómo funciona</span>
     </div>
-    <h2 class="reveal" id="h-how-it-works">Three steps, <span class="it">about a week.</span></h2>
-    <p class="lead reveal">You qualify, select your aircraft and take delivery. The whole process can be completed in about a week.</p>
+    <h2 class="reveal" id="h-como-funciona">Tres pasos, <span class="it">alrededor de una semana.</span></h2>
+    <p class="lead reveal">Calificas, eliges tu avión y recibes la entrega. Todo el proceso puede completarse en alrededor de una semana.</p>
   </div>
   <div class="steps">
-    <div class="step reveal"><div class="sn">STEP 01</div><h3>Qualification</h3><p>Flight schools qualify before the lease is drawn up. Tell us about your program, your facilities and the timeline you have in mind, and we’ll come back with what’s available for your school.</p></div>
-    <div class="step reveal"><div class="sn">STEP 02</div><h3>Select your aircraft</h3><p>Choose the airplane your program needs — new or used — from what we have available.</p></div>
+    <div class="step reveal"><div class="sn">PASO 01</div><h3>Calificación</h3><p>Las escuelas de vuelo califican antes de redactar el contrato. Cuéntanos cómo es tu programa, tus instalaciones y el plazo que tienes en mente, y volvemos con lo que hay disponible para tu escuela.</p></div>
+    <div class="step reveal"><div class="sn">PASO 02</div><h3>Elige tu avión</h3><p>Escoge el avión que tu programa necesita —nuevo o usado— entre lo que tenemos disponible.</p></div>
     <!-- El plazo de entrega del avión es UN SOLO dato y vive en UN SOLO sitio: la franja
          del hero, que es donde lo pidió el cliente (1:17). El paso 03 describe qué pasa,
          no cuánto tarda: dos píldoras del mismo dato se leen como dos preguntas distintas. -->
-    <div class="step reveal"><div class="sn">STEP 03</div><h3>Take delivery</h3><p>Your aircraft arrives ready for the flight line.</p></div>
+    <div class="step reveal"><div class="sn">PASO 03</div><h3>Recibe la entrega</h3><p>Tu avión llega listo para la línea de vuelo.</p></div>
   </div>
-  <div class="sec-cta reveal"><a href="#contact" class="btn btn-ink">Ask what’s available <span class="arw">→</span></a></div>
+  <div class="sec-cta reveal"><a href="#contacto" class="btn btn-ink">Pregunta qué hay disponible <span class="arw">→</span></a></div>
 </section>
 
 <!-- ===================== TESTIMONIOS ===================== -->
-<section class="section" id="testimonials" aria-labelledby="h-testimonials">
+<section class="section" id="testimonios" aria-labelledby="h-testimonios">
   <div class="sec-head">
     <div class="top">
-      <span class="eyebrow reveal">Customer feedback</span>
-      <span class="section-index"><b>07</b> — Testimonials</span>
+      <span class="eyebrow reveal">Opiniones de clientes</span>
+      <span class="section-index"><b>07</b> — Testimonios</span>
     </div>
-    <h2 class="reveal" id="h-testimonials">Schools already <span class="it">working with us.</span></h2>
-    <p class="lead reveal">Two of the schools we work with, in their own words.</p>
+    <h2 class="reveal" id="h-testimonios">Escuelas que ya <span class="it">trabajan con nosotros.</span></h2>
+    <p class="lead reveal">Dos de las escuelas con las que trabajamos, en sus propias palabras.</p>
   </div>
   <div class="tst-wrap">
     <!-- Cada testimonio declara de qué producto habla. Los dos que hay son los de
@@ -948,79 +922,79 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
          avión real las horas consumen vida de motor y célula. Etiqueta distinta en
          cada uno: la cita de Sarah K. NO menciona los simuladores. -->
     <figure class="tst reveal">
-      <span class="eyebrow eyebrow--sub">On working with us</span>
-      <div class="stars" aria-label="5 of 5 stars">
+      <span class="eyebrow eyebrow--sub">Sobre trabajar con nosotros</span>
+      <div class="stars" aria-label="5 de 5 estrellas">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>
       </div>
-      <blockquote>The flexibility and support from Sim Solutions have been incredible. We can now offer a more comprehensive training program that meets the needs of our diverse student base.</blockquote>
-      <figcaption class="who"><span class="av">SK</span><span><span class="wn">Sarah K.</span><br><span class="rol">Aviation Program Director</span></span></figcaption>
+      <blockquote>La flexibilidad y el soporte de Sim Solutions han sido increíbles. Ahora ofrecemos un programa de entrenamiento más completo para nuestra base de estudiantes.</blockquote>
+      <figcaption class="who"><span class="av">SK</span><span><span class="wn">Sarah K.</span><br><span class="rol">Directora de Programa de Aviación</span></span></figcaption>
     </figure>
     <figure class="tst reveal">
-      <span class="eyebrow eyebrow--sub">On our simulators</span>
-      <div class="stars" aria-label="5 of 5 stars">
+      <span class="eyebrow eyebrow--sub">Sobre nuestros simuladores</span>
+      <div class="stars" aria-label="5 de 5 estrellas">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>
       </div>
-      <blockquote>Leasing from Sim Solutions has transformed our flight training program. The simulators are top-notch, and the installation process was seamless. Our students love the unlimited access to flight time!</blockquote>
-      <figcaption class="who"><span class="av">JD</span><span><span class="wn">John D.</span><br><span class="rol">Flight School Owner</span></span></figcaption>
+      <blockquote>El leasing con Sim Solutions transformó nuestro programa. Los simuladores son de primera y la instalación fue impecable. ¡Nuestros estudiantes aman el acceso ilimitado a horas de vuelo!</blockquote>
+      <figcaption class="who"><span class="av">JD</span><span><span class="wn">John D.</span><br><span class="rol">Dueño de Escuela de Vuelo</span></span></figcaption>
     </figure>
   </div>
   <!-- Estado vacío honesto: el cliente eligió «escuelas que ya trabajan con nosotros»
        (4:01) y esas las tiene que dar él, con permiso para nombrarlas. Mientras tanto la
        sección enseña los dos testimonios de simulador que ya publica su sitio. -->
-  <div class="wrap"><span class="pend pend-block">Testimonials from aircraft schools · to be confirmed</span></div>
-  <div class="sec-cta reveal"><a href="#contact" class="btn btn-ink">Ask what’s available <span class="arw">→</span></a></div>
+  <div class="wrap"><span class="pend pend-block">Testimonios de escuelas con aviones: pendientes del cliente</span></div>
+  <div class="sec-cta reveal"><a href="#contacto" class="btn btn-ink">Pregunta qué hay disponible <span class="arw">→</span></a></div>
 </section>
 
 <!-- ===================== CONTACTO ===================== -->
-<section class="section band" id="contact" aria-labelledby="h-contact">
+<section class="section band" id="contacto" aria-labelledby="h-contacto">
   <!-- Segunda y última palabra de fondo de la página («VUELO» en el hero es la primera).
        El cliente las citó en plural (0:19). Decorativa: aria-hidden, sin animación y
        oculta por debajo de 900 px, donde la sección pasa a una columna. -->
-  <div class="cta-ghost" aria-hidden="true">TAKEOFF</div>
+  <div class="cta-ghost" aria-hidden="true">DESPEGA</div>
   <div class="contact-grid">
     <div class="contact-copy">
       <div class="top">
-        <span class="eyebrow reveal">Contact</span>
-        <span class="section-index"><b>08</b> — Contact</span>
+        <span class="eyebrow reveal">Contacto</span>
+        <span class="section-index"><b>08</b> — Contacto</span>
       </div>
-      <h2 class="reveal" id="h-contact" style="margin-top:1.1rem">Talk to <span style="color:#0e4c6b">our team.</span></h2>
-      <p class="reveal">Tell us what your program flies today and how many students you train. We’ll come back with what’s available for your school and with the lease terms.</p>
-      <p class="reveal" style="margin-bottom:1rem;font-family:var(--grotesk);font-size:.92rem;color:#284159">Or contact us directly:</p>
+      <h2 class="reveal" id="h-contacto" style="margin-top:1.1rem">Habla con <span style="color:#0e4c6b">nuestro equipo.</span></h2>
+      <p class="reveal">Cuéntanos qué vuela hoy tu programa y a cuántos alumnos formas. Volvemos con lo que hay disponible para tu escuela y con las condiciones del contrato.</p>
+      <p class="reveal" style="margin-bottom:1rem;font-family:var(--grotesk);font-size:.92rem;color:#284159">O contáctanos directamente:</p>
       <div class="contact-list reveal">
         <a href="mailto:sales@airplanesims.com"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>sales@airplanesims.com</a>
         <a href="tel:+14079251337"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>+1 (407) 925-1337</a>
       </div>
     </div>
     <form class="form reveal" id="ctaForm" novalidate>
-      <div class="fhead">Request information</div>
-      <div class="field"><label for="f-school">Flight School Name</label>
-        <input id="f-school" name="school" type="text" placeholder="Your school’s name" required></div>
-      <div class="field"><label for="f-contact">Point of Contact</label>
-        <input id="f-contact" name="contact" type="text" placeholder="Full name" required></div>
-      <div class="field"><label for="f-email">Email</label>
-        <input id="f-email" name="email" type="email" placeholder="you@school.com" required></div>
-      <div class="field"><label for="f-phone">Phone Number</label>
-        <input id="f-phone" name="phone" type="tel" placeholder="+1 (___) ___-____" required></div>
+      <div class="fhead">Solicita información</div>
+      <div class="field"><label for="f-escuela">Nombre de la escuela de vuelo</label>
+        <input id="f-escuela" name="escuela" type="text" placeholder="Nombre de tu escuela" required></div>
+      <div class="field"><label for="f-contacto">Persona de contacto</label>
+        <input id="f-contacto" name="contacto" type="text" placeholder="Nombre y apellido" required></div>
+      <div class="field"><label for="f-email">Correo electrónico</label>
+        <input id="f-email" name="email" type="email" placeholder="tu@escuela.com" required></div>
+      <div class="field"><label for="f-tel">Teléfono</label>
+        <input id="f-tel" name="telefono" type="tel" placeholder="+1 (___) ___-____" required></div>
       <!-- El campo deja de llamarse «simulador»: si no, los avisos que recibe el
            equipo comercial llegan mal etiquetados en cuanto entren aviones. -->
-      <div class="field"><label for="f-product">What are you looking for?</label>
-        <select id="f-product" name="product" required>
-          <option value="" disabled selected>Select an option…</option>
-          <option>Airplanes</option>
-          <option>Simulators</option>
-          <option>Airplanes and simulators</option>
-          <option>Don’t know yet</option>
+      <div class="field"><label for="f-producto">¿Qué estás buscando?</label>
+        <select id="f-producto" name="producto" required>
+          <option value="" disabled selected>Selecciona una opción</option>
+          <option>Aviones</option>
+          <option>Simuladores</option>
+          <option>Aviones y simuladores</option>
+          <option>Aún no lo sé</option>
         </select></div>
-      <button type="submit" class="btn btn-ink">Send my message <span class="arw">→</span></button>
-      <p class="form-ok" id="formOk">Received. Our team will get back to you shortly. ✈</p>
+      <button type="submit" class="btn btn-ink">Enviar mi mensaje <span class="arw">→</span></button>
+      <p class="form-ok" id="formOk">Recibido. Nuestro equipo te contactará pronto. ✈</p>
     </form>
   </div>
 </section>
@@ -1030,16 +1004,16 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
   <div class="footer-in">
     <div>
       <a href="#top" class="brand"><img class="blogo" src="assets/logo_sim_dark.png" alt="Sim Solutions"></a>
-      <p class="ftag">Leasing of new and used training aircraft, and of FAA-approved AATD flight simulators, for flight schools and aviation universities.</p>
+      <p class="ftag">Leasing de aviones de entrenamiento nuevos y usados, y de simuladores AATD aprobados por la FAA, para escuelas de vuelo y universidades de aviación.</p>
     </div>
-    <nav class="foot-nav" aria-label="Footer">
-      <a href="#top">Home</a><a href="#airplanes">Airplanes</a><a href="#simulators">Simulators</a>
-      <a href="#how-it-works">How it works</a><a href="#testimonials">Testimonials</a><a href="#contact">Contact</a>
+    <nav class="foot-nav" aria-label="Pie de página">
+      <a href="#top">Inicio</a><a href="#aviones">Aviones</a><a href="#simuladores">Simuladores</a>
+      <a href="#como-funciona">Cómo funciona</a><a href="#testimonios">Testimonios</a><a href="#contacto">Contacto</a>
     </nav>
   </div>
   <div class="foot-bottom">
-    <span>© 2026 Sim Solutions. All rights reserved.</span>
-    <span>Training aircraft · FAA-approved AATD simulators</span>
+    <span>© 2026 Sim Solutions. Todos los derechos reservados.</span>
+    <span>Aviones de entrenamiento · Simuladores AATD aprobados por la FAA</span>
   </div>
 </footer>
 
@@ -1087,7 +1061,7 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
   toggle.addEventListener("click",function(){
     var open=nav.classList.toggle("open");
     toggle.setAttribute("aria-expanded",open?"true":"false");
-    toggle.setAttribute("aria-label",open?"Close menu":"Open menu");
+    toggle.setAttribute("aria-label",open?"Cerrar menú":"Abrir menú");
   });
   navlinks.addEventListener("click",function(e){
     if(e.target.closest("a")){nav.classList.remove("open");toggle.setAttribute("aria-expanded","false");}
@@ -1115,9 +1089,9 @@ h1,h2,h3{overflow-wrap:break-word;font-family:var(--display);font-weight:600;let
   var sims=[
     // El `desc` del 01 tiene que ser LITERALMENTE el mismo que el del HTML (`#simDesc`),
     // o el visitante ve cambiar el texto al volver a la pestaña 01 desde otra.
-    {label:"01 — VirtualFly",name:"VirtualFly SOLO PRO",desc:"An advanced, FAA-approved Aviation Training Device for pilot and instructor training and proficiency."},
-    {label:"02 — Redbird",name:"Redbird LD",desc:"A cutting-edge training device designed to enhance the flight training experience for students and instructors alike."},
-    {label:"03 — Frasca",name:"Frasca RTD",desc:"An Advanced Aviation Training Device built to deliver an immersive training experience that develops the skills a pilot takes into the cockpit."}
+    {label:"01 — VirtualFly",name:"VirtualFly SOLO PRO",desc:"Simulador AATD aprobado por la FAA para el entrenamiento avanzado de pilotos e instructores."},
+    {label:"02 — Redbird",name:"Redbird LD",desc:"Dispositivo de vanguardia, diseñado para escenarios realistas que potencian a alumnos e instructores."},
+    {label:"03 — Frasca",name:"Frasca RTD",desc:"AATD de experiencia inmersiva que desarrolla las habilidades esenciales que el piloto lleva a la cabina."}
   ];
   var simImgs=document.querySelectorAll(".sim-stage img"),simTabs=document.querySelectorAll("#simTabs button"),
       simLabel=document.getElementById("simLabel"),simName=document.getElementById("simName"),simDesc=document.getElementById("simDesc");
